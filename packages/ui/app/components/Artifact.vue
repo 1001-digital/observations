@@ -78,6 +78,11 @@ const showAnimation = ref(true)
   width: min(80cqh, 80cqw);
   margin-inline: auto;
 
+  h1,
+  p {
+    word-break: break-word;
+  }
+
   h1 {
     font-size: var(--font-lg);
   }
