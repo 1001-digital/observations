@@ -54,21 +54,26 @@ watch(width, () => {
 
 <style scoped>
 .embed {
-  width: 100%;
-  height: 0;
-  padding-bottom: 100%;
   position: relative;
   touch-action: none;
   overflow: hidden;
+  aspect-ratio: 1;
 
-  video,
+  &.playable {
+    aspect-ratio: auto;
+  }
+
+  video {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
   iframe {
     width: 100%;
     height: 100%;
     position: absolute;
-  }
-
-  iframe {
+    inset: 0;
     pointer-events: all;
   }
 }
