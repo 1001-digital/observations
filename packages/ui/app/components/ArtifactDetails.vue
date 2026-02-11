@@ -8,7 +8,11 @@
     >
       <template v-if="details.showCollection && collection.name">
         <dt>Collection</dt>
-        <dd>{{ collection.name }}</dd>
+        <dd>
+          <NuxtLink :to="`${blockExplorer}/address/${contract}`" target="_blank">
+            {{ collection.name }}
+          </NuxtLink>
+        </dd>
       </template>
       <template v-if="details.showSymbol && collection.symbol">
         <dt>Symbol</dt>
@@ -32,6 +36,7 @@ import type { CollectionData } from '../composables/useCollection'
 defineProps<{
   metadata: { name?: string; description?: string }
   collection?: CollectionData | null
+  contract?: string
 }>()
 
 const {

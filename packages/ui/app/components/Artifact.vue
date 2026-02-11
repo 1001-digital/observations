@@ -22,6 +22,7 @@
       <ArtifactDetails
         :metadata="metadata"
         :collection="collection"
+        :contract="contract"
       />
     </slot>
   </article>
