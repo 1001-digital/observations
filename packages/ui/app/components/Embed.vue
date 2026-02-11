@@ -31,17 +31,17 @@
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
 
-async function fetchMediaType(url: string): Promise<string | null> {
+async function fetchMediaType(url: string): Promise<string | undefined> {
   try {
     const response = await fetch(url, { method: 'HEAD' })
 
-    if (!response.ok) return null
+    if (!response.ok) return undefined
 
     const contentType = response.headers.get('Content-Type')
-    return contentType ? contentType.split(';')[0] : null
+    return contentType ? contentType.split(';')[0] : undefined
   } catch (error) {
     console.error(`Error fetching media type: ${error}`)
-    return null
+    return undefined
   }
 }
 
@@ -50,7 +50,7 @@ const props = defineProps<{
 }>()
 
 const src = ref(props.src)
-const mediaType = ref<string | null>()
+const mediaType = ref<string>()
 const isPlayable = computed(() => {
   if (!mediaType.value) return false
   return document.createElement('video').canPlayType(mediaType.value) !== ''
