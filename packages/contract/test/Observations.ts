@@ -16,10 +16,10 @@ describe("Observations", async function () {
     const observations = await viem.deployContract("Observations");
 
     await viem.assertions.emitWithArgs(
-      observations.write.observe([collection, tokenId, "Beautiful piece."]),
+      observations.write.observe([collection, tokenId, "Beautiful piece.", 0]),
       observations,
       "Observation",
-      [collection, tokenId, getAddress(walletClient.account.address), "Beautiful piece.", false, 0, 0],
+      [collection, tokenId, getAddress(walletClient.account.address), "Beautiful piece.", false, 0, 0, 0],
     );
   });
 
@@ -27,19 +27,41 @@ describe("Observations", async function () {
     const observations = await viem.deployContract("Observations");
 
     await viem.assertions.emitWithArgs(
-      observations.write.observeAt([collection, tokenId, "Detail in the corner.", 120, 340]),
+      observations.write.observeAt([collection, tokenId, "Detail in the corner.", 120, 340, 0]),
       observations,
       "Observation",
-      [collection, tokenId, getAddress(walletClient.account.address), "Detail in the corner.", true, 120, 340],
+      [collection, tokenId, getAddress(walletClient.account.address), "Detail in the corner.", true, 120, 340, 0],
+    );
+  });
+
+  it("Should emit an Observation event with animation view", async function () {
+    const observations = await viem.deployContract("Observations");
+
+    await viem.assertions.emitWithArgs(
+      observations.write.observe([collection, tokenId, "Fluid motion.", 1]),
+      observations,
+      "Observation",
+      [collection, tokenId, getAddress(walletClient.account.address), "Fluid motion.", false, 0, 0, 1],
+    );
+  });
+
+  it("Should emit a located Observation event with animation view", async function () {
+    const observations = await viem.deployContract("Observations");
+
+    await viem.assertions.emitWithArgs(
+      observations.write.observeAt([collection, tokenId, "Movement here.", 50, 75, 1]),
+      observations,
+      "Observation",
+      [collection, tokenId, getAddress(walletClient.account.address), "Movement here.", true, 50, 75, 1],
     );
   });
 
   it("Should track the observation count", async function () {
     const observations = await viem.deployContract("Observations");
 
-    await observations.write.observe([collection, tokenId, "First."]);
-    await observations.write.observe([collection, tokenId, "Second."]);
-    await observations.write.observeAt([collection, tokenId, "Third.", 10, 20]);
+    await observations.write.observe([collection, tokenId, "First.", 0]);
+    await observations.write.observe([collection, tokenId, "Second.", 0]);
+    await observations.write.observeAt([collection, tokenId, "Third.", 10, 20, 0]);
 
     const [count] = await observations.read.artifacts([collection, tokenId]);
 
@@ -51,7 +73,7 @@ describe("Observations", async function () {
 
     const blockBefore = await publicClient.getBlockNumber();
 
-    await observations.write.observe([collection, tokenId, "First observation."]);
+    await observations.write.observe([collection, tokenId, "First observation.", 0]);
 
     const [, firstBlock] = await observations.read.artifacts([collection, tokenId]);
 
@@ -61,10 +83,10 @@ describe("Observations", async function () {
   it("Should not update firstBlock on subsequent observations", async function () {
     const observations = await viem.deployContract("Observations");
 
-    await observations.write.observe([collection, tokenId, "First."]);
+    await observations.write.observe([collection, tokenId, "First.", 0]);
     const [, firstBlock] = await observations.read.artifacts([collection, tokenId]);
 
-    await observations.write.observe([collection, tokenId, "Second."]);
+    await observations.write.observe([collection, tokenId, "Second.", 0]);
     const [, firstBlockAfter] = await observations.read.artifacts([collection, tokenId]);
 
     assert.equal(firstBlock, firstBlockAfter);
@@ -74,9 +96,9 @@ describe("Observations", async function () {
     const observations = await viem.deployContract("Observations");
     const otherToken = 99n;
 
-    await observations.write.observe([collection, tokenId, "On token 1."]);
-    await observations.write.observe([collection, otherToken, "On token 99."]);
-    await observations.write.observe([collection, otherToken, "Again on 99."]);
+    await observations.write.observe([collection, tokenId, "On token 1.", 0]);
+    await observations.write.observe([collection, otherToken, "On token 99.", 0]);
+    await observations.write.observe([collection, otherToken, "Again on 99.", 0]);
 
     const [count1] = await observations.read.artifacts([collection, tokenId]);
     const [count99] = await observations.read.artifacts([collection, otherToken]);
@@ -90,9 +112,9 @@ describe("Observations", async function () {
     const deployBlock = await publicClient.getBlockNumber();
     const otherToken = 42n;
 
-    await observations.write.observe([collection, tokenId, "Note A."]);
-    await observations.write.observe([collection, otherToken, "Note B."]);
-    await observations.write.observe([collection, tokenId, "Note C."]);
+    await observations.write.observe([collection, tokenId, "Note A.", 0]);
+    await observations.write.observe([collection, otherToken, "Note B.", 0]);
+    await observations.write.observe([collection, tokenId, "Note C.", 0]);
 
     // Filter events for a specific tokenId.
     const events = await publicClient.getContractEvents({

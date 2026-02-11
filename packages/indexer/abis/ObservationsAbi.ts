@@ -10,6 +10,7 @@ export const ObservationsAbi = [
       { indexed: false, name: "located", type: "bool" },
       { indexed: false, name: "x", type: "int32" },
       { indexed: false, name: "y", type: "int32" },
+      { indexed: false, name: "viewType", type: "uint8" },
     ],
   },
   {
@@ -33,6 +34,7 @@ export const ObservationsAbi = [
       { name: "collection", type: "address" },
       { name: "tokenId", type: "uint256" },
       { name: "note", type: "string" },
+      { name: "viewType", type: "uint8" },
     ],
     outputs: [],
   },
@@ -46,6 +48,7 @@ export const ObservationsAbi = [
       { name: "note", type: "string" },
       { name: "x", type: "int32" },
       { name: "y", type: "int32" },
+      { name: "viewType", type: "uint8" },
     ],
     outputs: [],
   },

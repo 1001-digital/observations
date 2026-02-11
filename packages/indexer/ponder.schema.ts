@@ -11,6 +11,7 @@ export const observations = onchainTable(
     located: t.boolean().notNull(),
     x: t.integer().notNull(),
     y: t.integer().notNull(),
+    view: t.integer().notNull(),
     block: t.bigint().notNull(),
     timestamp: t.bigint().notNull(),
     txHash: t.hex().notNull(),
