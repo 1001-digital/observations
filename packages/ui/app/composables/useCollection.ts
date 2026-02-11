@@ -1,6 +1,5 @@
 import { getContract, type Address, type PublicClient } from 'viem'
 import { getPublicClient } from '@wagmi/core'
-import { useEnsName } from '@wagmi/vue'
 import { parseAbi } from 'viem'
 import { resolveURI } from './useArtifact'
 
@@ -80,18 +79,10 @@ export const useCollection = (contract: Ref<Address>) => {
     () => fetchCollection(client, contract.value),
   )
 
-  const owner = computed(() => collection.value?.owner)
   const image = computed(() => resolveURI(collection.value?.image))
-
-  const { data: ownerEns } = useEnsName({
-    address: owner,
-    chainId: 1,
-  })
 
   return {
     collection,
-    owner,
-    ownerEns,
     image,
     pending,
     error,
