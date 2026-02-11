@@ -101,10 +101,12 @@ export const useArtifact = (contract: Ref<Address>, tokenId: Ref<bigint>) => {
   )
 
   const image = computed(() => resolveURI(metadata.value?.image))
+  const animationUrl = computed(() => resolveURI(metadata.value?.animation_url))
 
   return {
     metadata,
     image,
+    animationUrl,
     pending,
     error,
   }

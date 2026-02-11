@@ -4,7 +4,8 @@
     <Alert v-else-if="error">{{ error.message }}</Alert>
     <template v-else-if="metadata">
       <div class="artifact-media">
-        <img v-if="image" :src="image" :alt="metadata.name" />
+        <Embed v-if="animationUrl" :src="animationUrl" />
+        <img v-else-if="image" :src="image" :alt="metadata.name" />
       </div>
       <section class="artifact-details">
         <h1>{{ metadata.name }}</h1>
@@ -22,7 +23,7 @@ const props = defineProps<{
   tokenId: bigint
 }>()
 
-const { metadata, image, pending, error } = useArtifact(
+const { metadata, image, animationUrl, pending, error } = useArtifact(
   toRef(() => props.contract),
   toRef(() => props.tokenId),
 )
