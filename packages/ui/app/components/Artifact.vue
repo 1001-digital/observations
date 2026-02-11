@@ -33,7 +33,7 @@ const { metadata, image, animationUrl, pending, error } = useArtifact(
   toRef(() => props.tokenId),
 )
 
-const showAnimation = ref(true)
+const { showAnimation } = useArtifactView(animationUrl, pending)
 </script>
 
 <style scoped>
