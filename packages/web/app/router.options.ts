@@ -5,11 +5,12 @@ export default {
     const { contract, token } = useArtifactScope()
 
     if (contract && token) {
-      return _routes.map(route => ({
+      return _routes.map((route) => ({
         ...route,
-        path: route.path === '/:contract()/:token()'
-          ? '/'
-          : route.path.replace('/:contract()/:token()/', '/'),
+        path:
+          route.path === '/:contract()/:token()'
+            ? '/'
+            : route.path.replace('/:contract()/:token()/', '/'),
       }))
     }
 

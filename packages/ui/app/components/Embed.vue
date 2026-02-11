@@ -1,10 +1,30 @@
 <template>
-  <div class="embed" :class="{ playable: isPlayable }" @touchmove.stop.prevent="() => null">
-    <video v-if="isPlayable" autoplay muted playsinline loop crossorigin="anonymous">
-      <source :src="src" :type="mediaType" />
+  <div
+    class="embed"
+    :class="{ playable: isPlayable }"
+    @touchmove.stop.prevent="() => null"
+  >
+    <video
+      v-if="isPlayable"
+      autoplay
+      muted
+      playsinline
+      loop
+      crossorigin="anonymous"
+    >
+      <source
+        :src="src"
+        :type="mediaType"
+      />
       Your browser does not support the video tag.
     </video>
-    <iframe v-else ref="frame" frameborder="0" :src="src" sandbox="allow-scripts"></iframe>
+    <iframe
+      v-else
+      ref="frame"
+      frameborder="0"
+      :src="src"
+      sandbox="allow-scripts"
+    ></iframe>
   </div>
 </template>
 

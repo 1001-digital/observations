@@ -1,9 +1,22 @@
 <template>
   <div class="artifact-visual">
-    <Embed v-if="animationUrl && showAnimation" :src="animationUrl" />
-    <img v-else-if="image" :src="image" :alt="name" />
-    <Actions v-if="animationUrl && image" class="artifact-visual-actions">
-      <Button class="small" @click="showAnimation = !showAnimation">
+    <Embed
+      v-if="animationUrl && showAnimation"
+      :src="animationUrl"
+    />
+    <img
+      v-else-if="image"
+      :src="image"
+      :alt="name"
+    />
+    <Actions
+      v-if="animationUrl && image"
+      class="artifact-visual-actions"
+    >
+      <Button
+        class="small"
+        @click="showAnimation = !showAnimation"
+      >
         <Icon :type="showAnimation ? 'lucide:image' : 'lucide:play'" />
       </Button>
     </Actions>

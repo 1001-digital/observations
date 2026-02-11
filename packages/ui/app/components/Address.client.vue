@@ -6,14 +6,17 @@
 import type { Address } from 'viem'
 import { useEnsName } from '@wagmi/vue'
 
-const props = withDefaults(defineProps<{
-  address: Address
-  ens?: boolean
-  shorten?: boolean
-}>(), {
-  ens: true,
-  shorten: true,
-})
+const props = withDefaults(
+  defineProps<{
+    address: Address
+    ens?: boolean
+    shorten?: boolean
+  }>(),
+  {
+    ens: true,
+    shorten: true,
+  },
+)
 
 const address = computed(() => props.address)
 

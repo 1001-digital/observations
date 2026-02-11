@@ -29,7 +29,8 @@ export interface TokenMetadata {
 export const resolveURI = (uri?: string): string => {
   if (!uri) return ''
   if (uri.startsWith('data:')) return uri
-  if (uri.startsWith('ipfs://')) return IPFS_GATEWAY + uri.replace('ipfs://', '')
+  if (uri.startsWith('ipfs://'))
+    return IPFS_GATEWAY + uri.replace('ipfs://', '')
   if (uri.startsWith('ar://')) return ARWEAVE_GATEWAY + uri.replace('ar://', '')
   if (uri.startsWith('Qm') || uri.startsWith('baf')) return IPFS_GATEWAY + uri
   return uri
@@ -94,10 +95,8 @@ export const useArtifact = (contract: Ref<Address>, tokenId: Ref<bigint>) => {
     data: metadata,
     pending,
     error,
-  } = useAsyncData(
-    `artifact-${contract.value}-${tokenId.value}`,
-    () => fetchTokenURI(client, contract.value, tokenId.value)
-      .then(fetchMetadata),
+  } = useAsyncData(`artifact-${contract.value}-${tokenId.value}`, () =>
+    fetchTokenURI(client, contract.value, tokenId.value).then(fetchMetadata),
   )
 
   const image = computed(() => resolveURI(metadata.value?.image))

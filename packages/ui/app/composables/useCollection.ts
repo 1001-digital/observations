@@ -74,9 +74,8 @@ export const useCollection = (contract: Ref<Address>) => {
     data: collection,
     pending,
     error,
-  } = useAsyncData(
-    `collection-${contract.value}`,
-    () => fetchCollection(client, contract.value),
+  } = useAsyncData(`collection-${contract.value}`, () =>
+    fetchCollection(client, contract.value),
   )
 
   const image = computed(() => resolveURI(collection.value?.image))

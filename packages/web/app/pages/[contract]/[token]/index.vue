@@ -1,5 +1,8 @@
 <template>
-  <Artifact :contract="contract" :token-id="tokenId" />
+  <Artifact
+    :contract="contract"
+    :token-id="tokenId"
+  />
 </template>
 
 <script setup lang="ts">

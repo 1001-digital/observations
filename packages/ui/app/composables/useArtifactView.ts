@@ -1,4 +1,7 @@
-export const useArtifactView = (animationUrl: Ref<string>, pending: Ref<boolean>) => {
+export const useArtifactView = (
+  animationUrl: Ref<string>,
+  pending: Ref<boolean>,
+) => {
   const route = useRoute()
   const router = useRouter()
   const { artifact } = useAppConfig()
@@ -21,11 +24,19 @@ export const useArtifactView = (animationUrl: Ref<string>, pending: Ref<boolean>
   })
 
   // Redirect when animation view is requested but no animation exists
-  watch(pending, (isPending) => {
-    if (!isPending && !animationUrl.value && route.query.animation === 'true') {
-      router.replace({ query: { ...route.query, animation: undefined } })
-    }
-  }, { immediate: true })
+  watch(
+    pending,
+    (isPending) => {
+      if (
+        !isPending &&
+        !animationUrl.value &&
+        route.query.animation === 'true'
+      ) {
+        router.replace({ query: { ...route.query, animation: undefined } })
+      }
+    },
+    { immediate: true },
+  )
 
   return { showAnimation }
 }

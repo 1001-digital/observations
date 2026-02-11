@@ -2,7 +2,10 @@
   <section class="artifact-details">
     <h1 v-if="metadata.name">{{ metadata.name }}</h1>
     <p v-if="metadata.description">{{ metadata.description }}</p>
-    <dl v-if="collection" class="artifact-collection">
+    <dl
+      v-if="collection"
+      class="artifact-collection"
+    >
       <template v-if="details.showCollection && collection.name">
         <dt>Collection</dt>
         <dd>{{ collection.name }}</dd>
@@ -29,7 +32,9 @@ defineProps<{
   collection?: CollectionData | null
 }>()
 
-const { artifact: { details } } = useAppConfig()
+const {
+  artifact: { details },
+} = useAppConfig()
 </script>
 
 <style scoped>

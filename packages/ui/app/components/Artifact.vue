@@ -1,12 +1,28 @@
 <template>
   <article class="artifact">
-    <Loading v-if="pending" spinner />
+    <Loading
+      v-if="pending"
+      spinner
+    />
     <Alert v-else-if="error">{{ error.message }}</Alert>
-    <slot v-else-if="metadata" :metadata="metadata" :image="image" :animation-url="animationUrl"
-      :show-animation="showAnimation" :collection="collection">
-      <ArtifactVisual v-model:show-animation="showAnimation" :image="image" :animation-url="animationUrl"
-        :name="metadata.name" />
-      <ArtifactDetails :metadata="metadata" :collection="collection" />
+    <slot
+      v-else-if="metadata"
+      :metadata="metadata"
+      :image="image"
+      :animation-url="animationUrl"
+      :show-animation="showAnimation"
+      :collection="collection"
+    >
+      <ArtifactVisual
+        v-model:show-animation="showAnimation"
+        :image="image"
+        :animation-url="animationUrl"
+        :name="metadata.name"
+      />
+      <ArtifactDetails
+        :metadata="metadata"
+        :collection="collection"
+      />
     </slot>
   </article>
 </template>
