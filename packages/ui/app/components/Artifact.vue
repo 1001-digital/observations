@@ -26,7 +26,7 @@
           </template>
           <template v-if="collection.owner">
             <dt>Owner</dt>
-            <dd>{{ collection.owner }}</dd>
+            <dd>{{ ownerEns || collection.owner }}</dd>
           </template>
         </dl>
       </section>
@@ -49,7 +49,7 @@ const { metadata, image, animationUrl, pending, error } = useArtifact(
   toRef(() => props.tokenId),
 )
 
-const { collection } = useCollection(contractRef)
+const { collection, ownerEns } = useCollection(contractRef)
 
 const { showAnimation } = useArtifactView(animationUrl, pending)
 </script>
