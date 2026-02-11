@@ -15,6 +15,20 @@
       <section class="artifact-details">
         <h1 v-if="metadata.name">{{ metadata.name }}</h1>
         <p v-if="metadata.description">{{ metadata.description }}</p>
+        <dl v-if="collection" class="artifact-collection">
+          <template v-if="collection.name">
+            <dt>Collection</dt>
+            <dd>{{ collection.name }}</dd>
+          </template>
+          <template v-if="collection.symbol">
+            <dt>Symbol</dt>
+            <dd>{{ collection.symbol }}</dd>
+          </template>
+          <template v-if="collection.owner">
+            <dt>Owner</dt>
+            <dd>{{ collection.owner }}</dd>
+          </template>
+        </dl>
       </section>
     </template>
   </article>
@@ -28,10 +42,14 @@ const props = defineProps<{
   tokenId: bigint
 }>()
 
+const contractRef = toRef(() => props.contract)
+
 const { metadata, image, animationUrl, pending, error } = useArtifact(
-  toRef(() => props.contract),
+  contractRef,
   toRef(() => props.tokenId),
 )
+
+const { collection } = useCollection(contractRef)
 
 const { showAnimation } = useArtifactView(animationUrl, pending)
 </script>
@@ -89,6 +107,23 @@ const { showAnimation } = useArtifactView(animationUrl, pending)
 
   p {
     color: var(--muted);
+  }
+
+  .artifact-collection {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--spacer-xs) var(--spacer-sm);
+    color: var(--muted);
+    font-size: var(--font-sm);
+
+    dt {
+      font-weight: 600;
+    }
+
+    dd {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
 </style>
