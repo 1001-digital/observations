@@ -1,5 +1,5 @@
 {
-  "name": "ui",
+  "name": "@1001-digital/observations-ui",
   "type": "module",
   "private": true,
   "scripts": {
