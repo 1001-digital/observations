@@ -51,6 +51,6 @@ const { showAnimation } = useArtifactView(animationUrl, pending)
 .artifact {
   display: grid;
   gap: var(--spacer);
-  container-type: inline;
+  container-type: inline-size;
 }
 </style>

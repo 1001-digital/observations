@@ -39,6 +39,10 @@ const showAnimation = defineModel<boolean>('showAnimation', { default: false })
   margin: auto;
   width: min(80cqh, 80cqw);
   height: min(80cqh, 80cqw);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  container-type: size;
 
   img {
     display: block;
@@ -46,11 +50,6 @@ const showAnimation = defineModel<boolean>('showAnimation', { default: false })
     height: auto;
     aspect-ratio: auto;
     image-rendering: pixelated;
-  }
-
-  :deep(.embed) {
-    max-width: 80vw;
-    max-height: 80vh;
   }
 
   .artifact-visual-actions {

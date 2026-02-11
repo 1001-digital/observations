@@ -78,6 +78,7 @@ watch(width, () => {
   touch-action: none;
   overflow: hidden;
   aspect-ratio: 1;
+  width: 100cqw;
 
   &.playable {
     aspect-ratio: auto;

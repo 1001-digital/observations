@@ -17,7 +17,9 @@
       <template v-if="details.showArtist && collection.owner">
         <dt>Artist</dt>
         <dd>
-          <Address :address="collection.owner" />
+          <NuxtLink :to="`${blockExplorer}/address/${collection.owner}`" target="_blank">
+            <Address :address="collection.owner" />
+          </NuxtLink>
         </dd>
       </template>
     </dl>
@@ -35,6 +37,7 @@ defineProps<{
 const {
   artifact: { details },
 } = useAppConfig()
+const { blockExplorer } = useRuntimeConfig().public
 </script>
 
 <style scoped>
