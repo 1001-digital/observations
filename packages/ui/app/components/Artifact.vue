@@ -33,19 +33,30 @@ const { metadata, image, animationUrl, pending, error } = useArtifact(
 .artifact {
   display: grid;
   gap: var(--spacer);
+  container-type: inline;
 }
 
 .artifact-media {
-  overflow: hidden;
   position: relative;
-  background-color: var(--background);
+  margin: auto;
+  width: min(80cqh, 80cqw);
+  height: min(80cqh, 80cqw);
 
   img {
-    width: 100%;
-    height: auto;
     display: block;
+    width: 100%;
+    height: 100%;
+    width: auto;
+    height: auto;
+    aspect-ratio: auto;
     image-rendering: pixelated;
   }
+
+  :deep(.embed) {
+    max-width: 80vw;
+    max-height: 80vh;
+  }
+
 }
 
 .artifact-details {
