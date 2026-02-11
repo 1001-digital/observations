@@ -74,11 +74,11 @@ const fetchMetadata = async (uri: string): Promise<TokenMetadata> => {
 
   if (resolved.startsWith('data:application/json;base64,')) {
     const base64Data = resolved.split(',')[1]
-    return JSON.parse(atob(base64Data))
+    return JSON.parse(atob(base64Data!))
   }
 
   if (resolved.startsWith('data:application/json')) {
-    const jsonStr = decodeURIComponent(resolved.split(',')[1])
+    const jsonStr = decodeURIComponent(resolved.split(',')[1]!)
     return JSON.parse(jsonStr)
   }
 
