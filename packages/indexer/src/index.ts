@@ -7,7 +7,7 @@ ponder.on("Observations:Observation", async ({ event, context }) => {
   await context.db
     .insert(observations)
     .values({
-      id: `${event.log.blockNumber}-${event.log.logIndex}`,
+      id: `${event.block.number}-${event.log.logIndex}`,
       collection,
       tokenId,
       observer,
