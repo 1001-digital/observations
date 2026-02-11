@@ -1,12 +1,8 @@
 {
   "name": "@1001-digital/observations-ui",
   "type": "module",
-  "private": true,
+  "main": "./nuxt.config.ts",
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev --port 8642",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {

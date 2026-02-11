@@ -1,0 +1,16 @@
+{
+  "name": "@1001-digital/observations-web",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev --port 8642",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@1001-digital/observations-ui": "workspace:*",
+    "nuxt": "^4.3.0"
+  }
+}
