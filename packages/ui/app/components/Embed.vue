@@ -1,5 +1,5 @@
 <template>
-  <div class="embed" @touchmove.stop.prevent="() => null">
+  <div class="embed" :class="{ playable: isPlayable }" @touchmove.stop.prevent="() => null">
     <video v-if="isPlayable" autoplay muted playsinline loop crossorigin="anonymous">
       <source :src="src" :type="mediaType" />
       Your browser does not support the video tag.

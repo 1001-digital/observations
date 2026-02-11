@@ -4,8 +4,13 @@
     <Alert v-else-if="error">{{ error.message }}</Alert>
     <template v-else-if="metadata">
       <div class="artifact-media">
-        <Embed v-if="animationUrl" :src="animationUrl" />
+        <Embed v-if="animationUrl && showAnimation" :src="animationUrl" />
         <img v-else-if="image" :src="image" :alt="metadata.name" />
+        <Actions v-if="animationUrl && image" class="artifact-actions">
+          <Button class="small" @click="showAnimation = !showAnimation">
+            <Icon :type="showAnimation ? 'lucide:image' : 'lucide:play'" />
+          </Button>
+        </Actions>
       </div>
       <section class="artifact-details">
         <h1>{{ metadata.name }}</h1>
@@ -27,6 +32,8 @@ const { metadata, image, animationUrl, pending, error } = useArtifact(
   toRef(() => props.contract),
   toRef(() => props.tokenId),
 )
+
+const showAnimation = ref(true)
 </script>
 
 <style scoped>
@@ -57,11 +64,19 @@ const { metadata, image, animationUrl, pending, error } = useArtifact(
     max-height: 80vh;
   }
 
+  .artifact-actions {
+    position: absolute;
+    bottom: var(--spacer-sm);
+    right: var(--spacer-sm);
+    z-index: 1;
+  }
 }
 
 .artifact-details {
   display: grid;
   gap: var(--spacer-sm);
+  width: min(80cqh, 80cqw);
+  margin-inline: auto;
 
   h1 {
     font-size: var(--font-lg);
