@@ -35,7 +35,8 @@ contract Observations {
         bool located,
         int32 x,
         int32 y,
-        uint8 viewType
+        uint8 viewType,
+        uint32 time
     );
 
     /// @dev collection => tokenId => Artifact
@@ -46,15 +47,17 @@ contract Observations {
     /// @param tokenId The token ID within that collection.
     /// @param note The observation text.
     /// @param viewType The view type (0 = image, 1 = animation).
+    /// @param time The time in seconds within the media (0 = no specific time).
     function observe(
         address collection,
         uint256 tokenId,
         string calldata note,
-        uint8 viewType
+        uint8 viewType,
+        uint32 time
     ) external {
         _record(collection, tokenId);
 
-        emit Observation(collection, tokenId, msg.sender, note, false, 0, 0, viewType);
+        emit Observation(collection, tokenId, msg.sender, note, false, 0, 0, viewType, time);
     }
 
     /// @notice Leave an observation at specific coordinates on an artifact.
@@ -64,17 +67,19 @@ contract Observations {
     /// @param x The x coordinate on the artifact.
     /// @param y The y coordinate on the artifact.
     /// @param viewType The view type (0 = image, 1 = animation).
+    /// @param time The time in seconds within the media (0 = no specific time).
     function observeAt(
         address collection,
         uint256 tokenId,
         string calldata note,
         int32 x,
         int32 y,
-        uint8 viewType
+        uint8 viewType,
+        uint32 time
     ) external {
         _record(collection, tokenId);
 
-        emit Observation(collection, tokenId, msg.sender, note, true, x, y, viewType);
+        emit Observation(collection, tokenId, msg.sender, note, true, x, y, viewType, time);
     }
 
     /// @dev Track the observation count and first observation block for an artifact.
