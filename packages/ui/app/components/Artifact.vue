@@ -13,7 +13,7 @@
         </Actions>
       </div>
       <section class="artifact-details">
-        <h1>{{ metadata.name }}</h1>
+        <h1 v-if="metadata.name">{{ metadata.name }}</h1>
         <p v-if="metadata.description">{{ metadata.description }}</p>
       </section>
     </template>
