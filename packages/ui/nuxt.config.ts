@@ -5,5 +5,11 @@ export default defineNuxtConfig({
     '@1001-digital/layers.base',
     '@1001-digital/layers.evm',
   ],
+  runtimeConfig: {
+    public: {
+      contract: '',
+      token: '',
+    },
+  },
   devtools: { enabled: true },
 })

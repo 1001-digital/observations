@@ -3,10 +3,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Address } from 'viem'
-
-const route = useRoute()
-
-const contract = computed(() => route.params.contract as Address)
-const tokenId = computed(() => BigInt(route.params.token as string))
+const contract = useArtifactContract()
+const tokenId = useArtifactTokenId()
 </script>
