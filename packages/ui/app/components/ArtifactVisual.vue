@@ -49,7 +49,6 @@ const showAnimation = defineModel<boolean>('showAnimation', { default: false })
     width: auto;
     height: auto;
     aspect-ratio: auto;
-    image-rendering: pixelated;
   }
 
   .artifact-visual-actions {
