@@ -9,4 +9,13 @@ export default defineAppConfig({
       showOwner: true,
     },
   },
+  evm: {
+    defaultChain: 'sepolia',
+    chains: {
+      sepolia: {
+        id: 11155111,
+        blockExplorer: 'https://sepolia.etherscan.io',
+      },
+    },
+  },
 })

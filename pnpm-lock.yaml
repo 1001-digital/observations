@@ -63,8 +63,8 @@ importers:
         specifier: ^0.0.17
         version: 0.0.17(magicast@0.5.2)(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))
       '@1001-digital/layers.evm':
-        specifier: ^0.0.7
-        version: 0.0.7(0cea849f3a3d51cc6b8d2ff717783e08)
+        specifier: ^1.0.0
+        version: 1.0.0(0cea849f3a3d51cc6b8d2ff717783e08)
       nuxt:
         specifier: ^4.3.0
         version: 4.3.1(@electric-sql/pglite@0.2.13)(@parcel/watcher@2.5.6)(@types/node@22.19.11)(@vue/compiler-sfc@3.5.28)(bufferutil@4.1.0)(cac@6.7.14)(db0@0.3.4(@electric-sql/pglite@0.2.13)(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(kysely@0.26.3)(pg@8.18.0)))(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(kysely@0.26.3)(pg@8.18.0))(idb-keyval@6.2.2)(ioredis@5.9.2)(magicast@0.5.2)(optionator@0.9.4)(rollup@4.57.1)(terser@5.46.0)(tsx@4.21.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(yaml@2.8.2)
@@ -83,10 +83,10 @@ packages:
   '@1001-digital/layers.base@0.0.17':
     resolution: {integrity: sha512-K/KkYlPeNl3nBLUYsdIwtvqPZo0st6A0Mj6vN3sb/bVFIv6wC0hm7UuSFuSM3Mp9Laa0OhQyTtj1NDIHZDUKBQ==}
 
-  '@1001-digital/layers.evm@0.0.7':
-    resolution: {integrity: sha512-pa/653n0z528QbUdPUU6FR0f2I+X3VRB6rqdZ0J1mlhK+VDxb6B4WYhSR5Wd8OkoGQRBZbqzje04W5+zQ7gc5g==}
+  '@1001-digital/layers.evm@1.0.0':
+    resolution: {integrity: sha512-ayisk85jZ3H5Ef2tJgqEbvvUzgm4lZ+//3SURlFeBMFbjEhrS65wOs3wpP3Zweu7u9IM7N/NicciMi2+ly3tvQ==}
     peerDependencies:
-      '@1001-digital/layers.base': ^0.0.14
+      '@1001-digital/layers.base': ^0.0.17
 
   '@actions/core@1.11.1':
     resolution: {integrity: sha512-hXJCSrkwfA46Vd9Z3q4cpEpHB1rL5NG04+/rbqW9d3+CSvtB1tYe8UTpAlixa1vj0m/ULglfEK2UKxMGxCxv5A==}
@@ -6478,12 +6478,13 @@ snapshots:
       - vite
       - vue
 
-  '@1001-digital/layers.evm@0.0.7(0cea849f3a3d51cc6b8d2ff717783e08)':
+  '@1001-digital/layers.evm@1.0.0(0cea849f3a3d51cc6b8d2ff717783e08)':
     dependencies:
       '@1001-digital/layers.base': 0.0.17(magicast@0.5.2)(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))
       '@metamask/sdk': 0.34.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@tanstack/vue-query': 5.92.9(vue@3.5.28(typescript@5.8.3))
       '@types/qrcode': 1.5.6
+      '@wagmi/core': 3.3.3(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
       '@wagmi/vue': 0.4.16(3c51eecb7b6649179213d8ba4680aa13)
       '@walletconnect/ethereum-provider': 2.23.5(@types/react@19.2.14)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.2.13)(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(kysely@0.26.3)(pg@8.18.0)))(immer@10.0.2)(ioredis@5.9.2)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       qrcode: 1.5.4

@@ -6,6 +6,12 @@ export default defineNuxtConfig({
     public: {
       contract: '',
       token: '',
+      observationsContract: '',
+      evm: {
+        chains: {
+          sepolia: { rpc1: '', rpc2: '', rpc3: '' },
+        },
+      },
     },
   },
 })

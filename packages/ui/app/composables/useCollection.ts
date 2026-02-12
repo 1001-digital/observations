@@ -67,7 +67,7 @@ const fetchCollection = async (
 
 export const useCollection = (contract: Ref<Address>) => {
   const { $wagmi } = useNuxtApp()
-  const chainId = useMainChainId()
+  const chainId = useChainConfig('mainnet').id
   const client = getPublicClient($wagmi, { chainId }) as PublicClient
 
   const {

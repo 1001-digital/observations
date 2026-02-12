@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@1001-digital/layers.base": "^0.0.17",
-    "@1001-digital/layers.evm": "^0.0.7",
+    "@1001-digital/layers.evm": "^1.0.0",
     "nuxt": "^4.3.0"
   }
 }

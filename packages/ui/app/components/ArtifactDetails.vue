@@ -60,7 +60,7 @@ defineProps<{
 const {
   artifact: { details },
 } = useAppConfig()
-const { blockExplorer } = useRuntimeConfig().public
+const blockExplorer = useBlockExplorer('mainnet')
 </script>
 
 <style scoped>
