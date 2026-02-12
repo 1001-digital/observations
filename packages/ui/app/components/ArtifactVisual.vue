@@ -46,6 +46,8 @@ const showAnimation = defineModel<boolean>('showAnimation', { default: false })
     display: block;
     width: auto;
     height: auto;
+    max-width: 100%;
+    max-height: 100%;
     aspect-ratio: auto;
   }
 
