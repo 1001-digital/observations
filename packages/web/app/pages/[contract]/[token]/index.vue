@@ -71,7 +71,9 @@ const { showAnimation } = useArtifactView(animationUrl, pending)
   height: 100cqw;
 
   .artifact-visual {
-    width: 80cqw;
+    width: min(80cqw, 80cqh);
+    height: min(80cqw, 80cqh);
+    border: var(--border);
   }
 
   @media (min-width: 45rem) {
