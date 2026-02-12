@@ -26,7 +26,7 @@
 <script setup lang="ts">
 defineProps<{
   image: string
-  animationUrl: string
+  animationUrl?: string
   name?: string
 }>()
 
