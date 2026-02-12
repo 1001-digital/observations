@@ -21,6 +21,7 @@
           :metadata="metadata"
           :collection="collection"
           :contract="contract"
+          :owner="owner"
         />
 
         <section class="observations">
@@ -35,7 +36,7 @@
 const contract = useArtifactContract()
 const tokenId = useArtifactTokenId()
 
-const { metadata, image, animationUrl, pending, error } = useArtifact(
+const { metadata, owner, image, animationUrl, pending, error } = useArtifact(
   toRef(contract),
   toRef(tokenId),
 )
@@ -85,6 +86,7 @@ const { showAnimation } = useArtifactView(animationUrl, pending)
 
 .sidebar {
   @media (min-width: 45rem) {
+    min-height: 0;
     overflow-y: auto;
   }
 
