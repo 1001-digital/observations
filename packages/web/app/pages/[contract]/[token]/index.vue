@@ -24,9 +24,7 @@
           :owner="owner"
         />
 
-        <section class="observations">
-          <!-- Reserved for observations -->
-        </section>
+        <Observations :contract="contract" :token-id="tokenId" />
       </template>
     </div>
   </article>
