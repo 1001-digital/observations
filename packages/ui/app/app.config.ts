@@ -5,6 +5,7 @@ export default defineAppConfig({
       showCollection: true,
       showSymbol: true,
       showArtist: true,
+      showOwner: true,
     },
   },
 })

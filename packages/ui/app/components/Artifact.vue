@@ -23,6 +23,7 @@
         :metadata="metadata"
         :collection="collection"
         :contract="contract"
+        :owner="owner"
       />
     </slot>
   </article>
@@ -38,7 +39,7 @@ const props = defineProps<{
 
 const contractRef = toRef(() => props.contract)
 
-const { metadata, image, animationUrl, pending, error } = useArtifact(
+const { metadata, owner, image, animationUrl, pending, error } = useArtifact(
   contractRef,
   toRef(() => props.tokenId),
 )

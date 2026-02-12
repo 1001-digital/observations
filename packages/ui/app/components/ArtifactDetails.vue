@@ -26,17 +26,27 @@
           </NuxtLink>
         </dd>
       </template>
+      <template v-if="details.showOwner && owner">
+        <dt>Owner</dt>
+        <dd>
+          <NuxtLink :to="`${blockExplorer}/address/${owner}`" target="_blank">
+            <Address :address="owner" />
+          </NuxtLink>
+        </dd>
+      </template>
     </dl>
   </section>
 </template>
 
 <script setup lang="ts">
+import type { Address } from 'viem'
 import type { CollectionData } from '../composables/useCollection'
 
 defineProps<{
   metadata: { name?: string; description?: string }
   collection?: CollectionData | null
   contract?: string
+  owner?: Address | null
 }>()
 
 const {

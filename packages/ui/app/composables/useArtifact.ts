@@ -4,6 +4,7 @@ import { parseAbi } from 'viem'
 
 const ERC721_ABI = parseAbi([
   'function tokenURI(uint256 tokenId) view returns (string)',
+  'function ownerOf(uint256 tokenId) view returns (address)',
   'function supportsInterface(bytes4 interfaceId) view returns (bool)',
 ])
 
@@ -99,11 +100,20 @@ export const useArtifact = (contract: Ref<Address>, tokenId: Ref<bigint>) => {
     fetchTokenURI(client, contract.value, tokenId.value).then(fetchMetadata),
   )
 
+  const { data: owner } = useAsyncData(
+    `artifact-owner-${contract.value}-${tokenId.value}`,
+    () => {
+      const c = getContract({ address: contract.value, abi: ERC721_ABI, client })
+      return c.read.ownerOf([tokenId.value]).catch(() => undefined)
+    },
+  )
+
   const image = computed(() => resolveURI(metadata.value?.image))
   const animationUrl = computed(() => resolveURI(metadata.value?.animation_url))
 
   return {
     metadata,
+    owner,
     image,
     animationUrl,
     pending,
