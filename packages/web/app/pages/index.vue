@@ -11,9 +11,11 @@
 
 <style scoped>
 main {
-  max-width: 32rem;
+  max-width: 64rem;
   margin: var(--spacer) auto;
   padding: var(--spacer);
+  display: grid;
+  gap: var(--spacer-lg);
 }
 
 .card {

@@ -36,9 +36,7 @@ const showAnimation = defineModel<boolean>('showAnimation', { default: false })
 <style scoped>
 .artifact-visual {
   position: relative;
-  margin: auto;
-  width: min(80cqh, 80cqw);
-  height: min(80cqh, 80cqw);
+  aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
