@@ -10,6 +10,7 @@
       muted
       playsinline
       loop
+      controls
       crossorigin="anonymous"
     >
       <source
