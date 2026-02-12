@@ -9,19 +9,24 @@
       <template v-if="details.showCollection && collection.name">
         <dt>Collection</dt>
         <dd>
-          <NuxtLink :to="`${blockExplorer}/address/${contract}`" target="_blank">
-            {{ collection.name }}
+          <NuxtLink
+            :to="`${blockExplorer}/address/${contract}`"
+            target="_blank"
+          >
+            {{ collection.name
+            }}<small v-if="details.showSymbol && collection.symbol">
+              ({{ collection.symbol }})</small
+            >
           </NuxtLink>
         </dd>
-      </template>
-      <template v-if="details.showSymbol && collection.symbol">
-        <dt>Symbol</dt>
-        <dd>{{ collection.symbol }}</dd>
       </template>
       <template v-if="details.showArtist && collection.owner">
         <dt>Artist</dt>
         <dd>
-          <NuxtLink :to="`${blockExplorer}/address/${collection.owner}`" target="_blank">
+          <NuxtLink
+            :to="`${blockExplorer}/address/${collection.owner}`"
+            target="_blank"
+          >
             <Address :address="collection.owner" />
           </NuxtLink>
         </dd>
@@ -29,7 +34,10 @@
       <template v-if="details.showOwner && owner">
         <dt>Owner</dt>
         <dd>
-          <NuxtLink :to="`${blockExplorer}/address/${owner}`" target="_blank">
+          <NuxtLink
+            :to="`${blockExplorer}/address/${owner}`"
+            target="_blank"
+          >
             <Address :address="owner" />
           </NuxtLink>
         </dd>
