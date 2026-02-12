@@ -6,6 +6,7 @@
       </header>
       <FindArtifact />
     </Card>
+    <ExampleArtifacts />
   </main>
 </template>
 
