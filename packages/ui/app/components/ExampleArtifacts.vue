@@ -7,7 +7,7 @@
       :token-id="BigInt(id.split('/')[1]!)"
     >
       <template #default="{ metadata, image }">
-        <Card tag="div">
+        <Card as="div">
           <ArtifactVisual
             :image="image"
             :name="metadata.name"
