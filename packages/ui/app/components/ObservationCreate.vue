@@ -17,13 +17,13 @@
             error: 'Submission Failed',
           },
           lead: {
-            confirm: 'Leave your observation on this artifact.',
             complete: 'Your observation has been recorded onchain.',
           },
           action: {
             confirm: 'Submit',
           },
         }"
+        skip-confirmation
         @complete="onComplete"
         @cancel="pending = false"
       >
@@ -35,6 +35,9 @@
               >Observe</Button
             >
           </Actions>
+        </template>
+        <template #confirm>
+          <p class="observation-note">{{ note }}</p>
         </template>
         <template #complete="{ cancel }">
           <Actions>
