@@ -8,9 +8,10 @@
         :observations="observations"
         :pending-marker="pendingMarker"
         :focused-id="focusedId"
+        :view-type="animationUrl && image ? (showAnimation ? 1 : 0) : undefined"
         @place-marker="placeMarker"
         @discard-marker="discardMarker"
-        @focus-observation="focusObservation"
+        @focus-observation="onFocusObservation"
         @clear-focus="clearFocus"
         @complete="onMarkerComplete"
       >
@@ -46,7 +47,7 @@
           :focused-id="focusedId"
           :has-both-views="!!image && !!animationUrl"
           @complete="refresh"
-          @focus-observation="focusObservation"
+          @focus-observation="onFocusObservation"
         />
       </template>
     </div>
@@ -83,16 +84,40 @@ const {
   clearFocus,
 } = useObservationMarkers()
 
-// Initialize focused observation from query param
-if (route.query.obs != null) {
-  focusObservation(String(route.query.obs))
+const { artifact } = useAppConfig()
+
+const animationQueryParam = (value: boolean) => {
+  const isDefault = value === (artifact.defaultView === 'animation')
+  return isDefault ? undefined : String(value)
 }
 
-// Sync focused observation to query param
+const onFocusObservation = (id: string) => {
+  focusObservation(id)
+}
+
+// Initialize focused observation from query param
+if (route.query.obs != null) {
+  const obsId = String(route.query.obs)
+  focusObservation(obsId)
+  // Switch view once observations load
+  watch(observations, (items) => {
+    const obs = items.find((o) => o.id === obsId)
+    if (obs && animationUrl.value) {
+      const query = { ...route.query, animation: animationQueryParam(obs.viewType === 1) }
+      router.replace({ query })
+    }
+  }, { once: true })
+}
+
+// Sync focused observation to query param and switch view
 watch(focusedId, (id) => {
   const query = { ...route.query }
   if (id != null) {
     query.obs = id
+    const obs = observations.value.find((o) => o.id === id)
+    if (obs && animationUrl.value) {
+      query.animation = animationQueryParam(obs.viewType === 1)
+    }
   } else {
     delete query.obs
   }

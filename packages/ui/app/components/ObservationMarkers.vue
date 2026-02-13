@@ -47,6 +47,7 @@
           :token-id="tokenId"
           :x="pendingMarker.x"
           :y="pendingMarker.y"
+          :view-type="viewType"
           @complete="emit('complete')"
         />
       </ObservationMarker>
@@ -64,6 +65,7 @@ const props = defineProps<{
   observations: ObservationData[]
   pendingMarker: { x: number; y: number } | null
   focusedId: string | null
+  viewType?: number
 }>()
 
 const emit = defineEmits<{
@@ -79,7 +81,7 @@ const { isConnected } = useConnection()
 const isTransacting = ref(false)
 
 const locatedObservations = computed(() =>
-  props.observations.filter((obs) => obs.located),
+  props.observations.filter((obs) => obs.located && (props.viewType == null || obs.viewType === props.viewType)),
 )
 
 const container = ref<HTMLElement>()
@@ -88,23 +90,23 @@ const overlayStyle = ref<Record<string, string> | null>(null)
 let observer: ResizeObserver | null = null
 
 const updateOverlay = () => {
-  const img = container.value?.querySelector<HTMLImageElement>(
-    '.artifact-visual img',
+  const el = container.value?.querySelector<HTMLElement>(
+    '.artifact-visual img, .artifact-visual .embed',
   )
-  if (!img || !container.value) {
+  if (!el || !container.value) {
     overlayStyle.value = null
     return
   }
 
   const containerRect = container.value.getBoundingClientRect()
-  const imgRect = img.getBoundingClientRect()
+  const elRect = el.getBoundingClientRect()
 
   overlayStyle.value = {
     position: 'absolute',
-    left: `${imgRect.left - containerRect.left}px`,
-    top: `${imgRect.top - containerRect.top}px`,
-    width: `${imgRect.width}px`,
-    height: `${imgRect.height}px`,
+    left: `${elRect.left - containerRect.left}px`,
+    top: `${elRect.top - containerRect.top}px`,
+    width: `${elRect.width}px`,
+    height: `${elRect.height}px`,
   }
 }
 
@@ -115,7 +117,7 @@ onMounted(() => {
     observer.observe(container.value)
   }
 
-  const checkImage = () => {
+  const checkElement = () => {
     const img = container.value?.querySelector<HTMLImageElement>(
       '.artifact-visual img',
     )
@@ -126,13 +128,22 @@ onMounted(() => {
       } else {
         img.addEventListener('load', updateOverlay, { once: true })
       }
+      return
+    }
+
+    const embed = container.value?.querySelector<HTMLElement>(
+      '.artifact-visual .embed',
+    )
+    if (embed) {
+      observer?.observe(embed)
+      updateOverlay()
     }
   }
 
-  checkImage()
+  checkElement()
 
   const mutationObserver = new MutationObserver(() => {
-    checkImage()
+    checkElement()
     updateOverlay()
   })
 

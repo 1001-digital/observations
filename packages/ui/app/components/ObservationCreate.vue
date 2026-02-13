@@ -61,6 +61,7 @@ const props = defineProps<{
   tokenId: bigint
   x?: number
   y?: number
+  viewType?: number
 }>()
 
 const emit = defineEmits<{
@@ -85,8 +86,8 @@ const submitObservation = () =>
     abi: ObservationsAbi,
     functionName: located.value ? 'observeAt' : 'observe',
     args: located.value
-      ? [props.contract, props.tokenId, note.value, props.x!, props.y!, 0, 0]
-      : [props.contract, props.tokenId, note.value, 0, 0],
+      ? [props.contract, props.tokenId, note.value, props.x!, props.y!, props.viewType ?? 0, 0]
+      : [props.contract, props.tokenId, note.value, props.viewType ?? 0, 0],
   })
 
 const onComplete = () => {
