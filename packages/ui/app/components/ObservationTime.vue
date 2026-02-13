@@ -1,5 +1,11 @@
 <template>
-  <span>{{ display }}</span>
+  <Tooltip v-if="currentBlock">
+    <template #trigger>
+      <span>{{ blocksAgo }}</span>
+    </template>
+    {{ timeAgo }}
+  </Tooltip>
+  <span v-else>block {{ blockNumber }}</span>
 </template>
 
 <script setup lang="ts">
@@ -10,9 +16,10 @@ const props = defineProps<{
 const chainId = useMainChainId()
 const { data: currentBlock } = useBlockNumber({ chainId })
 
-const display = computed(() => {
-  if (!currentBlock.value) return `block ${props.blockNumber}`
-
-  return formatBlockAge(props.blockNumber, currentBlock.value)
+const blocksAgo = computed(() => {
+  const diff = Number(currentBlock.value! - props.blockNumber)
+  return `${formatNumber(diff)} blocks ago`
 })
+
+const timeAgo = computed(() => formatBlockAge(props.blockNumber, currentBlock.value!))
 </script>
