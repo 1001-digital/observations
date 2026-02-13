@@ -19,16 +19,11 @@
         v-if="observations.length"
         class="observation-list"
       >
-        <div
+        <Observation
           v-for="(obs, i) in observations"
           :key="i"
-          class="observation"
-        >
-          <div class="observation-header">
-            <Address :address="obs.observer" />
-          </div>
-          <p class="observation-note">{{ obs.note }}</p>
-        </div>
+          :observation="obs"
+        />
       </div>
       <p
         v-else
@@ -78,23 +73,4 @@ const { observations, count, pending, refresh } = useObservations(
   gap: var(--spacer);
 }
 
-.observation {
-  display: grid;
-  gap: var(--spacer-xs);
-
-  .observation-header {
-    font-size: var(--font-sm);
-    color: var(--muted);
-  }
-
-  .observation-note {
-    word-break: break-word;
-    white-space: pre-wrap;
-  }
-
-  &:not(:last-child) {
-    padding-bottom: var(--spacer);
-    border-bottom: var(--border);
-  }
-}
 </style>

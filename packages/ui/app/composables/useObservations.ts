@@ -11,6 +11,8 @@ export interface ObservationData {
   viewType: number
   time: number
   blockNumber: bigint
+  blockTimestamp: bigint
+  transactionHash: string
 }
 
 export const useObservations = (collection: Ref<Address>, tokenId: Ref<bigint>) => {
@@ -50,6 +52,12 @@ export const useObservations = (collection: Ref<Address>, tokenId: Ref<bigint>) 
         fromBlock: BigInt(firstBlock),
       })
 
+      const uniqueBlockNumbers = [...new Set(events.map((e) => e.blockNumber))]
+      const blocks = await Promise.all(
+        uniqueBlockNumbers.map((blockNumber) => client.getBlock({ blockNumber })),
+      )
+      const blockTimestamps = new Map(blocks.map((b) => [b.number, b.timestamp]))
+
       const items: ObservationData[] = events.map((event) => ({
         observer: event.args.observer!,
         note: event.args.note!,
@@ -59,6 +67,8 @@ export const useObservations = (collection: Ref<Address>, tokenId: Ref<bigint>) 
         viewType: event.args.viewType!,
         time: event.args.time!,
         blockNumber: event.blockNumber,
+        blockTimestamp: blockTimestamps.get(event.blockNumber) ?? 0n,
+        transactionHash: event.transactionHash,
       }))
 
       return { count, items }
