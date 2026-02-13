@@ -17,7 +17,6 @@ export interface ObservationData {
   viewType: number
   time: number
   blockNumber: bigint
-  blockTimestamp: bigint
   transactionHash: string
 }
 

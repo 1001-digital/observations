@@ -6,7 +6,7 @@
         :to="`${blockExplorer}/tx/${observation.transactionHash}`"
         target="_blank"
       >
-        <time :datetime="date.toISOString()">{{ formattedTime }}</time>
+        <ObservationTime :block-number="observation.blockNumber" />
       </NuxtLink>
     </div>
     <p class="observation-note">{{ observation.note }}</p>
@@ -29,27 +29,6 @@ const props = defineProps<{
 }>()
 
 const blockExplorer = useBlockExplorer()
-
-const date = computed(() => new Date(Number(props.observation.blockTimestamp) * 1000))
-
-const formattedTime = computed(() => {
-  const now = Date.now()
-  const then = date.value.getTime()
-  const seconds = Math.floor((now - then) / 1000)
-
-  if (seconds < 60) return 'just now'
-
-  const minutes = Math.floor(seconds / 60)
-  if (minutes < 60) return `${minutes}m ago`
-
-  const hours = Math.floor(minutes / 60)
-  if (hours < 24) return `${hours}h ago`
-
-  const days = Math.floor(hours / 24)
-  if (days < 30) return `${days}d ago`
-
-  return date.value.toLocaleDateString()
-})
 </script>
 
 <style scoped>

@@ -6,14 +6,6 @@ import {
   type ObservationProvider,
 } from './observations'
 
-async function resolveBlockTimestamps(client: PublicClient, events: { blockNumber: bigint }[]) {
-  const uniqueBlockNumbers = [...new Set(events.map((e) => e.blockNumber))]
-  const blocks = await Promise.all(
-    uniqueBlockNumbers.map((blockNumber) => client.getBlock({ blockNumber })),
-  )
-  return new Map(blocks.map((b) => [b.number, b.timestamp]))
-}
-
 export function createOnchainProvider(client: PublicClient, contractAddress: Address): ObservationProvider {
   return {
     async fetchObservations(collection, tokenId) {
@@ -36,8 +28,6 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
         fromBlock: BigInt(firstBlock),
       })
 
-      const blockTimestamps = await resolveBlockTimestamps(client, events)
-
       const items: ObservationData[] = events.map((event) => ({
         id: `${event.blockNumber}-${event.logIndex}`,
         observer: event.args.observer!,
@@ -48,7 +38,6 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
         viewType: event.args.viewType!,
         time: event.args.time!,
         blockNumber: event.blockNumber,
-        blockTimestamp: blockTimestamps.get(event.blockNumber) ?? 0n,
         transactionHash: event.transactionHash,
       }))
 
@@ -68,8 +57,6 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
         fromBlock,
       })
 
-      const blockTimestamps = await resolveBlockTimestamps(client, events)
-
       return events.map((event) => ({
         id: `${event.blockNumber}-${event.logIndex}`,
         observer: event.args.observer!,
@@ -80,7 +67,6 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
         viewType: event.args.viewType!,
         time: event.args.time!,
         blockNumber: event.blockNumber,
-        blockTimestamp: blockTimestamps.get(event.blockNumber) ?? 0n,
         transactionHash: event.transactionHash,
         collection: event.args.collection!,
         tokenId: event.args.tokenId!,

@@ -24,7 +24,7 @@
       >
         <template #title>
           <EvmAccount :address="obs.observer" />
-          <ObservationTime :timestamp="obs.blockTimestamp" />
+          <ObservationTime :block-number="obs.blockNumber" />
         </template>
         <p class="observation-note">{{ obs.note }}</p>
       </ObservationMarker>
