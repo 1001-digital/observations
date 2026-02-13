@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ObservationData } from '../composables/useObservations'
+import type { ObservationData } from '../utils/observations'
 
 const props = defineProps<{
   observation: ObservationData

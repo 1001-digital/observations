@@ -10,7 +10,6 @@ import {
 import { createOnchainProvider } from '../utils/observation-provider-onchain'
 import { createIndexerProvider } from '../utils/observation-provider-indexer'
 
-export type { RecentObservationData } from '../utils/observations'
 
 async function resolve(
   strategies: ObservationsMode[],

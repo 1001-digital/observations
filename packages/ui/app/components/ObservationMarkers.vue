@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 import type { Address } from 'viem'
-import type { ObservationData } from '../composables/useObservations'
+import type { ObservationData } from '../utils/observations'
 
 const props = defineProps<{
   contract: Address
