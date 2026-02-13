@@ -9,7 +9,7 @@ const { db: ensDb } = await createOffchainDb();
 const app = new Hono();
 
 app.route(
-  "/profiles",
+  "/ens",
   createEnsRoutes({
     client: publicClients["ethereum"],
     db: ensDb,
