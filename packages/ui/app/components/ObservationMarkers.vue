@@ -45,6 +45,7 @@
           :x="pendingMarker.x"
           :y="pendingMarker.y"
           :view-type="viewType"
+          :time="mediaTime"
           @complete="emit('complete')"
         />
       </ObservationMarker>
@@ -76,6 +77,10 @@ const emit = defineEmits<{
 const { isConnected } = useConnection()
 
 const isTransacting = ref(false)
+const mediaTime = ref(0)
+
+const findMediaElement = (): HTMLMediaElement | null =>
+  container.value?.querySelector<HTMLMediaElement>('video, audio') ?? null
 
 const locatedObservations = computed(() =>
   props.observations.filter((obs) => obs.located && (props.viewType == null || obs.viewType === props.viewType)),
@@ -164,8 +169,35 @@ const onOverlayClick = (event: MouseEvent) => {
   const rect = target.getBoundingClientRect()
   const x = Math.round(((event.clientX - rect.left) / rect.width) * 10000)
   const y = Math.round(((event.clientY - rect.top) / rect.height) * 10000)
+
+  const media = findMediaElement()
+  if (media) {
+    mediaTime.value = Math.round(media.currentTime)
+    media.pause()
+  } else {
+    mediaTime.value = 0
+  }
+
   emit('placeMarker', x, y)
 }
+
+watch(() => props.pendingMarker, (val, old) => {
+  if (old && !val) {
+    findMediaElement()?.play()
+  }
+})
+
+watch(() => props.focusedId, (id) => {
+  if (!id) return
+
+  const obs = props.observations.find((o) => o.id === id)
+  if (!obs?.time) return
+
+  const media = findMediaElement()
+  if (media) {
+    media.currentTime = obs.time
+  }
+})
 </script>
 
 <style scoped>
