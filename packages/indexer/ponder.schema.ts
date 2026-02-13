@@ -1,7 +1,7 @@
 import { index, onchainTable, primaryKey, relations } from "ponder";
 
-export const observations = onchainTable(
-  "observations",
+export const observation = onchainTable(
+  "observation",
   (t) => ({
     id: t.text().primaryKey(),
     collection: t.hex().notNull(),
@@ -24,8 +24,8 @@ export const observations = onchainTable(
   }),
 );
 
-export const artifacts = onchainTable(
-  "artifacts",
+export const artifact = onchainTable(
+  "artifact",
   (t) => ({
     collection: t.hex().notNull(),
     tokenId: t.bigint().notNull(),
@@ -38,13 +38,13 @@ export const artifacts = onchainTable(
   }),
 );
 
-export const artifactsRelations = relations(artifacts, ({ many }) => ({
-  observations: many(observations),
+export const artifactRelations = relations(artifact, ({ many }) => ({
+  observations: many(observation),
 }));
 
-export const observationsRelations = relations(observations, ({ one }) => ({
-  artifact: one(artifacts, {
-    fields: [observations.collection, observations.tokenId],
-    references: [artifacts.collection, artifacts.tokenId],
+export const observationRelations = relations(observation, ({ one }) => ({
+  artifact: one(artifact, {
+    fields: [observation.collection, observation.tokenId],
+    references: [artifact.collection, artifact.tokenId],
   }),
 }));
