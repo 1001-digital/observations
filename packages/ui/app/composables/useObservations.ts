@@ -3,6 +3,7 @@ import { getPublicClient } from '@wagmi/core'
 import { ObservationsAbi } from '../utils/observations'
 
 export interface ObservationData {
+  id: string
   observer: Address
   note: string
   located: boolean
@@ -59,6 +60,7 @@ export const useObservations = (collection: Ref<Address>, tokenId: Ref<bigint>) 
       const blockTimestamps = new Map(blocks.map((b) => [b.number, b.timestamp]))
 
       const items: ObservationData[] = events.map((event) => ({
+        id: `${event.blockNumber}-${event.logIndex}`,
         observer: event.args.observer!,
         note: event.args.note!,
         located: event.args.located!,

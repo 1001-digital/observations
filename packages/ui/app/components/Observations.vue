@@ -20,11 +20,11 @@
         class="observation-list"
       >
         <div
-          v-for="(obs, i) in displayObservations"
-          :key="i"
+          v-for="obs in displayObservations"
+          :key="obs.id"
           ref="observationRefs"
-          :class="{ focused: focusedIndex === i }"
-          @click="emit('focusObservation', i)"
+          :class="{ focused: focusedId === obs.id }"
+          @click="emit('focusObservation', obs.id)"
         >
           <Observation :observation="obs" show-location />
         </div>
@@ -49,12 +49,12 @@ const props = defineProps<{
   observations?: ObservationData[]
   count?: bigint
   externalPending?: boolean
-  focusedIndex?: number | null
+  focusedId?: string | null
 }>()
 
 const emit = defineEmits<{
   complete: []
-  focusObservation: [index: number]
+  focusObservation: [id: string]
 }>()
 
 // Use external data when provided, otherwise fall back to internal fetch
@@ -74,9 +74,11 @@ const onComplete = () => {
 const observationRefs = useTemplateRef<HTMLElement[]>('observationRefs')
 
 watch(
-  () => props.focusedIndex,
-  (index) => {
-    if (index == null) return
+  () => props.focusedId,
+  (id) => {
+    if (id == null) return
+    const index = displayObservations.value.findIndex((obs) => obs.id === id)
+    if (index < 0) return
     nextTick(() => {
       observationRefs.value?.[index]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
     })

@@ -1,9 +1,9 @@
 export const useObservationMarkers = () => {
   const pendingMarker = useState<{ x: number; y: number } | null>('observation-pending-marker', () => null)
-  const focusedIndex = useState<number | null>('observation-focused-index', () => null)
+  const focusedId = useState<string | null>('observation-focused-id', () => null)
 
   const placeMarker = (x: number, y: number) => {
-    focusedIndex.value = null
+    focusedId.value = null
     pendingMarker.value = { x, y }
   }
 
@@ -11,16 +11,21 @@ export const useObservationMarkers = () => {
     pendingMarker.value = null
   }
 
-  const focusObservation = (index: number) => {
+  const focusObservation = (id: string) => {
     pendingMarker.value = null
-    focusedIndex.value = index
+    focusedId.value = id
+  }
+
+  const clearFocus = () => {
+    focusedId.value = null
   }
 
   return {
     pendingMarker,
-    focusedIndex,
+    focusedId,
     placeMarker,
     discardMarker,
     focusObservation,
+    clearFocus,
   }
 }

@@ -13,13 +13,14 @@
       @click="onOverlayClick"
     >
       <ObservationMarker
-        v-for="{ obs, originalIndex } in locatedObservations"
-        :key="originalIndex"
+        v-for="obs in locatedObservations"
+        :key="obs.id"
         :x="obs.x"
         :y="obs.y"
-        :focused="focusedIndex === originalIndex"
-        :open="focusedIndex === originalIndex"
-        @select="emit('focusObservation', originalIndex)"
+        :title="shortAddress(obs.observer)"
+        :focused="focusedId === obs.id"
+        :open="focusedId === obs.id"
+        @select="emit('focusObservation', obs.id)"
         @close="emit('clearFocus')"
       >
         <Observation :observation="obs" />
@@ -29,6 +30,7 @@
         v-if="pendingMarker"
         :x="pendingMarker.x"
         :y="pendingMarker.y"
+        title="Create Observation"
         pending
         open
         @close="emit('discardMarker')"
@@ -54,13 +56,13 @@ const props = defineProps<{
   tokenId: bigint
   observations: ObservationData[]
   pendingMarker: { x: number; y: number } | null
-  focusedIndex: number | null
+  focusedId: string | null
 }>()
 
 const emit = defineEmits<{
   placeMarker: [x: number, y: number]
   discardMarker: []
-  focusObservation: [index: number]
+  focusObservation: [id: string]
   clearFocus: []
   complete: []
 }>()
@@ -68,9 +70,7 @@ const emit = defineEmits<{
 const { isConnected } = useConnection()
 
 const locatedObservations = computed(() =>
-  props.observations
-    .map((obs, originalIndex) => ({ obs, originalIndex }))
-    .filter(({ obs }) => obs.located),
+  props.observations.filter((obs) => obs.located),
 )
 
 const container = ref<HTMLElement>()

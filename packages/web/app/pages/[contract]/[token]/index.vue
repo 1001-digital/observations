@@ -7,11 +7,11 @@
         :token-id="tokenId"
         :observations="observations"
         :pending-marker="pendingMarker"
-        :focused-index="focusedIndex"
+        :focused-id="focusedId"
         @place-marker="placeMarker"
         @discard-marker="discardMarker"
         @focus-observation="focusObservation"
-        @clear-focus="focusedIndex = null"
+        @clear-focus="clearFocus"
         @complete="onMarkerComplete"
       >
         <ArtifactVisual
@@ -43,7 +43,7 @@
           :observations="observations"
           :count="observationCount"
           :external-pending="observationsPending"
-          :focused-index="focusedIndex"
+          :focused-id="focusedId"
           @complete="refresh"
           @focus-observation="focusObservation"
         />
@@ -75,25 +75,23 @@ const {
 
 const {
   pendingMarker,
-  focusedIndex,
+  focusedId,
   placeMarker,
   discardMarker,
   focusObservation,
+  clearFocus,
 } = useObservationMarkers()
 
 // Initialize focused observation from query param
 if (route.query.obs != null) {
-  const index = Number(route.query.obs)
-  if (!Number.isNaN(index)) {
-    focusObservation(index)
-  }
+  focusObservation(String(route.query.obs))
 }
 
 // Sync focused observation to query param
-watch(focusedIndex, (index) => {
+watch(focusedId, (id) => {
   const query = { ...route.query }
-  if (index != null) {
-    query.obs = String(index)
+  if (id != null) {
+    query.obs = id
   } else {
     delete query.obs
   }
