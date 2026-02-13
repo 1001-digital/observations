@@ -23,10 +23,7 @@
         @close="emit('clearFocus')"
       >
         <template #title>
-          <Address
-            :address="obs.observer"
-            ens
-          />
+          <EvmAccount :address="obs.observer" />
           <ObservationTime :timestamp="obs.blockTimestamp" />
         </template>
         <p class="observation-note">{{ obs.note }}</p>

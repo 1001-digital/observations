@@ -17,5 +17,8 @@ export default defineAppConfig({
         blockExplorer: 'https://sepolia.etherscan.io',
       },
     },
+    ens: {
+      mode: 'indexer',
+    },
   },
 })

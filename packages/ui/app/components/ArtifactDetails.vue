@@ -27,7 +27,7 @@
             :to="`${blockExplorer}/address/${collection.owner}`"
             target="_blank"
           >
-            <Address :address="collection.owner" />
+            <EvmAccount :address="collection.owner" />
           </NuxtLink>
         </dd>
       </template>
@@ -38,7 +38,7 @@
             :to="`${blockExplorer}/address/${owner}`"
             target="_blank"
           >
-            <Address :address="owner" />
+            <EvmAccount :address="owner" />
           </NuxtLink>
         </dd>
       </template>

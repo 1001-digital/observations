@@ -11,6 +11,9 @@ export default defineNuxtConfig({
         chains: {
           sepolia: { rpc1: '', rpc2: '', rpc3: '' },
         },
+        ens: {
+          indexer1: 'http://localhost:42069/ens',
+        },
       },
     },
   },
