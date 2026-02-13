@@ -11,6 +11,7 @@ export const ObservationsAbi = [
       { indexed: false, name: "x", type: "int32" },
       { indexed: false, name: "y", type: "int32" },
       { indexed: false, name: "viewType", type: "uint8" },
+      { indexed: false, name: "time", type: "uint32" },
     ],
   },
   {
@@ -35,6 +36,7 @@ export const ObservationsAbi = [
       { name: "tokenId", type: "uint256" },
       { name: "note", type: "string" },
       { name: "viewType", type: "uint8" },
+      { name: "time", type: "uint32" },
     ],
     outputs: [],
   },
@@ -49,6 +51,7 @@ export const ObservationsAbi = [
       { name: "x", type: "int32" },
       { name: "y", type: "int32" },
       { name: "viewType", type: "uint8" },
+      { name: "time", type: "uint32" },
     ],
     outputs: [],
   },
