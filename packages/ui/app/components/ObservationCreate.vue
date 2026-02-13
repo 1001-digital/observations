@@ -55,6 +55,8 @@ import { ObservationsAbi } from '../utils/observations'
 const props = defineProps<{
   contract: Address
   tokenId: bigint
+  x?: number
+  y?: number
 }>()
 
 const emit = defineEmits<{
@@ -69,12 +71,16 @@ const { isConnected } = useConnection()
 
 const note = ref('')
 
+const located = computed(() => props.x != null && props.y != null)
+
 const submitObservation = () =>
   writeContract($wagmi as Config, {
     address: contractAddress,
     abi: ObservationsAbi,
-    functionName: 'observe',
-    args: [props.contract, props.tokenId, note.value, 0, 0],
+    functionName: located.value ? 'observeAt' : 'observe',
+    args: located.value
+      ? [props.contract, props.tokenId, note.value, props.x!, props.y!, 0, 0]
+      : [props.contract, props.tokenId, note.value, 0, 0],
   })
 
 const onComplete = () => {

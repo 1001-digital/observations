@@ -1,29 +1,33 @@
 <template>
   <section class="observations">
     <h2>
-      Observations <small v-if="count > 0n">({{ count }})</small>
+      Observations <small v-if="displayCount > 0n">({{ displayCount }})</small>
     </h2>
 
     <ObservationCreate
       :contract="contract"
       :token-id="tokenId"
-      @complete="refresh"
+      @complete="onComplete"
     />
 
     <Loading
-      v-if="pending"
+      v-if="displayPending"
       spinner
     />
     <template v-else>
       <div
-        v-if="observations.length"
+        v-if="displayObservations.length"
         class="observation-list"
       >
-        <Observation
-          v-for="(obs, i) in observations"
+        <div
+          v-for="(obs, i) in displayObservations"
           :key="i"
-          :observation="obs"
-        />
+          ref="observationRefs"
+          :class="{ focused: focusedIndex === i }"
+          @click="emit('focusObservation', i)"
+        >
+          <Observation :observation="obs" />
+        </div>
       </div>
       <p
         v-else
@@ -37,15 +41,46 @@
 
 <script setup lang="ts">
 import type { Address } from 'viem'
+import type { ObservationData } from '../composables/useObservations'
 
 const props = defineProps<{
   contract: Address
   tokenId: bigint
+  observations?: ObservationData[]
+  count?: bigint
+  externalPending?: boolean
+  focusedIndex?: number | null
 }>()
 
-const { observations, count, pending, refresh } = useObservations(
-  toRef(() => props.contract),
-  toRef(() => props.tokenId),
+const emit = defineEmits<{
+  complete: []
+  focusObservation: [index: number]
+}>()
+
+// Use external data when provided, otherwise fall back to internal fetch
+const internal = props.observations
+  ? null
+  : useObservations(toRef(() => props.contract), toRef(() => props.tokenId))
+
+const displayObservations = computed(() => props.observations ?? internal?.observations.value ?? [])
+const displayCount = computed(() => props.count ?? internal?.count.value ?? 0n)
+const displayPending = computed(() => props.externalPending ?? internal?.pending.value ?? false)
+
+const onComplete = () => {
+  internal?.refresh()
+  emit('complete')
+}
+
+const observationRefs = useTemplateRef<HTMLElement[]>('observationRefs')
+
+watch(
+  () => props.focusedIndex,
+  (index) => {
+    if (index == null) return
+    nextTick(() => {
+      observationRefs.value?.[index]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    })
+  },
 )
 </script>
 
@@ -73,4 +108,9 @@ const { observations, count, pending, refresh } = useObservations(
   gap: var(--spacer);
 }
 
+.focused {
+  outline: 2px solid var(--accent, var(--color));
+  outline-offset: var(--spacer-xs);
+  border-radius: var(--spacer-xs);
+}
 </style>

@@ -1,13 +1,26 @@
 <template>
   <article class="token-detail">
     <div class="artifact-column">
-      <ArtifactVisual
+      <ObservationMarkers
         v-if="metadata"
-        v-model:show-animation="showAnimation"
-        :image="image"
-        :animation-url="animationUrl"
-        :name="metadata.name"
-      />
+        :contract="contract"
+        :token-id="tokenId"
+        :observations="observations"
+        :pending-marker="pendingMarker"
+        :focused-index="focusedIndex"
+        @place-marker="placeMarker"
+        @discard-marker="discardMarker"
+        @focus-observation="focusObservation"
+        @clear-focus="focusedIndex = null"
+        @complete="onMarkerComplete"
+      >
+        <ArtifactVisual
+          v-model:show-animation="showAnimation"
+          :image="image"
+          :animation-url="animationUrl"
+          :name="metadata.name"
+        />
+      </ObservationMarkers>
     </div>
 
     <div class="sidebar">
@@ -27,6 +40,12 @@
         <Observations
           :contract="contract"
           :token-id="tokenId"
+          :observations="observations"
+          :count="observationCount"
+          :external-pending="observationsPending"
+          :focused-index="focusedIndex"
+          @complete="refresh"
+          @focus-observation="focusObservation"
         />
       </template>
     </div>
@@ -43,6 +62,26 @@ const { metadata, owner, image, animationUrl, pending, error } = useArtifact(
 )
 const { collection } = useCollection(toRef(contract))
 const { showAnimation } = useArtifactView(animationUrl, pending)
+
+const {
+  observations,
+  count: observationCount,
+  pending: observationsPending,
+  refresh,
+} = useObservations(toRef(contract), toRef(tokenId))
+
+const {
+  pendingMarker,
+  focusedIndex,
+  placeMarker,
+  discardMarker,
+  focusObservation,
+} = useObservationMarkers()
+
+const onMarkerComplete = () => {
+  discardMarker()
+  refresh()
+}
 </script>
 
 <style scoped>
