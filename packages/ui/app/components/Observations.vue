@@ -34,10 +34,10 @@
 
     <div class="observation-form">
       <template v-if="isConnected">
-        <textarea
+        <FormTextarea
           v-model="note"
           placeholder="Leave an observation..."
-          rows="3"
+          :rows="3"
         />
         <EvmTransactionFlow
           :request="submitObservation"
@@ -168,7 +168,6 @@ const onComplete = () => {
 
   textarea {
     width: 100%;
-    resize: vertical;
     padding: var(--spacer);
 
     &::placeholder {
