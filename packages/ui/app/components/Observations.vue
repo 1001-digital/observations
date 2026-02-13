@@ -26,7 +26,7 @@
           :class="{ focused: focusedIndex === i }"
           @click="emit('focusObservation', i)"
         >
-          <Observation :observation="obs" />
+          <Observation :observation="obs" show-location />
         </div>
       </div>
       <p
