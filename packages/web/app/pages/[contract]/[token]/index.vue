@@ -93,6 +93,8 @@ const syncFocusToRoute = (id: string | null) => {
       const animation = animationQueryValue(obs.viewType === 1)
       if (animation != null) {
         query.animation = animation
+      } else {
+        delete query.animation
       }
     }
   } else {
