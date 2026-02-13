@@ -9,6 +9,9 @@ export default defineAppConfig({
       showOwner: true,
     },
   },
+  observations: {
+    mode: 'onchain' as 'indexer' | 'onchain',
+  },
   evm: {
     defaultChain: 'sepolia',
     chains: {

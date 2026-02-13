@@ -1,27 +1,56 @@
 import { type Address, type PublicClient } from 'viem'
 import { getPublicClient } from '@wagmi/core'
-import { ObservationsAbi } from '../utils/observations'
+import type { Config } from '@wagmi/vue'
+import {
+  type ObservationsMode,
+  type ObservationData,
+  observationsCache,
+  getIndexerUrls,
+} from '../utils/observations'
+import { createOnchainProvider } from '../utils/observation-provider-onchain'
+import { createIndexerProvider } from '../utils/observation-provider-indexer'
 
-export interface ObservationData {
-  id: string
-  observer: Address
-  note: string
-  located: boolean
-  x: number
-  y: number
-  viewType: number
-  time: number
-  blockNumber: bigint
-  blockTimestamp: bigint
-  transactionHash: string
+export type { ObservationData } from '../utils/observations'
+
+async function resolve(
+  strategies: ObservationsMode[],
+  collection: Address,
+  tokenId: bigint,
+  indexerUrls: string[],
+  wagmi: Config,
+  chainId: number,
+  contractAddress: Address,
+) {
+  for (const strategy of strategies) {
+    try {
+      if (strategy === 'indexer') {
+        if (!indexerUrls.length) continue
+        return await createIndexerProvider(indexerUrls).fetchObservations(collection, tokenId)
+      }
+
+      if (strategy === 'onchain') {
+        const client = getPublicClient(wagmi, { chainId }) as PublicClient
+        if (!client) continue
+        return await createOnchainProvider(client, contractAddress).fetchObservations(collection, tokenId)
+      }
+    } catch {
+      continue
+    }
+  }
+
+  return { count: 0n, items: [] as ObservationData[] }
 }
 
 export const useObservations = (collection: Ref<Address>, tokenId: Ref<bigint>) => {
   const { $wagmi } = useNuxtApp()
-  const chainId = useMainChainId()
-  const client = getPublicClient($wagmi, { chainId }) as PublicClient
+  const appConfig = useAppConfig()
   const config = useRuntimeConfig()
+  const chainId = useMainChainId()
   const contractAddress = config.public.observationsContract as Address
+
+  const mode = computed<ObservationsMode>(() => (appConfig as any).observations?.mode || 'onchain')
+  const indexerUrls = computed(() => getIndexerUrls(config.public.observations))
+  const cacheKey = computed(() => `observations-${collection.value}-${tokenId.value}`)
 
   const {
     data: observations,
@@ -29,51 +58,19 @@ export const useObservations = (collection: Ref<Address>, tokenId: Ref<bigint>) 
     error,
     refresh,
   } = useAsyncData(
-    `observations-${collection.value}-${tokenId.value}`,
-    async () => {
-      if (!contractAddress) return { count: 0n, items: [] as ObservationData[] }
+    cacheKey.value,
+    () => {
+      const strategies: ObservationsMode[] = mode.value === 'indexer'
+        ? ['indexer', 'onchain']
+        : ['onchain', 'indexer']
 
-      const [count, firstBlock] = await client.readContract({
-        address: contractAddress,
-        abi: ObservationsAbi,
-        functionName: 'artifacts',
-        args: [collection.value, tokenId.value],
-      })
-
-      if (count === 0n) return { count: 0n, items: [] as ObservationData[] }
-
-      const events = await client.getContractEvents({
-        address: contractAddress,
-        abi: ObservationsAbi,
-        eventName: 'Observation',
-        args: {
-          collection: collection.value,
-          tokenId: tokenId.value,
-        },
-        fromBlock: BigInt(firstBlock),
-      })
-
-      const uniqueBlockNumbers = [...new Set(events.map((e) => e.blockNumber))]
-      const blocks = await Promise.all(
-        uniqueBlockNumbers.map((blockNumber) => client.getBlock({ blockNumber })),
+      return observationsCache.fetch(cacheKey.value, () =>
+        resolve(strategies, collection.value, tokenId.value, indexerUrls.value, $wagmi as Config, chainId, contractAddress),
       )
-      const blockTimestamps = new Map(blocks.map((b) => [b.number, b.timestamp]))
-
-      const items: ObservationData[] = events.map((event) => ({
-        id: `${event.blockNumber}-${event.logIndex}`,
-        observer: event.args.observer!,
-        note: event.args.note!,
-        located: event.args.located!,
-        x: event.args.x!,
-        y: event.args.y!,
-        viewType: event.args.viewType!,
-        time: event.args.time!,
-        blockNumber: event.blockNumber,
-        blockTimestamp: blockTimestamps.get(event.blockNumber) ?? 0n,
-        transactionHash: event.transactionHash,
-      }))
-
-      return { count, items }
+    },
+    {
+      watch: [collection, tokenId],
+      getCachedData: () => observationsCache.get(cacheKey.value) ?? undefined,
     },
   )
 

@@ -7,6 +7,13 @@ export default defineNuxtConfig({
       contract: '',
       token: '',
       observationsContract: '',
+      observations: {
+        indexer: {
+          endpoint1: '',
+          endpoint2: '',
+          endpoint3: '',
+        },
+      },
       evm: {
         chains: {
           sepolia: { rpc1: '', rpc2: '', rpc3: '' },

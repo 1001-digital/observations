@@ -10,4 +10,7 @@ export default defineAppConfig({
     '0x036721e5a769cc48b3189efbb9cce4471e8a48b1/15455',
     '0x036721e5a769cc48b3189efbb9cce4471e8a48b1/1001',
   ],
+  observations: {
+    mode: 'indexer' as 'indexer' | 'onchain',
+  },
 })
