@@ -13,6 +13,9 @@
     <small v-if="showLocation && observation.located" class="observation-location">
       {{ (observation.x / 100).toFixed(1) }}% / {{ (observation.y / 100).toFixed(1) }}%
     </small>
+    <small v-if="hasBothViews" class="observation-view-type">
+      {{ observation.viewType === 1 ? 'animation' : 'image' }}
+    </small>
   </div>
 </template>
 
@@ -22,6 +25,7 @@ import type { ObservationData } from '../composables/useObservations'
 const props = defineProps<{
   observation: ObservationData
   showLocation?: boolean
+  hasBothViews?: boolean
 }>()
 
 const blockExplorer = useBlockExplorer()
@@ -66,7 +70,8 @@ const formattedTime = computed(() => {
     white-space: pre-wrap;
   }
 
-  .observation-location {
+  .observation-location,
+  .observation-view-type {
     color: var(--muted);
     font-size: var(--font-sm);
   }

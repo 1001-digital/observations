@@ -26,7 +26,7 @@
           :class="{ focused: focusedId === obs.id }"
           @click="emit('focusObservation', obs.id)"
         >
-          <Observation :observation="obs" show-location />
+          <Observation :observation="obs" show-location :has-both-views="hasBothViews" />
         </div>
       </div>
       <p
@@ -50,6 +50,7 @@ const props = defineProps<{
   count?: bigint
   externalPending?: boolean
   focusedId?: string | null
+  hasBothViews?: boolean
 }>()
 
 const emit = defineEmits<{
