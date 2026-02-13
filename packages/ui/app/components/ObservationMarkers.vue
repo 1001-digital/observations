@@ -8,16 +8,18 @@
     <div
       v-if="overlayStyle"
       class="marker-overlay"
+      :class="{ 'can-place': isConnected }"
       :style="overlayStyle"
       @click="onOverlayClick"
     >
       <ObservationMarker
-        v-for="(obs, i) in locatedObservations"
-        :key="i"
+        v-for="{ obs, originalIndex } in locatedObservations"
+        :key="originalIndex"
         :x="obs.x"
         :y="obs.y"
-        :focused="focusedIndex === i"
-        :open="focusedIndex === i"
+        :focused="focusedIndex === originalIndex"
+        :open="focusedIndex === originalIndex"
+        @select="emit('focusObservation', originalIndex)"
         @close="emit('clearFocus')"
       >
         <Observation :observation="obs" />
@@ -63,8 +65,12 @@ const emit = defineEmits<{
   complete: []
 }>()
 
+const { isConnected } = useConnection()
+
 const locatedObservations = computed(() =>
-  props.observations.filter((obs) => obs.located),
+  props.observations
+    .map((obs, originalIndex) => ({ obs, originalIndex }))
+    .filter(({ obs }) => obs.located),
 )
 
 const container = ref<HTMLElement>()
@@ -128,6 +134,8 @@ onMounted(() => {
 })
 
 const onOverlayClick = (event: MouseEvent) => {
+  if (!isConnected.value) return
+
   const target = event.currentTarget as HTMLElement
   const rect = target.getBoundingClientRect()
   const x = Math.round(((event.clientX - rect.left) / rect.width) * 10000)
@@ -142,7 +150,10 @@ const onOverlayClick = (event: MouseEvent) => {
 }
 
 .marker-overlay {
-  cursor: crosshair;
   z-index: 2;
+
+  &.can-place {
+    cursor: crosshair;
+  }
 }
 </style>

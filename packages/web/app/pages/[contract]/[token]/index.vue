@@ -53,6 +53,9 @@
 </template>
 
 <script setup lang="ts">
+const route = useRoute()
+const router = useRouter()
+
 const contract = useArtifactContract()
 const tokenId = useArtifactTokenId()
 
@@ -77,6 +80,25 @@ const {
   discardMarker,
   focusObservation,
 } = useObservationMarkers()
+
+// Initialize focused observation from query param
+if (route.query.obs != null) {
+  const index = Number(route.query.obs)
+  if (!Number.isNaN(index)) {
+    focusObservation(index)
+  }
+}
+
+// Sync focused observation to query param
+watch(focusedIndex, (index) => {
+  const query = { ...route.query }
+  if (index != null) {
+    query.obs = String(index)
+  } else {
+    delete query.obs
+  }
+  router.replace({ query })
+})
 
 const onMarkerComplete = () => {
   discardMarker()

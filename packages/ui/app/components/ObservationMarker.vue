@@ -8,12 +8,13 @@
       v-model:open="isOpen"
       :side="popoverSide"
       :collision-padding="12"
+      closable
       class="observation-popover"
     >
       <template #trigger>
         <button
           class="marker-dot"
-          @click.stop
+          @click.stop="emit('select')"
         />
       </template>
       <slot />
@@ -31,13 +32,14 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
+  select: []
   close: []
 }>()
 
 const isOpen = computed({
   get: () => props.open ?? false,
   set: (value) => {
-    if (!value && !props.pending) emit('close')
+    if (!value) emit('close')
   },
 })
 
