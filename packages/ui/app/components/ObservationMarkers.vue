@@ -37,11 +37,12 @@
         :x="pendingMarker.x"
         :y="pendingMarker.y"
         title="Create Observation"
-        pending
+        :pending="isTransacting"
         open
         @close="emit('discardMarker')"
       >
         <ObservationCreate
+          v-model:pending="isTransacting"
           :contract="contract"
           :token-id="tokenId"
           :x="pendingMarker.x"
@@ -74,6 +75,8 @@ const emit = defineEmits<{
 }>()
 
 const { isConnected } = useConnection()
+
+const isTransacting = ref(false)
 
 const locatedObservations = computed(() =>
   props.observations.filter((obs) => obs.located),

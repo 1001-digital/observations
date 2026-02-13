@@ -128,6 +128,7 @@ const popoverSide = computed(() => (props.y < 3000 ? 'bottom' : 'top'))
     font-size: var(--font-sm);
     color: var(--muted);
     white-space: nowrap;
+    text-transform: none;
     font-size: var(--font-xs);
   }
 

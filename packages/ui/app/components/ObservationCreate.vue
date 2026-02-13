@@ -25,11 +25,12 @@
           },
         }"
         @complete="onComplete"
+        @cancel="pending = false"
       >
         <template #start="{ start }">
           <Actions>
             <Button
-              @click.stop.prevent="start"
+              @click.stop.prevent="pending = true; start()"
               :disabled="!note.trim()"
               >Observe</Button
             >
@@ -69,6 +70,8 @@ const contractAddress = config.public.observationsContract as Address
 
 const { isConnected } = useConnection()
 
+const pending = defineModel<boolean>('pending')
+
 const note = ref('')
 
 const located = computed(() => props.x != null && props.y != null)
@@ -84,6 +87,7 @@ const submitObservation = () =>
   })
 
 const onComplete = () => {
+  pending.value = false
   note.value = ''
   emit('complete')
 }
