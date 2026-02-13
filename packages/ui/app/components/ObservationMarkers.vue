@@ -17,13 +17,19 @@
         :key="obs.id"
         :x="obs.x"
         :y="obs.y"
-        :title="shortAddress(obs.observer)"
         :focused="focusedId === obs.id"
         :open="focusedId === obs.id"
         @select="emit('focusObservation', obs.id)"
         @close="emit('clearFocus')"
       >
-        <Observation :observation="obs" />
+        <template #title>
+          <Address
+            :address="obs.observer"
+            ens
+          />
+          <ObservationTime :timestamp="obs.blockTimestamp" />
+        </template>
+        <p class="observation-note">{{ obs.note }}</p>
       </ObservationMarker>
 
       <ObservationMarker
@@ -79,7 +85,9 @@ const overlayStyle = ref<Record<string, string> | null>(null)
 let observer: ResizeObserver | null = null
 
 const updateOverlay = () => {
-  const img = container.value?.querySelector<HTMLImageElement>('.artifact-visual img')
+  const img = container.value?.querySelector<HTMLImageElement>(
+    '.artifact-visual img',
+  )
   if (!img || !container.value) {
     overlayStyle.value = null
     return
@@ -105,7 +113,9 @@ onMounted(() => {
   }
 
   const checkImage = () => {
-    const img = container.value?.querySelector<HTMLImageElement>('.artifact-visual img')
+    const img = container.value?.querySelector<HTMLImageElement>(
+      '.artifact-visual img',
+    )
     if (img) {
       observer?.observe(img)
       if (img.complete) {
@@ -124,7 +134,10 @@ onMounted(() => {
   })
 
   if (container.value) {
-    mutationObserver.observe(container.value, { childList: true, subtree: true })
+    mutationObserver.observe(container.value, {
+      childList: true,
+      subtree: true,
+    })
   }
 
   onBeforeUnmount(() => {

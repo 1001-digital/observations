@@ -8,15 +8,30 @@
       v-model:open="isOpen"
       :side="popoverSide"
       :collision-padding="12"
+      :title="title"
+      arrow
       closable
       class="observation-popover"
     >
+      <template
+        v-if="$slots.title"
+        #title
+      >
+        <slot name="title" />
+      </template>
       <template #trigger>
         <button
           class="marker-dot"
           @click.stop="emit('select')"
         />
       </template>
+      <!-- <Button -->
+      <!--   class="marker-popover-close" -->
+      <!--   aria-label="Close" -->
+      <!--   @click="emit('close')" -->
+      <!-- > -->
+      <!--   <Icon type="close" /> -->
+      <!-- </Button> -->
       <slot />
     </Popover>
   </div>
@@ -26,6 +41,7 @@
 const props = defineProps<{
   x: number
   y: number
+  title?: string
   pending?: boolean
   focused?: boolean
   open?: boolean
@@ -39,11 +55,11 @@ const emit = defineEmits<{
 const isOpen = computed({
   get: () => props.open ?? false,
   set: (value) => {
-    if (!value) emit('close')
+    if (!value && !props.pending) emit('close')
   },
 })
 
-const popoverSide = computed(() => props.y < 3000 ? 'bottom' : 'top')
+const popoverSide = computed(() => (props.y < 3000 ? 'bottom' : 'top'))
 </script>
 
 <style scoped>
@@ -61,7 +77,9 @@ const popoverSide = computed(() => props.y < 3000 ? 'bottom' : 'top')
   background: var(--color);
   cursor: pointer;
   padding: 0;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
   box-shadow:
     0 0 0 1px rgb(0 0 0 / 0.4),
     0 1px 3px rgb(0 0 0 / 0.3);
@@ -84,13 +102,44 @@ const popoverSide = computed(() => props.y < 3000 ? 'bottom' : 'top')
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 </style>
 
 <style>
 .observation-popover {
-  --popover-width: min(40rem, calc(100vw - 2 * var(--spacer)));
+  --popover-width: min(24rem, calc(100vw - 2 * var(--spacer)));
+
+  h1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacer);
+  }
+
+  h1 time {
+    font-weight: normal;
+    font-size: var(--font-sm);
+    color: var(--muted);
+    white-space: nowrap;
+    font-size: var(--font-xs);
+  }
+
+  .observation-note {
+    word-break: break-word;
+    white-space: pre-wrap;
+  }
+
+  .marker-popover-close {
+    position: absolute !important;
+    top: 0;
+    right: 0;
+  }
 }
 </style>

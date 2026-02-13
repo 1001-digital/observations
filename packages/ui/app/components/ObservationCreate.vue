@@ -29,7 +29,7 @@
         <template #start="{ start }">
           <Actions>
             <Button
-              @click="start"
+              @click.stop.prevent="start"
               :disabled="!note.trim()"
               >Observe</Button
             >
