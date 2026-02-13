@@ -90,7 +90,10 @@ const syncFocusToRoute = (id: string | null) => {
     query.obs = id
     const obs = observations.value.find((o) => o.id === id)
     if (obs && animationUrl.value) {
-      query.animation = animationQueryValue(obs.viewType === 1)
+      const animation = animationQueryValue(obs.viewType === 1)
+      if (animation != null) {
+        query.animation = animation
+      }
     }
   } else {
     delete query.obs

@@ -88,7 +88,7 @@ async function graphqlFetch<T>(
       })
 
       if (response.errors?.length) {
-        throw new Error(response.errors[0].message)
+        throw new Error(response.errors![0]!.message)
       }
 
       return response.data
