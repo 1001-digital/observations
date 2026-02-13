@@ -11,7 +11,7 @@
         :view-type="animationUrl && image ? (showAnimation ? 1 : 0) : undefined"
         @place-marker="placeMarker"
         @discard-marker="discardMarker"
-        @focus-observation="onFocusObservation"
+        @focus-observation="focusObservation"
         @clear-focus="clearFocus"
         @complete="onMarkerComplete"
       >
@@ -47,7 +47,7 @@
           :focused-id="focusedId"
           :has-both-views="!!image && !!animationUrl"
           @complete="refresh"
-          @focus-observation="onFocusObservation"
+          @focus-observation="focusObservation"
         />
       </template>
     </div>
@@ -66,7 +66,7 @@ const { metadata, owner, image, animationUrl, pending, error } = useArtifact(
   toRef(tokenId),
 )
 const { collection } = useCollection(toRef(contract))
-const { showAnimation } = useArtifactView(animationUrl, pending)
+const { showAnimation, animationQueryValue } = useArtifactView(animationUrl, pending)
 
 const {
   observations,
@@ -84,15 +84,18 @@ const {
   clearFocus,
 } = useObservationMarkers()
 
-const { artifact } = useAppConfig()
-
-const animationQueryParam = (value: boolean) => {
-  const isDefault = value === (artifact.defaultView === 'animation')
-  return isDefault ? undefined : String(value)
-}
-
-const onFocusObservation = (id: string) => {
-  focusObservation(id)
+const syncFocusToRoute = (id: string | null) => {
+  const query = { ...route.query }
+  if (id != null) {
+    query.obs = id
+    const obs = observations.value.find((o) => o.id === id)
+    if (obs && animationUrl.value) {
+      query.animation = animationQueryValue(obs.viewType === 1)
+    }
+  } else {
+    delete query.obs
+  }
+  router.replace({ query })
 }
 
 // Initialize focused observation from query param
@@ -100,29 +103,11 @@ if (route.query.obs != null) {
   const obsId = String(route.query.obs)
   focusObservation(obsId)
   // Switch view once observations load
-  watch(observations, (items) => {
-    const obs = items.find((o) => o.id === obsId)
-    if (obs && animationUrl.value) {
-      const query = { ...route.query, animation: animationQueryParam(obs.viewType === 1) }
-      router.replace({ query })
-    }
-  }, { once: true })
+  watch(observations, () => syncFocusToRoute(obsId), { once: true })
 }
 
 // Sync focused observation to query param and switch view
-watch(focusedId, (id) => {
-  const query = { ...route.query }
-  if (id != null) {
-    query.obs = id
-    const obs = observations.value.find((o) => o.id === id)
-    if (obs && animationUrl.value) {
-      query.animation = animationQueryParam(obs.viewType === 1)
-    }
-  } else {
-    delete query.obs
-  }
-  router.replace({ query })
-})
+watch(focusedId, syncFocusToRoute)
 
 const onMarkerComplete = () => {
   discardMarker()
