@@ -6,6 +6,16 @@ import {
   type ObservationProvider,
 } from './observations'
 
+const MAX_BLOCK_RANGE = 5000n
+
+function blockRanges (from: bigint, to: bigint): [bigint, bigint][] {
+  const ranges: [bigint, bigint][] = []
+  for (let start = from; start <= to; start += MAX_BLOCK_RANGE + 1n) {
+    ranges.push([start, start + MAX_BLOCK_RANGE > to ? to : start + MAX_BLOCK_RANGE])
+  }
+  return ranges
+}
+
 export function createOnchainProvider(client: PublicClient, contractAddress: Address): ObservationProvider {
   return {
     async fetchObservations(collection, tokenId) {
@@ -20,15 +30,21 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
 
       if (count === 0n) return { count: 0n, items: [] }
 
-      const events = await client.getContractEvents({
-        address: contractAddress,
-        abi: ObservationsAbi,
-        eventName: 'Observation',
-        args: { collection, tokenId },
-        fromBlock: BigInt(firstBlock),
-      })
+      const currentBlock = await client.getBlockNumber()
+      const ranges = blockRanges(BigInt(firstBlock), currentBlock)
 
-      const items: ObservationData[] = events.map((event) => ({
+      const results = await Promise.all(ranges.map(([fromBlock, toBlock]) =>
+        client.getContractEvents({
+          address: contractAddress,
+          abi: ObservationsAbi,
+          eventName: 'Observation',
+          args: { collection, tokenId },
+          fromBlock,
+          toBlock,
+        })
+      ))
+
+      const items: ObservationData[] = results.flat().map((event) => ({
         id: `${event.blockNumber}-${event.logIndex}`,
         observer: event.args.observer!,
         note: event.args.note!,
@@ -49,15 +65,19 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
 
       const currentBlock = await client.getBlockNumber()
       const fromBlock = currentBlock > 50000n ? currentBlock - 50000n : 0n
+      const ranges = blockRanges(fromBlock, currentBlock)
 
-      const events = await client.getContractEvents({
-        address: contractAddress,
-        abi: ObservationsAbi,
-        eventName: 'Observation',
-        fromBlock,
-      })
+      const results = await Promise.all(ranges.map(([from, to]) =>
+        client.getContractEvents({
+          address: contractAddress,
+          abi: ObservationsAbi,
+          eventName: 'Observation',
+          fromBlock: from,
+          toBlock: to,
+        })
+      ))
 
-      return events.map((event) => ({
+      return results.flat().map((event) => ({
         id: `${event.blockNumber}-${event.logIndex}`,
         observer: event.args.observer!,
         note: event.args.note!,
