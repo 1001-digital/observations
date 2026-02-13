@@ -62,7 +62,7 @@ const internal = props.observations
   ? null
   : useObservations(toRef(() => props.contract), toRef(() => props.tokenId))
 
-const displayObservations = computed(() => props.observations ?? internal?.observations.value ?? [])
+const displayObservations = computed(() => [...(props.observations ?? internal?.observations.value ?? [])].reverse())
 const displayCount = computed(() => props.count ?? internal?.count.value ?? 0n)
 const displayPending = computed(() => props.externalPending ?? internal?.pending.value ?? false)
 
