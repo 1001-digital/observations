@@ -24,7 +24,10 @@
           :owner="owner"
         />
 
-        <Observations :contract="contract" :token-id="tokenId" />
+        <Observations
+          :contract="contract"
+          :token-id="tokenId"
+        />
       </template>
     </div>
   </article>

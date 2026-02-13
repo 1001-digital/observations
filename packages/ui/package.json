@@ -6,8 +6,8 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@1001-digital/layers.base": "^0.0.17",
-    "@1001-digital/layers.evm": "^1.0.1",
+    "@1001-digital/layers.base": "^0.0.20",
+    "@1001-digital/layers.evm": "^1.0.3",
     "nuxt": "^4.3.0"
   }
 }

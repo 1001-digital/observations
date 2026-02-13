@@ -41,7 +41,22 @@
         />
         <EvmTransactionFlow
           :request="submitObservation"
-          :text="txText"
+          :text="{
+            title: {
+              confirm: 'Submit Observation',
+              requesting: 'Submitting Observation',
+              waiting: 'Submitting Observation',
+              complete: 'Observation Submitted',
+              error: 'Submission Failed',
+            },
+            lead: {
+              confirm: 'Leave your observation on this artifact.',
+              complete: 'Your observation has been recorded onchain.',
+            },
+            action: {
+              confirm: 'Submit',
+            },
+          }"
           @complete="onComplete"
         >
           <template #start="{ start }">
@@ -88,20 +103,6 @@ const { observations, count, pending, refresh } = useObservations(
 )
 
 const note = ref('')
-
-const txText = {
-  title: {
-    confirm: 'Submit Observation',
-    complete: 'Observation Submitted',
-  },
-  lead: {
-    confirm: 'Leave your observation on this artifact.',
-    complete: 'Your observation has been recorded onchain.',
-  },
-  action: {
-    confirm: 'Submit',
-  },
-}
 
 const submitObservation = () =>
   writeContract($wagmi as Config, {
