@@ -14,6 +14,7 @@
         @focus-observation="focusObservation"
         @clear-focus="clearFocus"
         @complete="onMarkerComplete"
+        v-slot="{ observing, hasEmbed, toggleObserving }"
       >
         <ArtifactVisual
           v-model:show-animation="showAnimation"
@@ -21,6 +22,24 @@
           :animation-url="animationUrl"
           :name="metadata.name"
         />
+        <Actions v-if="(animationUrl && image) || hasEmbed" class="visual-actions">
+          <Tooltip v-if="animationUrl && image">
+            <template #trigger>
+              <Button class="small" @click="showAnimation = !showAnimation">
+                <Icon :type="showAnimation ? 'lucide:image' : 'lucide:play'" />
+              </Button>
+            </template>
+            {{ showAnimation ? 'Show image' : 'Show animation' }}
+          </Tooltip>
+          <Tooltip v-if="hasEmbed">
+            <template #trigger>
+              <Button class="small" @click="toggleObserving">
+                <Icon :type="observing ? 'lucide:hand' : 'lucide:crosshair'" />
+              </Button>
+            </template>
+            {{ observing ? 'Interact' : 'Observe' }}
+          </Tooltip>
+        </Actions>
       </ObservationMarkers>
     </div>
 
@@ -187,5 +206,10 @@ const onMarkerComplete = () => {
 
 .observations {
   min-height: 10rem;
+}
+
+.visual-actions.actions {
+  margin-top: var(--spacer-sm);
+  justify-content: center;
 }
 </style>

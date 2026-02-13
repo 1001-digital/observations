@@ -3,7 +3,7 @@
     ref="container"
     class="observation-markers-container"
   >
-    <slot />
+    <slot :observing="observing" :has-embed="hasEmbed" :toggle-observing="toggleObserving" />
 
     <div
       v-if="overlayStyle"
@@ -50,11 +50,6 @@
         />
       </ObservationMarker>
 
-      <Actions v-if="hasEmbed" class="observe-toggle">
-        <Button class="small" @click.stop="observing = !observing">
-          <Icon :type="observing ? 'lucide:hand' : 'lucide:crosshair'" />
-        </Button>
-      </Actions>
     </div>
   </div>
 </template>
@@ -86,6 +81,7 @@ const isTransacting = ref(false)
 const mediaTime = ref(0)
 const observing = ref(true)
 const hasEmbed = ref(false)
+const toggleObserving = () => { observing.value = !observing.value }
 
 const findMediaElement = (): HTMLMediaElement | null =>
   container.value?.querySelector<HTMLMediaElement>('video, audio') ?? null
@@ -227,10 +223,4 @@ watch(() => props.focusedId, (id) => {
   }
 }
 
-.observe-toggle {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  pointer-events: auto;
-}
 </style>

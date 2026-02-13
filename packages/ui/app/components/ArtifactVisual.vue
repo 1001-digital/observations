@@ -9,17 +9,6 @@
       :src="image"
       :alt="name"
     />
-    <Actions
-      v-if="animationUrl && image"
-      class="artifact-visual-actions"
-    >
-      <Button
-        class="small"
-        @click="showAnimation = !showAnimation"
-      >
-        <Icon :type="showAnimation ? 'lucide:image' : 'lucide:play'" />
-      </Button>
-    </Actions>
   </div>
 </template>
 
@@ -79,11 +68,5 @@ const showAnimation = defineModel<boolean>('showAnimation', { default: false })
     border-radius: 20%;
   }
 
-  .artifact-visual-actions {
-    position: absolute;
-    bottom: var(--spacer-sm);
-    right: var(--spacer-sm);
-    z-index: 3;
-  }
 }
 </style>
