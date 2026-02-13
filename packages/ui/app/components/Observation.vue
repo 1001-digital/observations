@@ -2,7 +2,12 @@
   <div class="observation">
     <div class="observation-header">
       <Address :address="observation.observer" />
-      <time :datetime="date.toISOString()">{{ formattedTime }}</time>
+      <NuxtLink
+        :to="`${blockExplorer}/tx/${observation.transactionHash}`"
+        target="_blank"
+      >
+        <time :datetime="date.toISOString()">{{ formattedTime }}</time>
+      </NuxtLink>
     </div>
     <p class="observation-note">{{ observation.note }}</p>
   </div>
@@ -14,6 +19,8 @@ import type { ObservationData } from '../composables/useObservations'
 const props = defineProps<{
   observation: ObservationData
 }>()
+
+const blockExplorer = useBlockExplorer()
 
 const date = computed(() => new Date(Number(props.observation.blockTimestamp) * 1000))
 
