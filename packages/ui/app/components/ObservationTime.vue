@@ -13,9 +13,6 @@ const { data: currentBlock } = useBlockNumber({ chainId })
 const display = computed(() => {
   if (!currentBlock.value) return `block ${props.blockNumber}`
 
-  const diff = currentBlock.value - props.blockNumber
-  if (diff <= 0n) return 'this block'
-  if (diff === 1n) return '1 block ago'
-  return `${diff} blocks ago`
+  return formatBlockAge(props.blockNumber, currentBlock.value)
 })
 </script>
