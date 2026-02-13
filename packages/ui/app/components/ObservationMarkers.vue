@@ -8,7 +8,7 @@
     <div
       v-if="overlayStyle"
       class="marker-overlay"
-      :class="{ 'can-place': isConnected }"
+      :class="{ 'can-place': isConnected && observing, 'non-interactive': !observing }"
       :style="overlayStyle"
       @click="onOverlayClick"
     >
@@ -49,6 +49,12 @@
           @complete="emit('complete')"
         />
       </ObservationMarker>
+
+      <Actions v-if="hasEmbed" class="observe-toggle">
+        <Button class="small" @click.stop="observing = !observing">
+          <Icon :type="observing ? 'lucide:hand' : 'lucide:crosshair'" />
+        </Button>
+      </Actions>
     </div>
   </div>
 </template>
@@ -78,6 +84,8 @@ const { isConnected } = useConnection()
 
 const isTransacting = ref(false)
 const mediaTime = ref(0)
+const observing = ref(true)
+const hasEmbed = ref(false)
 
 const findMediaElement = (): HTMLMediaElement | null =>
   container.value?.querySelector<HTMLMediaElement>('video, audio') ?? null
@@ -95,6 +103,8 @@ const updateOverlay = () => {
   const el = container.value?.querySelector<HTMLElement>(
     '.artifact-visual img, .artifact-visual .embed',
   )
+  hasEmbed.value = !!container.value?.querySelector('.artifact-visual .embed')
+
   if (!el || !container.value) {
     overlayStyle.value = null
     return
@@ -163,7 +173,7 @@ onMounted(() => {
 })
 
 const onOverlayClick = (event: MouseEvent) => {
-  if (!isConnected.value) return
+  if (!isConnected.value || !observing.value) return
 
   const target = event.currentTarget as HTMLElement
   const rect = target.getBoundingClientRect()
@@ -211,5 +221,16 @@ watch(() => props.focusedId, (id) => {
   &.can-place {
     cursor: crosshair;
   }
+
+  &.non-interactive {
+    pointer-events: none;
+  }
+}
+
+.observe-toggle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  pointer-events: auto;
 }
 </style>
