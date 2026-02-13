@@ -6,6 +6,7 @@
       </header>
       <FindArtifact />
     </Card>
+    <RecentObservations />
     <ExampleArtifacts />
   </main>
 </template>
