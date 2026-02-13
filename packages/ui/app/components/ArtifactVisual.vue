@@ -83,7 +83,7 @@ const showAnimation = defineModel<boolean>('showAnimation', { default: false })
     position: absolute;
     bottom: var(--spacer-sm);
     right: var(--spacer-sm);
-    z-index: 1;
+    z-index: 3;
   }
 }
 </style>
