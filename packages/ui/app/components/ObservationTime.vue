@@ -7,7 +7,8 @@ const props = defineProps<{
   blockNumber: bigint
 }>()
 
-const { data: currentBlock } = useBlockNumber()
+const chainId = useMainChainId()
+const { data: currentBlock } = useBlockNumber({ chainId })
 
 const display = computed(() => {
   if (!currentBlock.value) return `block ${props.blockNumber}`
