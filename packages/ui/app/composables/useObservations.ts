@@ -1,15 +1,18 @@
 import { type Address, type PublicClient } from 'viem'
-import { getPublicClient } from '@wagmi/core'
+import { getPublicClient, watchContractEvent } from '@wagmi/core'
 import type { Config } from '@wagmi/vue'
 import {
   type ObservationsMode,
   type ObservationData,
+  ObservationsAbi,
   observationsCache,
   getIndexerUrls,
 } from '../utils/observations'
 import { createOnchainProvider } from '../utils/observation-provider-onchain'
 import { createIndexerProvider } from '../utils/observation-provider-indexer'
 
+const POLL_INTERVAL = 3_000
+const MAX_POLL_ATTEMPTS = 10
 
 async function resolve(
   strategies: ObservationsMode[],
@@ -51,6 +54,21 @@ export const useObservations = (collection: Ref<Address>, tokenId: Ref<bigint>) 
   const indexerUrls = computed(() => getIndexerUrls(config.public.observations))
   const cacheKey = computed(() => `observations-${collection.value}-${tokenId.value}`)
 
+  const strategies = computed<ObservationsMode[]>(() => mode.value === 'indexer'
+    ? ['indexer', 'onchain']
+    : ['onchain', 'indexer'],
+  )
+
+  const fetchFresh = () => resolve(
+    strategies.value,
+    collection.value,
+    tokenId.value,
+    indexerUrls.value,
+    $wagmi as Config,
+    chainId,
+    contractAddress,
+  )
+
   const {
     data: observations,
     pending,
@@ -58,15 +76,7 @@ export const useObservations = (collection: Ref<Address>, tokenId: Ref<bigint>) 
     refresh,
   } = useAsyncData(
     cacheKey.value,
-    () => {
-      const strategies: ObservationsMode[] = mode.value === 'indexer'
-        ? ['indexer', 'onchain']
-        : ['onchain', 'indexer']
-
-      return observationsCache.fetch(cacheKey.value, () =>
-        resolve(strategies, collection.value, tokenId.value, indexerUrls.value, $wagmi as Config, chainId, contractAddress),
-      )
-    },
+    () => observationsCache.fetch(cacheKey.value, fetchFresh),
     {
       watch: [collection, tokenId],
       getCachedData: () => observationsCache.get(cacheKey.value) ?? undefined,
@@ -76,11 +86,77 @@ export const useObservations = (collection: Ref<Address>, tokenId: Ref<bigint>) 
   const count = computed(() => observations.value?.count ?? 0n)
   const items = computed(() => observations.value?.items ?? [])
 
+  // Poll until new data appears (bypassing cache)
+  let pollTimer: ReturnType<typeof setInterval> | null = null
+
+  function stopPolling () {
+    if (pollTimer) {
+      clearInterval(pollTimer)
+      pollTimer = null
+    }
+  }
+
+  async function refreshAndPoll () {
+    stopPolling()
+
+    const previousCount = count.value
+    let attempts = 0
+
+    pollTimer = setInterval(async () => {
+      attempts++
+
+      try {
+        const fresh = await fetchFresh()
+
+        if (fresh.count > previousCount) {
+          observations.value = fresh
+          stopPolling()
+        }
+      } catch {
+        // Ignore fetch errors during polling
+      }
+
+      if (attempts >= MAX_POLL_ATTEMPTS) {
+        stopPolling()
+      }
+    }, POLL_INTERVAL)
+  }
+
+  // Watch for new onchain events in real-time
+  let unwatchEvents: (() => void) | null = null
+
+  function startWatching () {
+    unwatchEvents?.()
+    unwatchEvents = watchContractEvent($wagmi as Config, {
+      address: contractAddress,
+      abi: ObservationsAbi,
+      eventName: 'Observation',
+      args: {
+        collection: collection.value,
+        tokenId: tokenId.value,
+      },
+      onLogs () {
+        refreshAndPoll()
+      },
+    })
+  }
+
+  if (import.meta.client) {
+    startWatching()
+    watch([collection, tokenId], startWatching)
+
+    onScopeDispose(() => {
+      stopPolling()
+      unwatchEvents?.()
+    })
+  }
+
   return {
     observations: items,
     count,
     pending,
     error,
     refresh,
+    refreshAndPoll,
   }
 }

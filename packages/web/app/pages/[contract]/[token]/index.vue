@@ -65,7 +65,7 @@
           :external-pending="observationsPending"
           :focused-id="focusedId"
           :has-both-views="!!image && !!animationUrl"
-          @complete="refresh"
+          @complete="refreshAndPoll"
           @focus-observation="focusObservation"
         />
       </template>
@@ -91,7 +91,7 @@ const {
   observations,
   count: observationCount,
   pending: observationsPending,
-  refresh,
+  refreshAndPoll,
 } = useObservations(toRef(contract), toRef(tokenId))
 
 const {
@@ -135,7 +135,7 @@ watch(focusedId, syncFocusToRoute)
 
 const onMarkerComplete = () => {
   discardMarker()
-  refresh()
+  refreshAndPoll()
 }
 </script>
 

@@ -68,7 +68,7 @@ const displayCount = computed(() => props.count ?? internal?.count.value ?? 0n)
 const displayPending = computed(() => props.externalPending ?? internal?.pending.value ?? false)
 
 const onComplete = () => {
-  internal?.refresh()
+  internal?.refreshAndPoll()
   emit('complete')
 }
 
