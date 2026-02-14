@@ -96,27 +96,33 @@ export const useObservations = (collection: Ref<Address>, tokenId: Ref<bigint>) 
     }
   }
 
+  async function pollOnce (previousCount: bigint) {
+    try {
+      const fresh = await fetchFresh()
+      if (fresh.count > previousCount) {
+        observations.value = fresh
+        return true
+      }
+    } catch {
+      // Ignore fetch errors during polling
+    }
+    return false
+  }
+
   async function refreshAndPoll () {
     stopPolling()
 
     const previousCount = count.value
-    let attempts = 0
+
+    // Try immediately first
+    if (await pollOnce(previousCount)) return
+
+    let attempts = 1
 
     pollTimer = setInterval(async () => {
       attempts++
 
-      try {
-        const fresh = await fetchFresh()
-
-        if (fresh.count > previousCount) {
-          observations.value = fresh
-          stopPolling()
-        }
-      } catch {
-        // Ignore fetch errors during polling
-      }
-
-      if (attempts >= MAX_POLL_ATTEMPTS) {
+      if (await pollOnce(previousCount) || attempts >= MAX_POLL_ATTEMPTS) {
         stopPolling()
       }
     }, POLL_INTERVAL)
