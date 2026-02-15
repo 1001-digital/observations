@@ -2,6 +2,7 @@ import { type Address } from 'viem'
 import {
   type ObservationData,
   type RecentObservationData,
+  type CollectionArtifactData,
   type ObservationProvider,
 } from './observations'
 
@@ -44,6 +45,37 @@ const OBSERVATIONS_QUERY = `
 const RECENT_OBSERVATIONS_QUERY = `
   query {
     observations(orderBy: "block", orderDirection: "desc", limit: 100) {
+      items {
+        id collection tokenId parent update observer note located x y view time tip block txHash
+      }
+    }
+  }
+`
+
+const COLLECTION_ARTIFACTS_QUERY = `
+  query($collection: String!) {
+    artifacts(
+      where: { collection: $collection }
+      orderBy: "count"
+      orderDirection: "desc"
+      limit: 1000
+    ) {
+      items {
+        tokenId
+        count
+      }
+    }
+  }
+`
+
+const COLLECTION_OBSERVATIONS_QUERY = `
+  query($collection: String!) {
+    observations(
+      where: { collection: $collection }
+      orderBy: "block"
+      orderDirection: "desc"
+      limit: 100
+    ) {
       items {
         id collection tokenId parent update observer note located x y view time tip block txHash
       }
@@ -127,6 +159,29 @@ export function createIndexerProvider(endpoints: string[]): ObservationProvider 
       }>(endpoints, RECENT_OBSERVATIONS_QUERY)
 
       return data.observations.items.map(mapRecentObservation).reverse()
+    },
+
+    async fetchCollectionArtifacts(collection) {
+      const data = await graphqlFetch<{
+        artifacts: { items: { tokenId: string; count: string }[] }
+      }>(endpoints, COLLECTION_ARTIFACTS_QUERY, {
+        collection: collection.toLowerCase(),
+      })
+
+      return data.artifacts.items.map((item): CollectionArtifactData => ({
+        tokenId: BigInt(item.tokenId),
+        count: BigInt(item.count),
+      }))
+    },
+
+    async fetchCollectionObservations(collection) {
+      const data = await graphqlFetch<{
+        observations: { items: PonderObservation[] }
+      }>(endpoints, COLLECTION_OBSERVATIONS_QUERY, {
+        collection: collection.toLowerCase(),
+      })
+
+      return data.observations.items.map(mapRecentObservation)
     },
   }
 }

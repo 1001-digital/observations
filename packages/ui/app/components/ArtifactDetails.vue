@@ -9,10 +9,7 @@
       <template v-if="details.showCollection && collection.name">
         <dt>Collection</dt>
         <dd>
-          <NuxtLink
-            :to="`${blockExplorer}/address/${contract}`"
-            target="_blank"
-          >
+          <NuxtLink :to="`/${contract}`">
             {{ collection.name
             }}<small v-if="details.showSymbol && collection.symbol">
               ({{ collection.symbol }})</small

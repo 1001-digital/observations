@@ -31,15 +31,24 @@ export interface RecentObservationData extends ObservationData {
   tokenId: bigint
 }
 
+export interface CollectionArtifactData {
+  tokenId: bigint
+  count: bigint
+}
+
 export type ObservationsMode = 'indexer' | 'onchain'
 
 export interface ObservationProvider {
   fetchObservations(collection: Address, tokenId: bigint): Promise<{ count: bigint; items: ObservationData[] }>
   fetchRecentObservations(): Promise<RecentObservationData[]>
+  fetchCollectionArtifacts(collection: Address): Promise<CollectionArtifactData[]>
+  fetchCollectionObservations(collection: Address): Promise<RecentObservationData[]>
 }
 
 export const observationsCache = createCache<{ count: bigint; items: ObservationData[] }>(5 * 60 * 1000, 200)
 export const recentObservationsCache = createCache<RecentObservationData[]>(5 * 60 * 1000, 1)
+export const collectionArtifactsCache = createCache<CollectionArtifactData[]>(5 * 60 * 1000, 50)
+export const collectionObservationsCache = createCache<RecentObservationData[]>(5 * 60 * 1000, 50)
 
 interface ObservationsRuntimeConfig {
   indexer?: { endpoint1?: string; endpoint2?: string; endpoint3?: string }
