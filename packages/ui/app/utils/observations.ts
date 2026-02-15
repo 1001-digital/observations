@@ -12,7 +12,6 @@ export const ObservationsAbi = parseAbi([
 
 export interface ObservationData {
   id: string
-  observationId: bigint
   parent: bigint
   update: boolean
   observer: Address

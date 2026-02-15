@@ -3,11 +3,10 @@ import { index, onchainTable, primaryKey, relations } from "ponder";
 export const observation = onchainTable(
   "observation",
   (t) => ({
-    id: t.text().primaryKey(),
     collection: t.hex().notNull(),
     tokenId: t.bigint().notNull(),
+    id: t.bigint().notNull(),
     observer: t.hex().notNull(),
-    observationId: t.bigint().notNull(),
     parent: t.bigint().notNull(),
     update: t.boolean().notNull(),
     note: t.text().notNull(),
@@ -22,6 +21,7 @@ export const observation = onchainTable(
     txHash: t.hex().notNull(),
   }),
   (table) => ({
+    pk: primaryKey({ columns: [table.collection, table.tokenId, table.id] }),
     collectionIdx: index().on(table.collection),
     observerIdx: index().on(table.observer),
     artifactIdx: index().on(table.collection, table.tokenId),

@@ -45,8 +45,7 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
       ))
 
       const items: ObservationData[] = results.flat().map((event) => ({
-        id: `${event.blockNumber}-${event.logIndex}`,
-        observationId: event.args.id!,
+        id: String(event.args.id!),
         parent: event.args.parent!,
         update: event.args.update!,
         observer: event.args.observer!,
@@ -82,8 +81,7 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
       ))
 
       return results.flat().map((event) => ({
-        id: `${event.blockNumber}-${event.logIndex}`,
-        observationId: event.args.id!,
+        id: String(event.args.id!),
         parent: event.args.parent!,
         update: event.args.update!,
         observer: event.args.observer!,

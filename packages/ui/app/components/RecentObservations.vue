@@ -13,7 +13,7 @@
       >
         <RecentObservation
           v-for="obs in displayObservations"
-          :key="obs.id"
+          :key="`${obs.collection}-${obs.tokenId}-${obs.id}`"
           :observation="obs"
         />
       </div>
