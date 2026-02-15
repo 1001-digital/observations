@@ -331,4 +331,127 @@ describe("Observations", async function () {
       [getAddress(mockOwnable.address), getAddress(walletClient.account.address), tip],
     );
   });
+
+  it("Should handle claim-then-retip-then-reclaim cycle", async function () {
+    const observations = await viem.deployContract("Observations");
+    const mockOwnable = await viem.deployContract("MockOwnable", [walletClient.account.address]);
+    const tip1 = parseEther("0.01");
+    const tip2 = parseEther("0.02");
+
+    // First tip and claim
+    await observations.write.observe([mockOwnable.address, tokenId, "First.", 0, 0], { value: tip1 });
+    await observations.write.claimTips([mockOwnable.address]);
+
+    const [balanceAfterClaim, unclaimedAfterClaim] = await observations.read.tips([mockOwnable.address]);
+    assert.equal(balanceAfterClaim, 0n);
+    assert.equal(unclaimedAfterClaim, 0n);
+
+    // New tips arrive
+    await observations.write.observe([mockOwnable.address, tokenId, "Second.", 0, 0], { value: tip2 });
+
+    const [balanceAfterRetip, unclaimedAfterRetip] = await observations.read.tips([mockOwnable.address]);
+    assert.equal(balanceAfterRetip, tip2);
+    assert.ok(unclaimedAfterRetip > 0n);
+
+    // Claim again
+    const balanceBefore = await publicClient.getBalance({ address: walletClient.account.address });
+    const hash = await observations.write.claimTips([mockOwnable.address]);
+    const receipt = await publicClient.getTransactionReceipt({ hash });
+    const gasUsed = receipt.gasUsed * receipt.effectiveGasPrice;
+    const balanceAfter = await publicClient.getBalance({ address: walletClient.account.address });
+
+    assert.equal(balanceAfter, balanceBefore + tip2 - gasUsed);
+  });
+
+  it("Should reject non-owner when owner() reverts", async function () {
+    const observations = await viem.deployContract("Observations");
+    const mockReverting = await viem.deployContract("MockRevertingOwner");
+    const tip = parseEther("0.01");
+
+    await observations.write.observe([mockReverting.address, tokenId, "Tipped.", 0, 0], { value: tip });
+
+    await assert.rejects(
+      observations.write.claimTips([mockReverting.address]),
+      /Not authorized/,
+    );
+  });
+
+  it("Should reject non-owner when owner() returns short data", async function () {
+    const observations = await viem.deployContract("Observations");
+    const mockShort = await viem.deployContract("MockShortReturnOwner");
+    const tip = parseEther("0.01");
+
+    await observations.write.observe([mockShort.address, tokenId, "Tipped.", 0, 0], { value: tip });
+
+    await assert.rejects(
+      observations.write.claimTips([mockShort.address]),
+      /Not authorized/,
+    );
+  });
+
+  it("Should resist reentrancy on claimTips", async function () {
+    const observations = await viem.deployContract("Observations");
+    const attacker = await viem.deployContract("MockReentrantClaimer");
+    const tip = parseEther("0.1");
+
+    // The attacker contract's owner() returns itself, so it is the "collection owner"
+    await observations.write.observe([attacker.address, tokenId, "Tipped.", 0, 0], { value: tip });
+    await attacker.write.setTarget([observations.address, attacker.address]);
+
+    // The re-entrant receive() will try to call claimTips again.
+    // Balance is zeroed before the transfer, so the re-entrant call should revert with "No tips to claim".
+    await assert.rejects(
+      attacker.write.claim(),
+      (err: any) => {
+        // The outer call reverts because the re-entrant call reverts inside receive()
+        return true;
+      },
+    );
+
+    // Verify tips were NOT drained (balance should still be intact since the whole tx reverted)
+    const [remaining] = await observations.read.tips([attacker.address]);
+    assert.equal(remaining, tip);
+  });
+
+  it("Should allow protocol owner to claim for collection with reverting owner() after 1 year", async function () {
+    const observations = await viem.deployContract("Observations");
+    const mockReverting = await viem.deployContract("MockRevertingOwner");
+    const tip = parseEther("0.01");
+
+    await observations.write.observe([mockReverting.address, tokenId, "Tipped.", 0, 0], { value: tip });
+
+    // Advance time by 1 year + 1 second
+    await publicClient.request({ method: "evm_increaseTime" as any, params: [365 * 24 * 60 * 60 + 1] });
+    await publicClient.request({ method: "evm_mine" as any, params: [] });
+
+    // Impersonate the protocol owner
+    await publicClient.request({ method: "hardhat_impersonateAccount" as any, params: [unclaimedTipsRecipient] });
+    await walletClient.sendTransaction({ to: unclaimedTipsRecipient, value: parseEther("1") });
+
+    await observations.write.claimTips([mockReverting.address], { account: unclaimedTipsRecipient });
+
+    const [remaining] = await observations.read.tips([mockReverting.address]);
+    assert.equal(remaining, 0n);
+
+    await publicClient.request({ method: "hardhat_stopImpersonatingAccount" as any, params: [unclaimedTipsRecipient] });
+  });
+
+  it("Should keep tips separate across collections when claiming", async function () {
+    const observations = await viem.deployContract("Observations");
+    const mockA = await viem.deployContract("MockOwnable", [walletClient.account.address]);
+    const mockB = await viem.deployContract("MockOwnable", [walletClient.account.address]);
+    const tipA = parseEther("0.03");
+    const tipB = parseEther("0.07");
+
+    await observations.write.observe([mockA.address, tokenId, "Tip A.", 0, 0], { value: tipA });
+    await observations.write.observe([mockB.address, tokenId, "Tip B.", 0, 0], { value: tipB });
+
+    // Claim only collection A
+    await observations.write.claimTips([mockA.address]);
+
+    const [remainingA] = await observations.read.tips([mockA.address]);
+    const [remainingB] = await observations.read.tips([mockB.address]);
+    assert.equal(remainingA, 0n);
+    assert.equal(remainingB, tipB);
+  });
 });
