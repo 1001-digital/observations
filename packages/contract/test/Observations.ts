@@ -17,10 +17,10 @@ describe("Observations", async function () {
     const observations = await viem.deployContract("Observations");
 
     await viem.assertions.emitWithArgs(
-      observations.write.observe([collection, tokenId, "Beautiful piece.", 0, 0, 0n, false]),
+      observations.write.observe([collection, tokenId, 0n, false, "Beautiful piece.", 0, 0]),
       observations,
       "Observation",
-      [collection, tokenId, getAddress(walletClient.account.address), "Beautiful piece.", false, 0, 0, 0, 0, 0n, 1n, 0n, false],
+      [collection, tokenId, getAddress(walletClient.account.address), 1n, 0n, false, "Beautiful piece.", false, 0, 0, 0, 0, 0n],
     );
   });
 
@@ -28,10 +28,10 @@ describe("Observations", async function () {
     const observations = await viem.deployContract("Observations");
 
     await viem.assertions.emitWithArgs(
-      observations.write.observeAt([collection, tokenId, "Detail in the corner.", 120, 340, 0, 0, 0n, false]),
+      observations.write.observeAt([collection, tokenId, 0n, false, "Detail in the corner.", 120, 340, 0, 0]),
       observations,
       "Observation",
-      [collection, tokenId, getAddress(walletClient.account.address), "Detail in the corner.", true, 120, 340, 0, 0, 0n, 1n, 0n, false],
+      [collection, tokenId, getAddress(walletClient.account.address), 1n, 0n, false, "Detail in the corner.", true, 120, 340, 0, 0, 0n],
     );
   });
 
@@ -39,10 +39,10 @@ describe("Observations", async function () {
     const observations = await viem.deployContract("Observations");
 
     await viem.assertions.emitWithArgs(
-      observations.write.observe([collection, tokenId, "Fluid motion.", 1, 0, 0n, false]),
+      observations.write.observe([collection, tokenId, 0n, false, "Fluid motion.", 1, 0]),
       observations,
       "Observation",
-      [collection, tokenId, getAddress(walletClient.account.address), "Fluid motion.", false, 0, 0, 1, 0, 0n, 1n, 0n, false],
+      [collection, tokenId, getAddress(walletClient.account.address), 1n, 0n, false, "Fluid motion.", false, 0, 0, 1, 0, 0n],
     );
   });
 
@@ -50,19 +50,19 @@ describe("Observations", async function () {
     const observations = await viem.deployContract("Observations");
 
     await viem.assertions.emitWithArgs(
-      observations.write.observeAt([collection, tokenId, "Movement here.", 50, 75, 1, 0, 0n, false]),
+      observations.write.observeAt([collection, tokenId, 0n, false, "Movement here.", 50, 75, 1, 0]),
       observations,
       "Observation",
-      [collection, tokenId, getAddress(walletClient.account.address), "Movement here.", true, 50, 75, 1, 0, 0n, 1n, 0n, false],
+      [collection, tokenId, getAddress(walletClient.account.address), 1n, 0n, false, "Movement here.", true, 50, 75, 1, 0, 0n],
     );
   });
 
   it("Should track the observation count", async function () {
     const observations = await viem.deployContract("Observations");
 
-    await observations.write.observe([collection, tokenId, "First.", 0, 0, 0n, false]);
-    await observations.write.observe([collection, tokenId, "Second.", 0, 0, 0n, false]);
-    await observations.write.observeAt([collection, tokenId, "Third.", 10, 20, 0, 0, 0n, false]);
+    await observations.write.observe([collection, tokenId, 0n, false, "First.", 0, 0]);
+    await observations.write.observe([collection, tokenId, 0n, false, "Second.", 0, 0]);
+    await observations.write.observeAt([collection, tokenId, 0n, false, "Third.", 10, 20, 0, 0]);
 
     const [count] = await observations.read.artifacts([collection, tokenId]);
 
@@ -74,7 +74,7 @@ describe("Observations", async function () {
 
     const blockBefore = await publicClient.getBlockNumber();
 
-    await observations.write.observe([collection, tokenId, "First observation.", 0, 0, 0n, false]);
+    await observations.write.observe([collection, tokenId, 0n, false, "First observation.", 0, 0]);
 
     const [, firstBlock] = await observations.read.artifacts([collection, tokenId]);
 
@@ -84,10 +84,10 @@ describe("Observations", async function () {
   it("Should not update firstBlock on subsequent observations", async function () {
     const observations = await viem.deployContract("Observations");
 
-    await observations.write.observe([collection, tokenId, "First.", 0, 0, 0n, false]);
+    await observations.write.observe([collection, tokenId, 0n, false, "First.", 0, 0]);
     const [, firstBlock] = await observations.read.artifacts([collection, tokenId]);
 
-    await observations.write.observe([collection, tokenId, "Second.", 0, 0, 0n, false]);
+    await observations.write.observe([collection, tokenId, 0n, false, "Second.", 0, 0]);
     const [, firstBlockAfter] = await observations.read.artifacts([collection, tokenId]);
 
     assert.equal(firstBlock, firstBlockAfter);
@@ -97,9 +97,9 @@ describe("Observations", async function () {
     const observations = await viem.deployContract("Observations");
     const otherToken = 99n;
 
-    await observations.write.observe([collection, tokenId, "On token 1.", 0, 0, 0n, false]);
-    await observations.write.observe([collection, otherToken, "On token 99.", 0, 0, 0n, false]);
-    await observations.write.observe([collection, otherToken, "Again on 99.", 0, 0, 0n, false]);
+    await observations.write.observe([collection, tokenId, 0n, false, "On token 1.", 0, 0]);
+    await observations.write.observe([collection, otherToken, 0n, false, "On token 99.", 0, 0]);
+    await observations.write.observe([collection, otherToken, 0n, false, "Again on 99.", 0, 0]);
 
     const [count1] = await observations.read.artifacts([collection, tokenId]);
     const [count99] = await observations.read.artifacts([collection, otherToken]);
@@ -113,9 +113,9 @@ describe("Observations", async function () {
     const deployBlock = await publicClient.getBlockNumber();
     const otherToken = 42n;
 
-    await observations.write.observe([collection, tokenId, "Note A.", 0, 0, 0n, false]);
-    await observations.write.observe([collection, otherToken, "Note B.", 0, 0, 0n, false]);
-    await observations.write.observe([collection, tokenId, "Note C.", 0, 0, 0n, false]);
+    await observations.write.observe([collection, tokenId, 0n, false, "Note A.", 0, 0]);
+    await observations.write.observe([collection, otherToken, 0n, false, "Note B.", 0, 0]);
+    await observations.write.observe([collection, tokenId, 0n, false, "Note C.", 0, 0]);
 
     // Filter events for a specific tokenId.
     const events = await publicClient.getContractEvents({
@@ -138,7 +138,7 @@ describe("Observations", async function () {
     const observations = await viem.deployContract("Observations");
     const tipAmount = parseEther("0.01");
 
-    await observations.write.observe([collection, tokenId, "Nice.", 0, 0, 0n, false], { value: tipAmount });
+    await observations.write.observe([collection, tokenId, 0n, false, "Nice.", 0, 0], { value: tipAmount });
 
     const [balance] = await observations.read.tips([collection]);
     assert.equal(balance, tipAmount);
@@ -149,17 +149,17 @@ describe("Observations", async function () {
     const tipAmount = parseEther("0.05");
 
     await viem.assertions.emitWithArgs(
-      observations.write.observe([collection, tokenId, "Tipped.", 0, 0, 0n, false], { value: tipAmount }),
+      observations.write.observe([collection, tokenId, 0n, false, "Tipped.", 0, 0], { value: tipAmount }),
       observations,
       "Observation",
-      [collection, tokenId, getAddress(walletClient.account.address), "Tipped.", false, 0, 0, 0, 0, tipAmount, 1n, 0n, false],
+      [collection, tokenId, getAddress(walletClient.account.address), 1n, 0n, false, "Tipped.", false, 0, 0, 0, 0, tipAmount],
     );
   });
 
   it("Should work with zero tip (backward compatible)", async function () {
     const observations = await viem.deployContract("Observations");
 
-    await observations.write.observe([collection, tokenId, "Free.", 0, 0, 0n, false]);
+    await observations.write.observe([collection, tokenId, 0n, false, "Free.", 0, 0]);
 
     const [balance] = await observations.read.tips([collection]);
     assert.equal(balance, 0n);
@@ -170,8 +170,8 @@ describe("Observations", async function () {
     const tip1 = parseEther("0.01");
     const tip2 = parseEther("0.02");
 
-    await observations.write.observe([collection, tokenId, "First tip.", 0, 0, 0n, false], { value: tip1 });
-    await observations.write.observe([collection, 2n, "Second tip.", 0, 0, 0n, false], { value: tip2 });
+    await observations.write.observe([collection, tokenId, 0n, false, "First tip.", 0, 0], { value: tip1 });
+    await observations.write.observe([collection, 2n, 0n, false, "Second tip.", 0, 0], { value: tip2 });
 
     const [balance] = await observations.read.tips([collection]);
     assert.equal(balance, tip1 + tip2);
@@ -181,11 +181,11 @@ describe("Observations", async function () {
     const observations = await viem.deployContract("Observations");
     const tip = parseEther("0.01");
 
-    await observations.write.observe([collection, tokenId, "First.", 0, 0, 0n, false], { value: tip });
+    await observations.write.observe([collection, tokenId, 0n, false, "First.", 0, 0], { value: tip });
     const [, firstUnclaimed] = await observations.read.tips([collection]);
     assert.ok(firstUnclaimed > 0n);
 
-    await observations.write.observe([collection, tokenId, "Second.", 0, 0, 0n, false], { value: tip });
+    await observations.write.observe([collection, tokenId, 0n, false, "Second.", 0, 0], { value: tip });
     const [, secondUnclaimed] = await observations.read.tips([collection]);
     assert.equal(firstUnclaimed, secondUnclaimed);
   });
@@ -195,7 +195,7 @@ describe("Observations", async function () {
     const mockOwnable = await viem.deployContract("MockOwnable", [walletClient.account.address]);
     const tip = parseEther("0.1");
 
-    await observations.write.observe([mockOwnable.address, tokenId, "Tipped.", 0, 0, 0n, false], { value: tip });
+    await observations.write.observe([mockOwnable.address, tokenId, 0n, false, "Tipped.", 0, 0], { value: tip });
 
     const balanceBefore = await publicClient.getBalance({ address: walletClient.account.address });
     const hash = await observations.write.claimTips([mockOwnable.address]);
@@ -214,7 +214,7 @@ describe("Observations", async function () {
     const mockOwnable = await viem.deployContract("MockOwnable", [walletClient.account.address]);
     const tip = parseEther("0.01");
 
-    await observations.write.observe([mockOwnable.address, tokenId, "Tipped.", 0, 0, 0n, false], { value: tip });
+    await observations.write.observe([mockOwnable.address, tokenId, 0n, false, "Tipped.", 0, 0], { value: tip });
     await observations.write.claimTips([mockOwnable.address]);
 
     const [, unclaimed] = await observations.read.tips([mockOwnable.address]);
@@ -227,7 +227,7 @@ describe("Observations", async function () {
     const mockOwnable = await viem.deployContract("MockOwnable", [walletClient.account.address]);
     const tip = parseEther("0.01");
 
-    await observations.write.observe([mockOwnable.address, tokenId, "Tipped.", 0, 0, 0n, false], { value: tip });
+    await observations.write.observe([mockOwnable.address, tokenId, 0n, false, "Tipped.", 0, 0], { value: tip });
 
     await assert.rejects(
       observations.write.claimTips([mockOwnable.address], { account: otherWallet.account }),
@@ -248,7 +248,7 @@ describe("Observations", async function () {
     const observations = await viem.deployContract("Observations");
     const tip = parseEther("0.01");
 
-    await observations.write.observe([collection, tokenId, "Tipped.", 0, 0, 0n, false], { value: tip });
+    await observations.write.observe([collection, tokenId, 0n, false, "Tipped.", 0, 0], { value: tip });
 
     // Impersonate the protocol owner (Safe multisig)
     await publicClient.request({ method: "hardhat_impersonateAccount" as any, params: [unclaimedTipsRecipient] });
@@ -266,7 +266,7 @@ describe("Observations", async function () {
     const observations = await viem.deployContract("Observations");
     const tip = parseEther("0.01");
 
-    await observations.write.observe([collection, tokenId, "Tipped.", 0, 0, 0n, false], { value: tip });
+    await observations.write.observe([collection, tokenId, 0n, false, "Tipped.", 0, 0], { value: tip });
 
     // Advance time by 1 year + 1 second
     await publicClient.request({ method: "evm_increaseTime" as any, params: [365 * 24 * 60 * 60 + 1] });
@@ -292,7 +292,7 @@ describe("Observations", async function () {
     const tip = parseEther("0.01");
 
     // collection is an EOA — no owner() — so only protocol owner after 1 year
-    await observations.write.observe([collection, tokenId, "Tipped.", 0, 0, 0n, false], { value: tip });
+    await observations.write.observe([collection, tokenId, 0n, false, "Tipped.", 0, 0], { value: tip });
 
     // Impersonate the protocol owner (Safe multisig)
     await publicClient.request({ method: "hardhat_impersonateAccount" as any, params: [unclaimedTipsRecipient] });
@@ -322,7 +322,7 @@ describe("Observations", async function () {
     const mockOwnable = await viem.deployContract("MockOwnable", [walletClient.account.address]);
     const tip = parseEther("0.05");
 
-    await observations.write.observe([mockOwnable.address, tokenId, "Tipped.", 0, 0, 0n, false], { value: tip });
+    await observations.write.observe([mockOwnable.address, tokenId, 0n, false, "Tipped.", 0, 0], { value: tip });
 
     await viem.assertions.emitWithArgs(
       observations.write.claimTips([mockOwnable.address]),
@@ -339,7 +339,7 @@ describe("Observations", async function () {
     const tip2 = parseEther("0.02");
 
     // First tip and claim
-    await observations.write.observe([mockOwnable.address, tokenId, "First.", 0, 0, 0n, false], { value: tip1 });
+    await observations.write.observe([mockOwnable.address, tokenId, 0n, false, "First.", 0, 0], { value: tip1 });
     await observations.write.claimTips([mockOwnable.address]);
 
     const [balanceAfterClaim, unclaimedAfterClaim] = await observations.read.tips([mockOwnable.address]);
@@ -347,7 +347,7 @@ describe("Observations", async function () {
     assert.equal(unclaimedAfterClaim, 0n);
 
     // New tips arrive
-    await observations.write.observe([mockOwnable.address, tokenId, "Second.", 0, 0, 0n, false], { value: tip2 });
+    await observations.write.observe([mockOwnable.address, tokenId, 0n, false, "Second.", 0, 0], { value: tip2 });
 
     const [balanceAfterRetip, unclaimedAfterRetip] = await observations.read.tips([mockOwnable.address]);
     assert.equal(balanceAfterRetip, tip2);
@@ -368,7 +368,7 @@ describe("Observations", async function () {
     const mockReverting = await viem.deployContract("MockRevertingOwner");
     const tip = parseEther("0.01");
 
-    await observations.write.observe([mockReverting.address, tokenId, "Tipped.", 0, 0, 0n, false], { value: tip });
+    await observations.write.observe([mockReverting.address, tokenId, 0n, false, "Tipped.", 0, 0], { value: tip });
 
     await assert.rejects(
       observations.write.claimTips([mockReverting.address]),
@@ -381,7 +381,7 @@ describe("Observations", async function () {
     const mockShort = await viem.deployContract("MockShortReturnOwner");
     const tip = parseEther("0.01");
 
-    await observations.write.observe([mockShort.address, tokenId, "Tipped.", 0, 0, 0n, false], { value: tip });
+    await observations.write.observe([mockShort.address, tokenId, 0n, false, "Tipped.", 0, 0], { value: tip });
 
     await assert.rejects(
       observations.write.claimTips([mockShort.address]),
@@ -395,7 +395,7 @@ describe("Observations", async function () {
     const tip = parseEther("0.1");
 
     // The attacker contract's owner() returns itself, so it is the "collection owner"
-    await observations.write.observe([attacker.address, tokenId, "Tipped.", 0, 0, 0n, false], { value: tip });
+    await observations.write.observe([attacker.address, tokenId, 0n, false, "Tipped.", 0, 0], { value: tip });
     await attacker.write.setTarget([observations.address, attacker.address]);
 
     // The re-entrant receive() will try to call claimTips again.
@@ -418,7 +418,7 @@ describe("Observations", async function () {
     const mockReverting = await viem.deployContract("MockRevertingOwner");
     const tip = parseEther("0.01");
 
-    await observations.write.observe([mockReverting.address, tokenId, "Tipped.", 0, 0, 0n, false], { value: tip });
+    await observations.write.observe([mockReverting.address, tokenId, 0n, false, "Tipped.", 0, 0], { value: tip });
 
     // Advance time by 1 year + 1 second
     await publicClient.request({ method: "evm_increaseTime" as any, params: [365 * 24 * 60 * 60 + 1] });
@@ -443,8 +443,8 @@ describe("Observations", async function () {
     const tipA = parseEther("0.03");
     const tipB = parseEther("0.07");
 
-    await observations.write.observe([mockA.address, tokenId, "Tip A.", 0, 0, 0n, false], { value: tipA });
-    await observations.write.observe([mockB.address, tokenId, "Tip B.", 0, 0, 0n, false], { value: tipB });
+    await observations.write.observe([mockA.address, tokenId, 0n, false, "Tip A.", 0, 0], { value: tipA });
+    await observations.write.observe([mockB.address, tokenId, 0n, false, "Tip B.", 0, 0], { value: tipB });
 
     // Claim only collection A
     await observations.write.claimTips([mockA.address]);
@@ -461,7 +461,7 @@ describe("Observations", async function () {
     const tip = parseEther("0.01");
 
     // MockNoReceive.owner() returns address(this), so it is its own authorized owner.
-    await observations.write.observe([mockNoReceive.address, tokenId, "Tipped.", 0, 0, 0n, false], { value: tip });
+    await observations.write.observe([mockNoReceive.address, tokenId, 0n, false, "Tipped.", 0, 0], { value: tip });
 
     // MockNoReceive.claim() calls claimTips(address(this)) — authorized as owner,
     // but the ETH transfer to MockNoReceive fails because it has no receive/fallback.
@@ -475,7 +475,7 @@ describe("Observations", async function () {
     const observations = await viem.deployContract("Observations");
     const tip = parseEther("0.02");
 
-    await observations.write.observeAt([collection, tokenId, "Spotted.", 10, 20, 0, 0, 0n, false], { value: tip });
+    await observations.write.observeAt([collection, tokenId, 0n, false, "Spotted.", 10, 20, 0, 0], { value: tip });
 
     const [balance] = await observations.read.tips([collection]);
     assert.equal(balance, tip);
@@ -487,7 +487,7 @@ describe("Observations", async function () {
     const mockOwnable = await viem.deployContract("MockOwnable", [walletClient.account.address]);
     const tip = parseEther("0.05");
 
-    await observations.write.observe([mockOwnable.address, tokenId, "Tipped.", 0, 0, 0n, false], { value: tip });
+    await observations.write.observe([mockOwnable.address, tokenId, 0n, false, "Tipped.", 0, 0], { value: tip });
 
     // Transfer ownership
     await mockOwnable.write.transferOwnership([otherWallet.account.address]);
@@ -514,87 +514,87 @@ describe("Observations", async function () {
     const observations = await viem.deployContract("Observations");
 
     await viem.assertions.emitWithArgs(
-      observations.write.observe([collection, tokenId, "First.", 0, 0, 0n, false]),
+      observations.write.observe([collection, tokenId, 0n, false, "First.", 0, 0]),
       observations,
       "Observation",
-      [collection, tokenId, getAddress(walletClient.account.address), "First.", false, 0, 0, 0, 0, 0n, 1n, 0n, false],
+      [collection, tokenId, getAddress(walletClient.account.address), 1n, 0n, false, "First.", false, 0, 0, 0, 0, 0n],
     );
 
     await viem.assertions.emitWithArgs(
-      observations.write.observe([collection, tokenId, "Second.", 0, 0, 0n, false]),
+      observations.write.observe([collection, tokenId, 0n, false, "Second.", 0, 0]),
       observations,
       "Observation",
-      [collection, tokenId, getAddress(walletClient.account.address), "Second.", false, 0, 0, 0, 0, 0n, 2n, 0n, false],
+      [collection, tokenId, getAddress(walletClient.account.address), 2n, 0n, false, "Second.", false, 0, 0, 0, 0, 0n],
     );
 
     await viem.assertions.emitWithArgs(
-      observations.write.observe([collection, tokenId, "Third.", 0, 0, 0n, false]),
+      observations.write.observe([collection, tokenId, 0n, false, "Third.", 0, 0]),
       observations,
       "Observation",
-      [collection, tokenId, getAddress(walletClient.account.address), "Third.", false, 0, 0, 0, 0, 0n, 3n, 0n, false],
+      [collection, tokenId, getAddress(walletClient.account.address), 3n, 0n, false, "Third.", false, 0, 0, 0, 0, 0n],
     );
   });
 
   it("Should allow reply to existing observation", async function () {
     const observations = await viem.deployContract("Observations");
 
-    await observations.write.observe([collection, tokenId, "Original.", 0, 0, 0n, false]);
+    await observations.write.observe([collection, tokenId, 0n, false, "Original.", 0, 0]);
 
     await viem.assertions.emitWithArgs(
-      observations.write.observe([collection, tokenId, "Reply.", 0, 0, 1n, false]),
+      observations.write.observe([collection, tokenId, 1n, false, "Reply.", 0, 0]),
       observations,
       "Observation",
-      [collection, tokenId, getAddress(walletClient.account.address), "Reply.", false, 0, 0, 0, 0, 0n, 2n, 1n, false],
+      [collection, tokenId, getAddress(walletClient.account.address), 2n, 1n, false, "Reply.", false, 0, 0, 0, 0, 0n],
     );
   });
 
   it("Should allow nested replies", async function () {
     const observations = await viem.deployContract("Observations");
 
-    await observations.write.observe([collection, tokenId, "Root.", 0, 0, 0n, false]);
-    await observations.write.observe([collection, tokenId, "Reply.", 0, 0, 1n, false]);
+    await observations.write.observe([collection, tokenId, 0n, false, "Root.", 0, 0]);
+    await observations.write.observe([collection, tokenId, 1n, false, "Reply.", 0, 0]);
 
     await viem.assertions.emitWithArgs(
-      observations.write.observe([collection, tokenId, "Nested reply.", 0, 0, 2n, false]),
+      observations.write.observe([collection, tokenId, 2n, false, "Nested reply.", 0, 0]),
       observations,
       "Observation",
-      [collection, tokenId, getAddress(walletClient.account.address), "Nested reply.", false, 0, 0, 0, 0, 0n, 3n, 2n, false],
+      [collection, tokenId, getAddress(walletClient.account.address), 3n, 2n, false, "Nested reply.", false, 0, 0, 0, 0, 0n],
     );
   });
 
   it("Should allow update with valid parent", async function () {
     const observations = await viem.deployContract("Observations");
 
-    await observations.write.observe([collection, tokenId, "Original.", 0, 0, 0n, false]);
+    await observations.write.observe([collection, tokenId, 0n, false, "Original.", 0, 0]);
 
     await viem.assertions.emitWithArgs(
-      observations.write.observe([collection, tokenId, "Edited.", 0, 0, 1n, true]),
+      observations.write.observe([collection, tokenId, 1n, true, "Edited.", 0, 0]),
       observations,
       "Observation",
-      [collection, tokenId, getAddress(walletClient.account.address), "Edited.", false, 0, 0, 0, 0, 0n, 2n, 1n, true],
+      [collection, tokenId, getAddress(walletClient.account.address), 2n, 1n, true, "Edited.", false, 0, 0, 0, 0, 0n],
     );
   });
 
   it("Should allow deletion (update with empty note)", async function () {
     const observations = await viem.deployContract("Observations");
 
-    await observations.write.observe([collection, tokenId, "To delete.", 0, 0, 0n, false]);
+    await observations.write.observe([collection, tokenId, 0n, false, "To delete.", 0, 0]);
 
     await viem.assertions.emitWithArgs(
-      observations.write.observe([collection, tokenId, "", 0, 0, 1n, true]),
+      observations.write.observe([collection, tokenId, 1n, true, "", 0, 0]),
       observations,
       "Observation",
-      [collection, tokenId, getAddress(walletClient.account.address), "", false, 0, 0, 0, 0, 0n, 2n, 1n, true],
+      [collection, tokenId, getAddress(walletClient.account.address), 2n, 1n, true, "", false, 0, 0, 0, 0, 0n],
     );
   });
 
   it("Should reject invalid parent ID", async function () {
     const observations = await viem.deployContract("Observations");
 
-    await observations.write.observe([collection, tokenId, "First.", 0, 0, 0n, false]);
+    await observations.write.observe([collection, tokenId, 0n, false, "First.", 0, 0]);
 
     await assert.rejects(
-      observations.write.observe([collection, tokenId, "Bad ref.", 0, 0, 5n, false]),
+      observations.write.observe([collection, tokenId, 5n, false, "Bad ref.", 0, 0]),
       /Invalid parent/,
     );
   });
@@ -603,7 +603,7 @@ describe("Observations", async function () {
     const observations = await viem.deployContract("Observations");
 
     await assert.rejects(
-      observations.write.observe([collection, tokenId, "Bad update.", 0, 0, 0n, true]),
+      observations.write.observe([collection, tokenId, 0n, true, "Bad update.", 0, 0]),
       /Update requires parent/,
     );
   });
@@ -612,9 +612,9 @@ describe("Observations", async function () {
     const observations = await viem.deployContract("Observations");
     const otherToken = 99n;
 
-    await observations.write.observe([collection, tokenId, "A1.", 0, 0, 0n, false]);
-    await observations.write.observe([collection, tokenId, "A2.", 0, 0, 0n, false]);
-    await observations.write.observe([collection, otherToken, "B1.", 0, 0, 0n, false]);
+    await observations.write.observe([collection, tokenId, 0n, false, "A1.", 0, 0]);
+    await observations.write.observe([collection, tokenId, 0n, false, "A2.", 0, 0]);
+    await observations.write.observe([collection, otherToken, 0n, false, "B1.", 0, 0]);
 
     // Token 1 has count=2, token 99 has count=1 (independent sequences)
     const [count1] = await observations.read.artifacts([collection, tokenId]);
@@ -625,10 +625,10 @@ describe("Observations", async function () {
 
     // Reply to observation 1 on token 99 should work
     await viem.assertions.emitWithArgs(
-      observations.write.observe([collection, otherToken, "B1 reply.", 0, 0, 1n, false]),
+      observations.write.observe([collection, otherToken, 1n, false, "B1 reply.", 0, 0]),
       observations,
       "Observation",
-      [collection, otherToken, getAddress(walletClient.account.address), "B1 reply.", false, 0, 0, 0, 0, 0n, 2n, 1n, false],
+      [collection, otherToken, getAddress(walletClient.account.address), 2n, 1n, false, "B1 reply.", false, 0, 0, 0, 0, 0n],
     );
   });
 
@@ -636,12 +636,12 @@ describe("Observations", async function () {
     const observations = await viem.deployContract("Observations");
     const otherToken = 99n;
 
-    await observations.write.observe([collection, tokenId, "On token 1.", 0, 0, 0n, false]);
-    await observations.write.observe([collection, tokenId, "Also on token 1.", 0, 0, 0n, false]);
+    await observations.write.observe([collection, tokenId, 0n, false, "On token 1.", 0, 0]);
+    await observations.write.observe([collection, tokenId, 0n, false, "Also on token 1.", 0, 0]);
 
     // Token 99 has no observations — parent=1 is invalid for it
     await assert.rejects(
-      observations.write.observe([collection, otherToken, "Bad cross-ref.", 0, 0, 1n, false]),
+      observations.write.observe([collection, otherToken, 1n, false, "Bad cross-ref.", 0, 0]),
       /Invalid parent/,
     );
   });
@@ -649,22 +649,22 @@ describe("Observations", async function () {
   it("Should support threading with observeAt", async function () {
     const observations = await viem.deployContract("Observations");
 
-    await observations.write.observeAt([collection, tokenId, "Spot.", 10, 20, 0, 0, 0n, false]);
+    await observations.write.observeAt([collection, tokenId, 0n, false, "Spot.", 10, 20, 0, 0]);
 
     await viem.assertions.emitWithArgs(
-      observations.write.observeAt([collection, tokenId, "Reply at spot.", 15, 25, 0, 0, 1n, false]),
+      observations.write.observeAt([collection, tokenId, 1n, false, "Reply at spot.", 15, 25, 0, 0]),
       observations,
       "Observation",
-      [collection, tokenId, getAddress(walletClient.account.address), "Reply at spot.", true, 15, 25, 0, 0, 0n, 2n, 1n, false],
+      [collection, tokenId, getAddress(walletClient.account.address), 2n, 1n, false, "Reply at spot.", true, 15, 25, 0, 0, 0n],
     );
   });
 
   it("Should still increment count for replies and updates", async function () {
     const observations = await viem.deployContract("Observations");
 
-    await observations.write.observe([collection, tokenId, "Original.", 0, 0, 0n, false]);
-    await observations.write.observe([collection, tokenId, "Reply.", 0, 0, 1n, false]);
-    await observations.write.observe([collection, tokenId, "Edit.", 0, 0, 1n, true]);
+    await observations.write.observe([collection, tokenId, 0n, false, "Original.", 0, 0]);
+    await observations.write.observe([collection, tokenId, 1n, false, "Reply.", 0, 0]);
+    await observations.write.observe([collection, tokenId, 1n, true, "Edit.", 0, 0]);
 
     const [count] = await observations.read.artifacts([collection, tokenId]);
     assert.equal(count, 3n);

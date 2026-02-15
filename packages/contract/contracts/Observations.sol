@@ -34,16 +34,16 @@ contract Observations {
         address indexed collection,
         uint256 indexed tokenId,
         address indexed observer,
+        uint64 id,
+        uint64 parent,
+        bool update,
         string note,
         bool located,
         int32 x,
         int32 y,
         uint8 viewType,
         uint32 time,
-        uint256 tip,
-        uint64 id,
-        uint64 parent,
-        bool update
+        uint256 tip
     );
 
     /// @dev collection => tokenId => Artifact
@@ -55,51 +55,51 @@ contract Observations {
     /// @notice Leave an observation on an artifact.
     /// @param collection The token contract address.
     /// @param tokenId The token ID within that collection.
+    /// @param parent The ID of the parent observation (0 = top-level).
+    /// @param update Whether this is an update to the parent observation.
     /// @param note The observation text.
     /// @param viewType The view type (0 = image, 1 = animation).
     /// @param time The time in seconds within the media (0 = no specific time).
-    /// @param parent The ID of the parent observation (0 = top-level).
-    /// @param update Whether this is an update to the parent observation.
     function observe(
         address collection,
         uint256 tokenId,
+        uint64 parent,
+        bool update,
         string calldata note,
         uint8 viewType,
-        uint32 time,
-        uint64 parent,
-        bool update
+        uint32 time
     ) external payable {
         uint64 id = _record(collection, tokenId, parent, update);
         tips[collection].deposit();
 
-        emit Observation(collection, tokenId, msg.sender, note, false, 0, 0, viewType, time, msg.value, id, parent, update);
+        emit Observation(collection, tokenId, msg.sender, id, parent, update, note, false, 0, 0, viewType, time, msg.value);
     }
 
     /// @notice Leave an observation at specific coordinates on an artifact.
     /// @param collection The token contract address.
     /// @param tokenId The token ID within that collection.
+    /// @param parent The ID of the parent observation (0 = top-level).
+    /// @param update Whether this is an update to the parent observation.
     /// @param note The observation text.
     /// @param x The x coordinate on the artifact.
     /// @param y The y coordinate on the artifact.
     /// @param viewType The view type (0 = image, 1 = animation).
     /// @param time The time in seconds within the media (0 = no specific time).
-    /// @param parent The ID of the parent observation (0 = top-level).
-    /// @param update Whether this is an update to the parent observation.
     function observeAt(
         address collection,
         uint256 tokenId,
+        uint64 parent,
+        bool update,
         string calldata note,
         int32 x,
         int32 y,
         uint8 viewType,
-        uint32 time,
-        uint64 parent,
-        bool update
+        uint32 time
     ) external payable {
         uint64 id = _record(collection, tokenId, parent, update);
         tips[collection].deposit();
 
-        emit Observation(collection, tokenId, msg.sender, note, true, x, y, viewType, time, msg.value, id, parent, update);
+        emit Observation(collection, tokenId, msg.sender, id, parent, update, note, true, x, y, viewType, time, msg.value);
     }
 
     /// @notice Claim accumulated tips for a collection.
