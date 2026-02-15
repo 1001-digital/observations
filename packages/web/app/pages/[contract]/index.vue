@@ -72,28 +72,20 @@
         v-else-if="observations.length"
         class="timeline-list"
       >
-        <div
+        <RecentObservation
           v-for="obs in observations"
           :key="`${obs.tokenId}-${obs.id}`"
-          class="timeline-item"
+          :observation="obs"
         >
-          <div class="timeline-item-header">
-            <EvmAccount :address="obs.observer" />
+          <template #link>
             <NuxtLink
-              :to="`${blockExplorer}/tx/${obs.transactionHash}`"
-              target="_blank"
+              :to="`/${contract}/${obs.tokenId}?obs=${obs.id}`"
+              class="recent-observation-link"
             >
-              <ObservationTime :block-number="obs.blockNumber" />
+              #{{ obs.tokenId }}
             </NuxtLink>
-          </div>
-          <p class="timeline-item-note">{{ obs.note }}</p>
-          <NuxtLink
-            :to="`/${contract}/${obs.tokenId}?obs=${obs.id}`"
-            class="timeline-item-artifact"
-          >
-            #{{ obs.tokenId }}
-          </NuxtLink>
-        </div>
+          </template>
+        </RecentObservation>
       </div>
       <p v-else class="empty">No observations yet.</p>
     </section>
@@ -218,33 +210,5 @@ const blockExplorer = useBlockExplorer('mainnet')
 .timeline-list {
   display: grid;
   gap: var(--spacer);
-}
-
-.timeline-item {
-  display: grid;
-  gap: var(--spacer-xs);
-
-  .timeline-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: var(--font-sm);
-    color: var(--muted);
-  }
-
-  .timeline-item-note {
-    word-break: break-word;
-    white-space: pre-wrap;
-  }
-
-  .timeline-item-artifact {
-    font-size: var(--font-sm);
-    color: var(--muted);
-  }
-
-  &:not(:last-child) {
-    padding-bottom: var(--spacer);
-    border-bottom: var(--border);
-  }
 }
 </style>

@@ -10,12 +10,14 @@
       </NuxtLink>
     </div>
     <p class="recent-observation-note">{{ observation.note }}</p>
-    <NuxtLink
-      :to="`/${observation.collection}/${observation.tokenId}`"
-      class="recent-observation-artifact"
-    >
-      {{ shortAddress(observation.collection) }} / #{{ observation.tokenId }}
-    </NuxtLink>
+    <slot name="link">
+      <NuxtLink
+        :to="`/${observation.collection}/${observation.tokenId}`"
+        class="recent-observation-link"
+      >
+        {{ shortAddress(observation.collection) }} / #{{ observation.tokenId }}
+      </NuxtLink>
+    </slot>
   </div>
 </template>
 
@@ -47,7 +49,8 @@ const blockExplorer = useBlockExplorer()
     white-space: pre-wrap;
   }
 
-  .recent-observation-artifact {
+  .recent-observation-link,
+  :slotted(.recent-observation-link) {
     font-size: var(--font-sm);
     color: var(--muted);
   }
