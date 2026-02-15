@@ -6,17 +6,7 @@
         placeholder="Leave an observation..."
         :rows="3"
       />
-      <FormItem>
-        <input
-          v-model="tipInput"
-          type="number"
-          step="0.001"
-          min="0"
-          placeholder="0"
-          label="Tip (ETH)"
-        />
-        <template #suffix> ETH </template>
-      </FormItem>
+      <TipSelect v-model="tip" />
       <EvmTransactionFlow
         :request="submitObservation"
         :text="{
@@ -63,7 +53,7 @@
 
 <script setup lang="ts">
 import { writeContract } from '@wagmi/core'
-import { parseEther, type Address } from 'viem'
+import type { Address } from 'viem'
 import type { Config } from '@wagmi/vue'
 import { ObservationsAbi } from '../utils/observations'
 
@@ -89,13 +79,7 @@ const { isConnected } = useConnection()
 const pending = defineModel<boolean>('pending')
 
 const note = ref('')
-const tipInput = ref('')
-
-const tipValue = computed(() => {
-  const v = parseFloat(tipInput.value)
-  if (!v || v <= 0) return 0n
-  return parseEther(String(tipInput.value))
-})
+const tip = ref(0n)
 
 const located = computed(() => props.x != null && props.y != null)
 
@@ -129,13 +113,13 @@ const submitObservation = () =>
           props.viewType ?? 0,
           props.time ?? 0,
         ],
-    value: tipValue.value,
+    value: tip.value,
   })
 
 const onComplete = () => {
   pending.value = false
   note.value = ''
-  tipInput.value = ''
+  tip.value = 0n
   emit('complete')
 }
 </script>
