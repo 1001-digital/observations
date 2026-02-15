@@ -34,8 +34,12 @@ Leave a text observation on a token.
 function observe(
     address collection,
     uint256 tokenId,
-    string calldata note
-) external
+    uint64 parent,
+    bool update,
+    string calldata note,
+    uint8 viewType,
+    uint32 time
+) external payable
 ```
 
 ### `observeAt`
@@ -46,10 +50,14 @@ Leave an observation pinned to a specific location on the artifact.
 function observeAt(
     address collection,
     uint256 tokenId,
+    uint64 parent,
+    bool update,
     string calldata note,
     int32 x,
-    int32 y
-) external
+    int32 y,
+    uint8 viewType,
+    uint32 time
+) external payable
 ```
 
 ### Events
@@ -61,14 +69,20 @@ event Observation(
     address indexed collection,
     uint256 indexed tokenId,
     address indexed observer,
+    uint64 id,
+    uint64 parent,
+    bool update,
     string note,
     bool located,
     int32 x,
-    int32 y
+    int32 y,
+    uint8 viewType,
+    uint32 time,
+    uint256 tip
 )
 ```
 
-The `collection` and `tokenId` are indexed, so you can efficiently filter observations for a specific artifact. The `observer` is also indexed, so you can query all observations left by a given address.
+The `collection` and `tokenId` are indexed, so you can efficiently filter observations for a specific artifact. The `observer` is also indexed, so you can query all observations left by a given address. Each observation gets a sequential `id` scoped to the artifact. `parent` references an existing observation for threading (0 = top-level). `update=true` signals an edit or deletion (empty note = deletion).
 
 ### State
 
@@ -76,7 +90,7 @@ The contract tracks a lightweight `Artifact` record per token:
 
 ```solidity
 struct Artifact {
-    uint128 count;      // total number of observations
+    uint64 count;       // total number of observations
     uint128 firstBlock; // block of the first observation
 }
 ```

@@ -6,6 +6,9 @@ export const ObservationsAbi = [
       { indexed: true, name: "collection", type: "address" },
       { indexed: true, name: "tokenId", type: "uint256" },
       { indexed: true, name: "observer", type: "address" },
+      { indexed: false, name: "id", type: "uint64" },
+      { indexed: false, name: "parent", type: "uint64" },
+      { indexed: false, name: "update", type: "bool" },
       { indexed: false, name: "note", type: "string" },
       { indexed: false, name: "located", type: "bool" },
       { indexed: false, name: "x", type: "int32" },
@@ -33,7 +36,7 @@ export const ObservationsAbi = [
       { name: "", type: "uint256" },
     ],
     outputs: [
-      { name: "count", type: "uint128" },
+      { name: "count", type: "uint64" },
       { name: "firstBlock", type: "uint128" },
     ],
   },
@@ -44,6 +47,8 @@ export const ObservationsAbi = [
     inputs: [
       { name: "collection", type: "address" },
       { name: "tokenId", type: "uint256" },
+      { name: "parent", type: "uint64" },
+      { name: "update", type: "bool" },
       { name: "note", type: "string" },
       { name: "viewType", type: "uint8" },
       { name: "time", type: "uint32" },
@@ -57,6 +62,8 @@ export const ObservationsAbi = [
     inputs: [
       { name: "collection", type: "address" },
       { name: "tokenId", type: "uint256" },
+      { name: "parent", type: "uint64" },
+      { name: "update", type: "bool" },
       { name: "note", type: "string" },
       { name: "x", type: "int32" },
       { name: "y", type: "int32" },

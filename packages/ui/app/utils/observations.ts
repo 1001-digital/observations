@@ -1,17 +1,20 @@
 import { parseAbi, type Address } from 'viem'
 
 export const ObservationsAbi = parseAbi([
-  'event Observation(address indexed collection, uint256 indexed tokenId, address indexed observer, string note, bool located, int32 x, int32 y, uint8 viewType, uint32 time, uint256 tip)',
+  'event Observation(address indexed collection, uint256 indexed tokenId, address indexed observer, uint64 id, uint64 parent, bool update, string note, bool located, int32 x, int32 y, uint8 viewType, uint32 time, uint256 tip)',
   'event TipsClaimed(address indexed collection, address indexed claimant, uint256 amount)',
-  'function artifacts(address, uint256) view returns (uint128 count, uint128 firstBlock)',
-  'function observe(address collection, uint256 tokenId, string note, uint8 viewType, uint32 time) payable',
-  'function observeAt(address collection, uint256 tokenId, string note, int32 x, int32 y, uint8 viewType, uint32 time) payable',
+  'function artifacts(address, uint256) view returns (uint64 count, uint128 firstBlock)',
+  'function observe(address collection, uint256 tokenId, uint64 parent, bool update, string note, uint8 viewType, uint32 time) payable',
+  'function observeAt(address collection, uint256 tokenId, uint64 parent, bool update, string note, int32 x, int32 y, uint8 viewType, uint32 time) payable',
   'function tips(address) view returns (uint128 balance, uint128 unclaimedSince)',
   'function claimTips(address collection)',
 ])
 
 export interface ObservationData {
   id: string
+  observationId: bigint
+  parent: bigint
+  update: boolean
   observer: Address
   note: string
   located: boolean

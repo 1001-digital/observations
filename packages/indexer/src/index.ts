@@ -2,7 +2,7 @@ import { ponder } from "ponder:registry";
 import { observation, artifact, collectionTips } from "ponder:schema";
 
 ponder.on("Observations:Observation", async ({ event, context }) => {
-  const { collection, tokenId, observer, note, located, x, y, viewType, time, tip } = event.args;
+  const { collection, tokenId, observer, id: observationId, parent, update, note, located, x, y, viewType, time, tip } = event.args;
 
   await context.db
     .insert(observation)
@@ -11,6 +11,9 @@ ponder.on("Observations:Observation", async ({ event, context }) => {
       collection,
       tokenId,
       observer,
+      observationId: BigInt(observationId),
+      parent: BigInt(parent),
+      update,
       note,
       located,
       x,

@@ -112,6 +112,8 @@ const submitObservation = () =>
       ? [
           props.contract,
           props.tokenId,
+          0n,
+          false,
           note.value,
           props.x!,
           props.y!,
@@ -121,6 +123,8 @@ const submitObservation = () =>
       : [
           props.contract,
           props.tokenId,
+          0n,
+          false,
           note.value,
           props.viewType ?? 0,
           props.time ?? 0,
