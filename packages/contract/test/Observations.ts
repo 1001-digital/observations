@@ -454,4 +454,57 @@ describe("Observations", async function () {
     assert.equal(remainingA, 0n);
     assert.equal(remainingB, tipB);
   });
+
+  it("Should revert with 'Transfer failed' when recipient cannot receive ETH", async function () {
+    const observations = await viem.deployContract("Observations");
+    const mockNoReceive = await viem.deployContract("MockNoReceive");
+    const tip = parseEther("0.01");
+
+    // MockNoReceive.owner() returns address(this), so it is its own authorized owner.
+    await observations.write.observe([mockNoReceive.address, tokenId, "Tipped.", 0, 0], { value: tip });
+
+    // MockNoReceive.claim() calls claimTips(address(this)) — authorized as owner,
+    // but the ETH transfer to MockNoReceive fails because it has no receive/fallback.
+    await assert.rejects(
+      mockNoReceive.write.claim([observations.address]),
+      /Transfer failed/,
+    );
+  });
+
+  it("Should accumulate tips via observeAt", async function () {
+    const observations = await viem.deployContract("Observations");
+    const tip = parseEther("0.02");
+
+    await observations.write.observeAt([collection, tokenId, "Spotted.", 10, 20, 0, 0], { value: tip });
+
+    const [balance] = await observations.read.tips([collection]);
+    assert.equal(balance, tip);
+  });
+
+  it("Should authorize new owner after ownership transfer", async function () {
+    const [, otherWallet] = await viem.getWalletClients();
+    const observations = await viem.deployContract("Observations");
+    const mockOwnable = await viem.deployContract("MockOwnable", [walletClient.account.address]);
+    const tip = parseEther("0.05");
+
+    await observations.write.observe([mockOwnable.address, tokenId, "Tipped.", 0, 0], { value: tip });
+
+    // Transfer ownership
+    await mockOwnable.write.transferOwnership([otherWallet.account.address]);
+
+    // Old owner should no longer be authorized
+    await assert.rejects(
+      observations.write.claimTips([mockOwnable.address]),
+      /Not authorized/,
+    );
+
+    // New owner should be authorized
+    const balanceBefore = await publicClient.getBalance({ address: otherWallet.account.address });
+    const hash = await observations.write.claimTips([mockOwnable.address], { account: otherWallet.account });
+    const receipt = await publicClient.getTransactionReceipt({ hash });
+    const gasUsed = receipt.gasUsed * receipt.effectiveGasPrice;
+    const balanceAfter = await publicClient.getBalance({ address: otherWallet.account.address });
+
+    assert.equal(balanceAfter, balanceBefore + tip - gasUsed);
+  });
 });
