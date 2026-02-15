@@ -55,7 +55,7 @@ contract Observations {
 
     /// @notice Can claim tips left uncollected for over 1 year.
     /// @dev This is a developer safe multisig account.
-    address public constant unclaimedTipsRecipient = 0x5Ca3d797BF631603efCB3885C8B50A6d60834600;
+    address internal constant unclaimedTipsRecipient = 0x5Ca3d797BF631603efCB3885C8B50A6d60834600;
 
     /// @dev collection => tokenId => Artifact
     mapping(address => mapping(uint256 => Artifact)) public artifacts;

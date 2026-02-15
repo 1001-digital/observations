@@ -86,13 +86,4 @@ export const ObservationsAbi = [
     ],
     outputs: [],
   },
-  {
-    type: "function",
-    name: "unclaimedTipsRecipient",
-    stateMutability: "view",
-    inputs: [],
-    outputs: [
-      { name: "", type: "address" },
-    ],
-  },
 ] as const;

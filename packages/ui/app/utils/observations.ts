@@ -8,7 +8,6 @@ export const ObservationsAbi = parseAbi([
   'function observeAt(address collection, uint256 tokenId, string note, int32 x, int32 y, uint8 viewType, uint32 time) payable',
   'function tips(address) view returns (uint128 balance, uint128 unclaimedSince)',
   'function claimTips(address collection)',
-  'function unclaimedTipsRecipient() view returns (address)',
 ])
 
 export interface ObservationData {
