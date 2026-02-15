@@ -13,6 +13,7 @@ export const observation = onchainTable(
     y: t.integer().notNull(),
     view: t.integer().notNull(),
     time: t.integer().notNull(),
+    tip: t.bigint().notNull(),
     block: t.bigint().notNull(),
     timestamp: t.bigint().notNull(),
     txHash: t.hex().notNull(),
@@ -35,6 +36,16 @@ export const artifact = onchainTable(
   (table) => ({
     pk: primaryKey({ columns: [table.collection, table.tokenId] }),
     collectionIdx: index().on(table.collection),
+  }),
+);
+
+export const collectionTips = onchainTable(
+  "collection_tips",
+  (t) => ({
+    collection: t.hex().primaryKey(),
+    totalTipped: t.bigint().notNull(),
+    totalClaimed: t.bigint().notNull(),
+    balance: t.bigint().notNull(),
   }),
 );
 

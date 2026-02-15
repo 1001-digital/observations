@@ -12,6 +12,16 @@ export const ObservationsAbi = [
       { indexed: false, name: "y", type: "int32" },
       { indexed: false, name: "viewType", type: "uint8" },
       { indexed: false, name: "time", type: "uint32" },
+      { indexed: false, name: "tip", type: "uint256" },
+    ],
+  },
+  {
+    type: "event",
+    name: "TipsClaimed",
+    inputs: [
+      { indexed: true, name: "collection", type: "address" },
+      { indexed: true, name: "claimant", type: "address" },
+      { indexed: false, name: "amount", type: "uint256" },
     ],
   },
   {
@@ -30,7 +40,7 @@ export const ObservationsAbi = [
   {
     type: "function",
     name: "observe",
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     inputs: [
       { name: "collection", type: "address" },
       { name: "tokenId", type: "uint256" },
@@ -43,7 +53,7 @@ export const ObservationsAbi = [
   {
     type: "function",
     name: "observeAt",
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     inputs: [
       { name: "collection", type: "address" },
       { name: "tokenId", type: "uint256" },
@@ -54,5 +64,35 @@ export const ObservationsAbi = [
       { name: "time", type: "uint32" },
     ],
     outputs: [],
+  },
+  {
+    type: "function",
+    name: "tips",
+    stateMutability: "view",
+    inputs: [
+      { name: "", type: "address" },
+    ],
+    outputs: [
+      { name: "balance", type: "uint128" },
+      { name: "unclaimedSince", type: "uint128" },
+    ],
+  },
+  {
+    type: "function",
+    name: "claimTips",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "collection", type: "address" },
+    ],
+    outputs: [],
+  },
+  {
+    type: "function",
+    name: "protocolOwner",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [
+      { name: "", type: "address" },
+    ],
   },
 ] as const;

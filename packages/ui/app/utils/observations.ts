@@ -1,10 +1,14 @@
 import { parseAbi, type Address } from 'viem'
 
 export const ObservationsAbi = parseAbi([
-  'event Observation(address indexed collection, uint256 indexed tokenId, address indexed observer, string note, bool located, int32 x, int32 y, uint8 viewType, uint32 time)',
+  'event Observation(address indexed collection, uint256 indexed tokenId, address indexed observer, string note, bool located, int32 x, int32 y, uint8 viewType, uint32 time, uint256 tip)',
+  'event TipsClaimed(address indexed collection, address indexed claimant, uint256 amount)',
   'function artifacts(address, uint256) view returns (uint128 count, uint128 firstBlock)',
-  'function observe(address collection, uint256 tokenId, string note, uint8 viewType, uint32 time)',
-  'function observeAt(address collection, uint256 tokenId, string note, int32 x, int32 y, uint8 viewType, uint32 time)',
+  'function observe(address collection, uint256 tokenId, string note, uint8 viewType, uint32 time) payable',
+  'function observeAt(address collection, uint256 tokenId, string note, int32 x, int32 y, uint8 viewType, uint32 time) payable',
+  'function tips(address) view returns (uint128 balance, uint128 unclaimedSince)',
+  'function claimTips(address collection)',
+  'function protocolOwner() view returns (address)',
 ])
 
 export interface ObservationData {
@@ -16,6 +20,7 @@ export interface ObservationData {
   y: number
   viewType: number
   time: number
+  tip: bigint
   blockNumber: bigint
   transactionHash: string
 }

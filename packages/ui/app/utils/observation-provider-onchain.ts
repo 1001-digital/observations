@@ -53,6 +53,7 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
         y: event.args.y!,
         viewType: event.args.viewType!,
         time: event.args.time!,
+        tip: event.args.tip!,
         blockNumber: event.blockNumber,
         transactionHash: event.transactionHash,
       }))
@@ -86,6 +87,7 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
         y: event.args.y!,
         viewType: event.args.viewType!,
         time: event.args.time!,
+        tip: event.args.tip!,
         blockNumber: event.blockNumber,
         transactionHash: event.transactionHash,
         collection: event.args.collection!,

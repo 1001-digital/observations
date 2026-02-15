@@ -6,6 +6,17 @@
         placeholder="Leave an observation..."
         :rows="3"
       />
+      <FormItem>
+        <input
+          v-model="tipInput"
+          type="number"
+          step="0.001"
+          min="0"
+          placeholder="0"
+          label="Tip (ETH)"
+        />
+        <template #suffix> ETH </template>
+      </FormItem>
       <EvmTransactionFlow
         :request="submitObservation"
         :text="{
@@ -30,7 +41,7 @@
         <template #start="{ start }">
           <Actions>
             <Button
-              @click.stop.prevent="pending = true; start()"
+              @click.stop.prevent="() => triggerTransactionFlow(start)"
               :disabled="!note.trim()"
               >Observe</Button
             >
@@ -52,7 +63,7 @@
 
 <script setup lang="ts">
 import { writeContract } from '@wagmi/core'
-import type { Address } from 'viem'
+import { parseEther, type Address } from 'viem'
 import type { Config } from '@wagmi/vue'
 import { ObservationsAbi } from '../utils/observations'
 
@@ -78,22 +89,49 @@ const { isConnected } = useConnection()
 const pending = defineModel<boolean>('pending')
 
 const note = ref('')
+const tipInput = ref('')
+
+const tipValue = computed(() => {
+  const v = parseFloat(tipInput.value)
+  if (!v || v <= 0) return 0n
+  return parseEther(String(tipInput.value))
+})
 
 const located = computed(() => props.x != null && props.y != null)
 
+const triggerTransactionFlow = (cb: Function) => {
+  pending.value = true
+  cb()
+}
 const submitObservation = () =>
   writeContract($wagmi as Config, {
     address: contractAddress,
     abi: ObservationsAbi,
     functionName: located.value ? 'observeAt' : 'observe',
     args: located.value
-      ? [props.contract, props.tokenId, note.value, props.x!, props.y!, props.viewType ?? 0, props.time ?? 0]
-      : [props.contract, props.tokenId, note.value, props.viewType ?? 0, props.time ?? 0],
+      ? [
+          props.contract,
+          props.tokenId,
+          note.value,
+          props.x!,
+          props.y!,
+          props.viewType ?? 0,
+          props.time ?? 0,
+        ]
+      : [
+          props.contract,
+          props.tokenId,
+          note.value,
+          props.viewType ?? 0,
+          props.time ?? 0,
+        ],
+    value: tipValue.value,
   })
 
 const onComplete = () => {
   pending.value = false
   note.value = ''
+  tipInput.value = ''
   emit('complete')
 }
 </script>

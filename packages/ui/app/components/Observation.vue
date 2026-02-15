@@ -16,10 +16,14 @@
     <small v-if="hasBothViews" class="observation-view-type">
       {{ observation.viewType === 1 ? 'animation' : 'image' }}
     </small>
+    <small v-if="observation.tip > 0n" class="observation-tip">
+      {{ formatTip(observation.tip) }} ETH
+    </small>
   </div>
 </template>
 
 <script setup lang="ts">
+import { formatEther } from 'viem'
 import type { ObservationData } from '../utils/observations'
 
 const props = defineProps<{
@@ -29,6 +33,15 @@ const props = defineProps<{
 }>()
 
 const blockExplorer = useBlockExplorer()
+
+function formatTip(value: bigint): string {
+  const formatted = formatEther(value)
+  // Remove trailing zeros after decimal point
+  if (formatted.includes('.')) {
+    return formatted.replace(/\.?0+$/, '') || '0'
+  }
+  return formatted
+}
 </script>
 
 <style scoped>
@@ -50,7 +63,8 @@ const blockExplorer = useBlockExplorer()
   }
 
   .observation-location,
-  .observation-view-type {
+  .observation-view-type,
+  .observation-tip {
     color: var(--muted);
     font-size: var(--font-sm);
   }

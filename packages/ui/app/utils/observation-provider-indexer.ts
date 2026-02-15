@@ -16,6 +16,7 @@ interface PonderObservation {
   y: number
   view: number
   time: number
+  tip: string
   block: string
   txHash: string
 }
@@ -32,7 +33,7 @@ const OBSERVATIONS_QUERY = `
       limit: 1000
     ) {
       items {
-        id observer note located x y view time block txHash
+        id observer note located x y view time tip block txHash
       }
     }
   }
@@ -42,7 +43,7 @@ const RECENT_OBSERVATIONS_QUERY = `
   query {
     observations(orderBy: "block", orderDirection: "desc", limit: 100) {
       items {
-        id collection tokenId observer note located x y view time block txHash
+        id collection tokenId observer note located x y view time tip block txHash
       }
     }
   }
@@ -58,6 +59,7 @@ function mapObservation(raw: PonderObservation): ObservationData {
     y: raw.y,
     viewType: raw.view,
     time: raw.time,
+    tip: BigInt(raw.tip || '0'),
     blockNumber: BigInt(raw.block),
     transactionHash: raw.txHash,
   }
