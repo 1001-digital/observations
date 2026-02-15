@@ -53,18 +53,15 @@ contract Observations {
         uint256 amount
     );
 
-    /// @notice The protocol owner (deployer), can sweep unclaimed tips after 1 year.
-    address public immutable protocolOwner;
+    /// @notice Can claim tips left uncollected for over 1 year.
+    /// @dev This is a developer safe multisig account.
+    address public constant unclaimedTipsRecipient = 0x5Ca3d797BF631603efCB3885C8B50A6d60834600;
 
     /// @dev collection => tokenId => Artifact
     mapping(address => mapping(uint256 => Artifact)) public artifacts;
 
     /// @notice Accumulated tips per collection.
     mapping(address => CollectionTips) public tips;
-
-    constructor() {
-        protocolOwner = msg.sender;
-    }
 
     /// @notice Leave an observation on an artifact.
     /// @param collection The token contract address.
@@ -129,11 +126,11 @@ contract Observations {
             }
         }
 
-        // Check if caller is protocol owner (only after 1 year)
-        if (!authorized && msg.sender == protocolOwner) {
+        // Check if caller is unclaimed tips recipient (only after 1 year)
+        if (!authorized && msg.sender == unclaimedTipsRecipient) {
             require(
                 block.timestamp - t.unclaimedSince > 365 days,
-                "Tips not yet sweepable"
+                "Tips not yet claimable"
             );
             authorized = true;
         }

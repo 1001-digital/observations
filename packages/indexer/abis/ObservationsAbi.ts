@@ -88,7 +88,7 @@ export const ObservationsAbi = [
   },
   {
     type: "function",
-    name: "protocolOwner",
+    name: "unclaimedTipsRecipient",
     stateMutability: "view",
     inputs: [],
     outputs: [

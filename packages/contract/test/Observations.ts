@@ -11,6 +11,7 @@ describe("Observations", async function () {
 
   const collection = getAddress("0x036721e5A769Cc48B3189EFb9CCE4C97e7C3C1f5");
   const tokenId = 1n;
+  const unclaimedTipsRecipient = getAddress("0x5Ca3d797BF631603efCB3885C8B50A6d60834600");
 
   it("Should emit an Observation event", async function () {
     const observations = await viem.deployContract("Observations");
@@ -245,15 +246,20 @@ describe("Observations", async function () {
 
   it("Should prevent protocol owner from claiming before 1 year", async function () {
     const observations = await viem.deployContract("Observations");
-    // Collection is an EOA (no owner() function) — only protocol owner can claim
     const tip = parseEther("0.01");
 
     await observations.write.observe([collection, tokenId, "Tipped.", 0, 0], { value: tip });
 
+    // Impersonate the protocol owner (Safe multisig)
+    await publicClient.request({ method: "hardhat_impersonateAccount" as any, params: [unclaimedTipsRecipient] });
+    await walletClient.sendTransaction({ to: unclaimedTipsRecipient, value: parseEther("1") });
+
     await assert.rejects(
-      observations.write.claimTips([collection]),
-      /Tips not yet sweepable/,
+      observations.write.claimTips([collection], { account: unclaimedTipsRecipient }),
+      /Tips not yet claimable/,
     );
+
+    await publicClient.request({ method: "hardhat_stopImpersonatingAccount" as any, params: [unclaimedTipsRecipient] });
   });
 
   it("Should allow protocol owner to sweep after 1 year", async function () {
@@ -266,13 +272,19 @@ describe("Observations", async function () {
     await publicClient.request({ method: "evm_increaseTime" as any, params: [365 * 24 * 60 * 60 + 1] });
     await publicClient.request({ method: "evm_mine" as any, params: [] });
 
-    const balanceBefore = await publicClient.getBalance({ address: walletClient.account.address });
-    const hash = await observations.write.claimTips([collection]);
+    // Impersonate the protocol owner (Safe multisig)
+    await publicClient.request({ method: "hardhat_impersonateAccount" as any, params: [unclaimedTipsRecipient] });
+    await walletClient.sendTransaction({ to: unclaimedTipsRecipient, value: parseEther("1") });
+
+    const balanceBefore = await publicClient.getBalance({ address: unclaimedTipsRecipient });
+    const hash = await observations.write.claimTips([collection], { account: unclaimedTipsRecipient });
     const receipt = await publicClient.getTransactionReceipt({ hash });
     const gasUsed = receipt.gasUsed * receipt.effectiveGasPrice;
-    const balanceAfter = await publicClient.getBalance({ address: walletClient.account.address });
+    const balanceAfter = await publicClient.getBalance({ address: unclaimedTipsRecipient });
 
     assert.equal(balanceAfter, balanceBefore + tip - gasUsed);
+
+    await publicClient.request({ method: "hardhat_stopImpersonatingAccount" as any, params: [unclaimedTipsRecipient] });
   });
 
   it("Should only allow protocol owner to claim for collection without owner()", async function () {
@@ -282,10 +294,14 @@ describe("Observations", async function () {
     // collection is an EOA — no owner() — so only protocol owner after 1 year
     await observations.write.observe([collection, tokenId, "Tipped.", 0, 0], { value: tip });
 
+    // Impersonate the protocol owner (Safe multisig)
+    await publicClient.request({ method: "hardhat_impersonateAccount" as any, params: [unclaimedTipsRecipient] });
+    await walletClient.sendTransaction({ to: unclaimedTipsRecipient, value: parseEther("1") });
+
     // Protocol owner can't claim before 1 year
     await assert.rejects(
-      observations.write.claimTips([collection]),
-      /Tips not yet sweepable/,
+      observations.write.claimTips([collection], { account: unclaimedTipsRecipient }),
+      /Tips not yet claimable/,
     );
 
     // Fast forward 1 year + 1
@@ -293,10 +309,12 @@ describe("Observations", async function () {
     await publicClient.request({ method: "evm_mine" as any, params: [] });
 
     // Now protocol owner can claim
-    await observations.write.claimTips([collection]);
+    await observations.write.claimTips([collection], { account: unclaimedTipsRecipient });
 
     const [remaining] = await observations.read.tips([collection]);
     assert.equal(remaining, 0n);
+
+    await publicClient.request({ method: "hardhat_stopImpersonatingAccount" as any, params: [unclaimedTipsRecipient] });
   });
 
   it("Should emit TipsClaimed event", async function () {
