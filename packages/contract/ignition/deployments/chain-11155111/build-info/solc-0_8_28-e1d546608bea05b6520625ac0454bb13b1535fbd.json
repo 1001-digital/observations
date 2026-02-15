@@ -1,0 +1,42 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_28-e1d546608bea05b6520625ac0454bb13b1535fbd",
+  "solcVersion": "0.8.28",
+  "solcLongVersion": "0.8.28+commit.7893614a",
+  "userSourceNameMap": {
+    "contracts/Observations.sol": "project/contracts/Observations.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "cancun",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/ClaimableTips.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.28;\n\n/// @notice Tracks claimable ETH tips per collection.\n/// Collection owners can claim at any time.\n/// If unclaimed for over 1 year, the unclaimed tips recipient can claim.\nlibrary ClaimableTips {\n\n    struct Tips {\n        uint128 balance;\n        uint128 unclaimedSince;\n    }\n\n    event TipsClaimed(\n        address indexed collection,\n        address indexed claimant,\n        uint256 amount\n    );\n\n    /// @notice Can claim tips left uncollected for over 1 year.\n    /// @dev This is a developer safe multisig account.\n    address internal constant UNCLAIMED_TIPS_RECIPIENT = 0x5Ca3d797BF631603efCB3885C8B50A6d60834600;\n\n    /// @dev Accumulate a tip for a collection.\n    function deposit(Tips storage t) internal {\n        if (msg.value == 0) return;\n        if (t.balance == 0) t.unclaimedSince = uint128(block.timestamp);\n        t.balance += uint128(msg.value);\n    }\n\n    /// @dev Claim accumulated tips for a collection.\n    function claim(Tips storage t, address collection) internal {\n        uint256 amount = t.balance;\n        require(amount > 0, \"No tips to claim\");\n\n        // Determine authorization\n        bool authorized = false;\n\n        // Check if caller is collection owner\n        (bool success, bytes memory data) = collection.staticcall(\n            abi.encodeWithSignature(\"owner()\")\n        );\n        if (success && data.length >= 32) {\n            address collectionOwner = abi.decode(data, (address));\n            if (msg.sender == collectionOwner) {\n                authorized = true;\n            }\n        }\n\n        // Check if caller is unclaimed tips recipient (only after 1 year)\n        if (!authorized && msg.sender == UNCLAIMED_TIPS_RECIPIENT) {\n            require(\n                block.timestamp - t.unclaimedSince > 365 days,\n                \"Tips not yet claimable\"\n            );\n            authorized = true;\n        }\n\n        require(authorized, \"Not authorized\");\n\n        // Effects before interactions (single SSTORE — clears both packed fields)\n        t.balance = 0;\n        t.unclaimedSince = 0;\n\n        // Transfer\n        (bool sent, ) = msg.sender.call{value: amount}(\"\");\n        require(sent, \"Transfer failed\");\n\n        emit TipsClaimed(collection, msg.sender, amount);\n    }\n}\n"
+      },
+      "project/contracts/Observations.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.28;\n\nimport { ClaimableTips } from \"./ClaimableTips.sol\";\n\n/**\n-------------------------------------\n|                                   |\n|     ·  ·  ·  ·  ·  ·  ●  ·  ·     |\n|     ·  ·  ·  ·  ·  ·  ·  ·  ·     |\n|     ·  ●  ·  ·  ·  ·  ·  ·  ·     |\n|     ·  ·  ·  ·  ●  ·  ·  ·  ·     |\n|     ·  ·  ·  ·  ·  ·  ·  ·  ●     |\n|     ·  ·  ●  ·  ·  ·  ·  ·  ·     |\n|     ·  ·  ·  ·  ·  ·  ·  ●  ·     |\n|     ·  ●  ·  ·  ·  ●  ·  ·  ·     |\n|     ·  ·  ·  ●  ·  ·  ·  ·  ·     |\n|                                   |\n-------------------------------------\n@title  Observations\n@notice Leave observations on Ethereum artifacts.\n*/\ncontract Observations {\n    using ClaimableTips for ClaimableTips.Tips;\n\n    /// @dev Tracks observation history for a given artifact.\n    struct Artifact {\n        uint64 count;\n        uint128 firstBlock;\n    }\n\n    /// @notice Emitted when someone leaves an observation.\n    event Observation(\n        address indexed collection,\n        uint256 indexed tokenId,\n        address indexed observer,\n        uint64 id,\n        uint64 parent,\n        bool update,\n        string note,\n        bool located,\n        int32 x,\n        int32 y,\n        uint8 viewType,\n        uint32 time,\n        uint256 tip\n    );\n\n    /// @dev collection => tokenId => Artifact\n    mapping(address => mapping(uint256 => Artifact)) public artifacts;\n\n    /// @notice Accumulated tips per collection.\n    mapping(address => ClaimableTips.Tips) public tips;\n\n    /// @notice Leave an observation on an artifact.\n    /// @param collection The token contract address.\n    /// @param tokenId The token ID within that collection.\n    /// @param parent The ID of the parent observation (0 = top-level).\n    /// @param update Whether this is an update to the parent observation.\n    /// @param note The observation text.\n    /// @param viewType The view type (0 = image, 1 = animation).\n    /// @param time The time in seconds within the media (0 = no specific time).\n    function observe(\n        address collection,\n        uint256 tokenId,\n        uint64 parent,\n        bool update,\n        string calldata note,\n        uint8 viewType,\n        uint32 time\n    ) external payable {\n        uint64 id = _record(collection, tokenId, parent, update);\n        tips[collection].deposit();\n\n        emit Observation(collection, tokenId, msg.sender, id, parent, update, note, false, 0, 0, viewType, time, msg.value);\n    }\n\n    /// @notice Leave an observation at specific coordinates on an artifact.\n    /// @param collection The token contract address.\n    /// @param tokenId The token ID within that collection.\n    /// @param parent The ID of the parent observation (0 = top-level).\n    /// @param update Whether this is an update to the parent observation.\n    /// @param note The observation text.\n    /// @param x The x coordinate on the artifact.\n    /// @param y The y coordinate on the artifact.\n    /// @param viewType The view type (0 = image, 1 = animation).\n    /// @param time The time in seconds within the media (0 = no specific time).\n    function observeAt(\n        address collection,\n        uint256 tokenId,\n        uint64 parent,\n        bool update,\n        string calldata note,\n        int32 x,\n        int32 y,\n        uint8 viewType,\n        uint32 time\n    ) external payable {\n        uint64 id = _record(collection, tokenId, parent, update);\n        tips[collection].deposit();\n\n        emit Observation(collection, tokenId, msg.sender, id, parent, update, note, true, x, y, viewType, time, msg.value);\n    }\n\n    /// @notice Claim accumulated tips for a collection.\n    /// @param collection The collection address to claim tips for.\n    function claimTips(address collection) external {\n        tips[collection].claim(collection);\n    }\n\n    /// @dev Track the observation count and first observation block for an artifact.\n    function _record(\n        address collection, uint256 tokenId, uint64 parent, bool update\n    ) internal returns (uint64 id) {\n        Artifact storage a = artifacts[collection][tokenId];\n\n        if (a.count == 0) {\n            a.firstBlock = uint128(block.number);\n        }\n\n        unchecked { ++a.count; }\n        id = a.count;\n\n        require(parent < id, \"Invalid parent\");\n        require(!update || parent != 0, \"Update requires parent\");\n    }\n}\n\n// - by jalil, inspired by Sam Spratt's \"The Monument Game\"\n"
+      }
+    }
+  }
+}
