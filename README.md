@@ -82,7 +82,16 @@ event Observation(
 )
 ```
 
-The `collection` and `tokenId` are indexed, so you can efficiently filter observations for a specific artifact. The `observer` is also indexed, so you can query all observations left by a given address. Each observation gets a sequential `id` scoped to the artifact. `parent` references an existing observation for threading (0 = top-level). `update=true` signals an edit or deletion (empty note = deletion).
+The `collection` and `tokenId` are indexed, so you can efficiently filter observations for a specific artifact. The `observer` is also indexed, so you can query all observations left by a given address. Each observation gets a sequential `id` scoped to the artifact.
+
+### Edits and Deletions
+
+Observations can be edited or deleted by their original author by submitting a new observation with `parent` set to the target observation's `id` and `update=true`.
+
+- **Edit**: `observe(collection, tokenId, parent=targetId, update=true, "new note", ...)` — replaces the content of the target observation.
+- **Delete**: `observe(collection, tokenId, parent=targetId, update=true, "", ...)` — an empty note signals deletion.
+
+Only the original observer of the target observation may edit or delete it. The update event is always recorded as its own observation (preserving full event history), but indexers should apply the update to the parent and exclude the update record from display. `parent=0` with `update=false` is a regular top-level observation.
 
 ### State
 
