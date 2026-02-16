@@ -106,7 +106,6 @@ const {
 const syncFocusToRoute = (id: string | null) => {
   const query = { ...route.query }
   if (id != null) {
-    query.obs = id
     const obs = observations.value.find((o) => o.id === id)
     if (obs && animationUrl.value) {
       const animation = animationQueryValue(obs.viewType === 1)
@@ -116,21 +115,19 @@ const syncFocusToRoute = (id: string | null) => {
         delete query.animation
       }
     }
-  } else {
-    delete query.obs
   }
-  router.replace({ query })
+  router.replace({ hash: id != null ? `#${id}` : '', query })
 }
 
-// Initialize focused observation from query param
-if (route.query.obs != null) {
-  const obsId = String(route.query.obs)
-  focusObservation(obsId)
+// Initialize focused observation from hash
+const initialHash = route.hash?.slice(1)
+if (initialHash) {
+  focusObservation(initialHash)
   // Switch view once observations load
-  watch(observations, () => syncFocusToRoute(obsId), { once: true })
+  watch(observations, () => syncFocusToRoute(initialHash), { once: true })
 }
 
-// Sync focused observation to query param and switch view
+// Sync focused observation to hash and switch view
 watch(focusedId, syncFocusToRoute)
 
 const onMarkerComplete = () => {

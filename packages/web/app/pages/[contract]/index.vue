@@ -79,7 +79,7 @@
         >
           <template #link>
             <NuxtLink
-              :to="`/${contract}/${obs.tokenId}?obs=${obs.id}`"
+              :to="`/${contract}/${obs.tokenId}#${obs.id}`"
               class="observation-list-item-link"
             >
               #{{ obs.tokenId }}
