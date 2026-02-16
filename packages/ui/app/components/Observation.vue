@@ -24,6 +24,9 @@
     <small v-if="hasBothViews" class="observation-view-type">
       {{ observation.viewType === 1 ? 'animation' : 'image' }}
     </small>
+    <small v-if="observation.updatedBlock" class="observation-updated">
+      updated <ObservationTime :block-number="observation.updatedBlock" />
+    </small>
     <small v-if="observation.tip > 0n" class="observation-tip">
       {{ formatTip(observation.tip) }} ETH
     </small>
@@ -84,6 +87,7 @@ function formatTip(value: bigint): string {
 
   .observation-location,
   .observation-view-type,
+  .observation-updated,
   .observation-tip {
     color: var(--muted);
     font-size: var(--font-sm);
