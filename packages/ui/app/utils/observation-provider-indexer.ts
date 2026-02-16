@@ -6,6 +6,13 @@ import {
   type ObservationProvider,
 } from './observations'
 
+export interface PaginatedObservations {
+  items: RecentObservationData[]
+  endCursor: string | null
+  hasNextPage: boolean
+  totalCount: number
+}
+
 interface PonderObservation {
   id: string
   collection: string
@@ -83,6 +90,27 @@ const COLLECTION_OBSERVATIONS_QUERY = `
   }
 `
 
+const OBSERVER_OBSERVATIONS_QUERY = `
+  query($observer: String!, $limit: Int!, $after: String) {
+    observations(
+      where: { observer: $observer }
+      orderBy: "block"
+      orderDirection: "desc"
+      limit: $limit
+      after: $after
+    ) {
+      items {
+        id collection tokenId parent update observer note located x y view time tip block txHash
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      totalCount
+    }
+  }
+`
+
 function mapObservation(raw: PonderObservation): ObservationData {
   return {
     id: raw.id,
@@ -101,7 +129,7 @@ function mapObservation(raw: PonderObservation): ObservationData {
   }
 }
 
-function mapRecentObservation(raw: PonderObservation): RecentObservationData {
+export function mapRecentObservation(raw: PonderObservation): RecentObservationData {
   return {
     ...mapObservation(raw),
     collection: raw.collection as Address,
@@ -109,7 +137,7 @@ function mapRecentObservation(raw: PonderObservation): RecentObservationData {
   }
 }
 
-async function graphqlFetch<T>(
+export async function graphqlFetch<T>(
   endpoints: string[],
   query: string,
   variables?: Record<string, unknown>,
@@ -134,6 +162,32 @@ async function graphqlFetch<T>(
   }
 
   throw lastError ?? new Error('No indexer endpoints configured')
+}
+
+export async function fetchObserverObservations(
+  endpoints: string[],
+  observer: string,
+  limit: number = 50,
+  after?: string,
+): Promise<PaginatedObservations> {
+  const data = await graphqlFetch<{
+    observations: {
+      items: PonderObservation[]
+      pageInfo: { endCursor: string | null; hasNextPage: boolean }
+      totalCount: number
+    }
+  }>(endpoints, OBSERVER_OBSERVATIONS_QUERY, {
+    observer: observer.toLowerCase(),
+    limit,
+    after,
+  })
+
+  return {
+    items: data.observations.items.map(mapRecentObservation),
+    endCursor: data.observations.pageInfo.endCursor,
+    hasNextPage: data.observations.pageInfo.hasNextPage,
+    totalCount: data.observations.totalCount,
+  }
 }
 
 export function createIndexerProvider(endpoints: string[]): ObservationProvider {

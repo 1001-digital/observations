@@ -1,7 +1,9 @@
 <template>
   <div class="observation">
     <div class="observation-header">
-      <EvmAccount :address="observation.observer" />
+      <NuxtLink :to="`/observer/${observation.observer}`">
+        <EvmAccount :address="observation.observer" />
+      </NuxtLink>
       <NuxtLink
         :to="`${blockExplorer}/tx/${observation.transactionHash}`"
         target="_blank"

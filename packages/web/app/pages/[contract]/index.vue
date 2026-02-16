@@ -72,7 +72,7 @@
         v-else-if="observations.length"
         class="timeline-list"
       >
-        <RecentObservation
+        <ObservationListItem
           v-for="obs in observations"
           :key="`${obs.tokenId}-${obs.id}`"
           :observation="obs"
@@ -80,12 +80,12 @@
           <template #link>
             <NuxtLink
               :to="`/${contract}/${obs.tokenId}?obs=${obs.id}`"
-              class="recent-observation-link"
+              class="observation-list-item-link"
             >
               #{{ obs.tokenId }}
             </NuxtLink>
           </template>
-        </RecentObservation>
+        </ObservationListItem>
       </div>
       <p v-else class="empty">No observations yet.</p>
     </section>

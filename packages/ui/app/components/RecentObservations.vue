@@ -11,7 +11,7 @@
         v-if="displayObservations.length"
         class="recent-observation-list"
       >
-        <RecentObservation
+        <ObservationListItem
           v-for="obs in displayObservations"
           :key="`${obs.collection}-${obs.tokenId}-${obs.id}`"
           :observation="obs"
