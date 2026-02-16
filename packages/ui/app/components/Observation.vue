@@ -30,6 +30,12 @@
     <small v-if="observation.tip > 0n" class="observation-tip">
       {{ formatTip(observation.tip) }} ETH
     </small>
+    <div v-if="responseCount || canReply" class="observation-footer">
+      <small v-if="responseCount" class="observation-responses-count">
+        {{ responseCount }} {{ responseCount === 1 ? 'reply' : 'replies' }}
+      </small>
+      <Button v-if="canReply" class="small muted" @click.stop="emit('reply')">Reply</Button>
+    </div>
   </div>
 </template>
 
@@ -42,11 +48,14 @@ const props = defineProps<{
   showLocation?: boolean
   hasBothViews?: boolean
   editable?: boolean
+  responseCount?: number
+  canReply?: boolean
 }>()
 
 const emit = defineEmits<{
   edit: []
   delete: []
+  reply: []
 }>()
 
 const blockExplorer = useBlockExplorer()
@@ -93,9 +102,16 @@ function formatTip(value: bigint): string {
     font-size: var(--font-sm);
   }
 
-  &:not(:last-child) {
-    padding-bottom: var(--spacer);
-    border-bottom: var(--border);
+  .observation-footer {
+    display: flex;
+    align-items: center;
+    gap: var(--spacer);
+    font-size: var(--font-sm);
+
+    .observation-responses-count {
+      color: var(--muted);
+    }
   }
+
 }
 </style>

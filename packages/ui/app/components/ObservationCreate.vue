@@ -6,12 +6,14 @@
         :placeholder="
           editObservation
             ? 'Update your observation...'
-            : 'Leave an observation...'
+            : isReply
+              ? 'Write a reply...'
+              : 'Leave an observation...'
         "
         :rows="3"
       />
       <TipSelect
-        v-if="!editObservation"
+        v-if="!editObservation && !isReply"
         v-model="tip"
       />
       <EvmTransactionFlow
@@ -20,22 +22,36 @@
           title: {
             confirm: editObservation
               ? 'Update Observation'
-              : 'Submit Observation',
+              : isReply
+                ? 'Submit Reply'
+                : 'Submit Observation',
             requesting: editObservation
               ? 'Updating Observation'
-              : 'Submitting Observation',
+              : isReply
+                ? 'Submitting Reply'
+                : 'Submitting Observation',
             waiting: editObservation
               ? 'Updating Observation'
-              : 'Submitting Observation',
+              : isReply
+                ? 'Submitting Reply'
+                : 'Submitting Observation',
             complete: editObservation
               ? 'Observation Updated'
-              : 'Observation Submitted',
-            error: editObservation ? 'Update Failed' : 'Submission Failed',
+              : isReply
+                ? 'Reply Submitted'
+                : 'Observation Submitted',
+            error: editObservation
+              ? 'Update Failed'
+              : isReply
+                ? 'Reply Failed'
+                : 'Submission Failed',
           },
           lead: {
             complete: editObservation
               ? 'Your observation has been updated onchain.'
-              : 'Your observation has been recorded onchain.',
+              : isReply
+                ? 'Your reply has been recorded onchain.'
+                : 'Your observation has been recorded onchain.',
           },
           action: {
             confirm: editObservation ? 'Update' : 'Submit',
@@ -55,7 +71,7 @@
             <Button
               @click.stop.prevent="() => triggerTransactionFlow(start)"
               :disabled="!note.trim()"
-              >{{ editObservation ? 'Update' : 'Observe' }}</Button
+              >{{ editObservation ? 'Update' : isReply ? 'Reply' : 'Observe' }}</Button
             >
           </Actions>
         </template>
@@ -87,6 +103,7 @@ const props = defineProps<{
   viewType?: number
   time?: number
   editObservation?: ObservationData | null
+  parent?: bigint
 }>()
 
 const emit = defineEmits<{
@@ -110,9 +127,12 @@ const located = computed(() => {
   return props.x != null && props.y != null
 })
 
-const parentId = computed(() =>
-  props.editObservation ? BigInt(props.editObservation.id) : 0n,
-)
+const parentId = computed(() => {
+  if (props.editObservation) return BigInt(props.editObservation.id)
+  return props.parent ?? 0n
+})
+
+const isReply = computed(() => !props.editObservation && (props.parent ?? 0n) > 0n)
 
 const isUpdate = computed(() => !!props.editObservation)
 

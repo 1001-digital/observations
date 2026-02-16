@@ -19,24 +19,59 @@
     />
     <template v-else>
       <div
-        v-if="displayObservations.length"
+        v-if="threads.length"
         class="observation-list"
       >
         <div
-          v-for="obs in displayObservations"
-          :key="obs.id"
-          ref="observationRefs"
-          :class="{ focused: focusedId === obs.id }"
-          @click="emit('focusObservation', obs.id)"
+          v-for="thread in threads"
+          :key="thread.observation.id"
+          class="observation-thread"
         >
-          <Observation
-            :observation="obs"
-            show-location
-            :has-both-views="hasBothViews"
-            :editable="isOwnObservation(obs)"
-            @edit="startEdit(obs)"
-            @delete="startDelete(obs)"
-          />
+          <div
+            :ref="(el) => setObservationRef(thread.observation.id, el as HTMLElement)"
+            :class="{ focused: focusedId === thread.observation.id }"
+            @click="emit('focusObservation', thread.observation.id)"
+          >
+            <Observation
+              :observation="thread.observation"
+              show-location
+              :has-both-views="hasBothViews"
+              :editable="isOwnObservation(thread.observation)"
+              :response-count="thread.responses.length"
+              :can-reply="isConnected && !editingObservation"
+              @edit="startEdit(thread.observation)"
+              @delete="startDelete(thread.observation)"
+              @reply="startReply(thread.observation.id)"
+            />
+          </div>
+
+          <div v-if="thread.responses.length" class="observation-responses">
+            <div
+              v-for="response in thread.responses"
+              :key="response.id"
+              :ref="(el) => setObservationRef(response.id, el as HTMLElement)"
+              :class="{ focused: focusedId === response.id }"
+              @click="emit('focusObservation', response.id)"
+            >
+              <Observation
+                :observation="response"
+                show-location
+                :has-both-views="hasBothViews"
+                :editable="isOwnObservation(response)"
+                @edit="startEdit(response)"
+                @delete="startDelete(response)"
+              />
+            </div>
+          </div>
+
+          <div v-if="replyingTo === thread.observation.id" class="observation-reply-form">
+            <ObservationCreate
+              :contract="contract"
+              :token-id="tokenId"
+              :parent="BigInt(thread.observation.id)"
+              @complete="onReplyComplete"
+            />
+          </div>
         </div>
       </div>
       <p
@@ -82,7 +117,13 @@
 import { writeContract } from '@wagmi/core'
 import type { Address } from 'viem'
 import type { Config } from '@wagmi/vue'
+import type { ComponentPublicInstance } from 'vue'
 import { ObservationsAbi, type ObservationData } from '../utils/observations'
+
+interface ObservationThread {
+  observation: ObservationData
+  responses: ObservationData[]
+}
 
 const props = defineProps<{
   contract: Address
@@ -92,6 +133,7 @@ const props = defineProps<{
   externalPending?: boolean
   focusedId?: string | null
   hasBothViews?: boolean
+  replyToId?: string | null
 }>()
 
 const emit = defineEmits<{
@@ -102,26 +144,59 @@ const emit = defineEmits<{
 const { $wagmi } = useNuxtApp()
 const config = useRuntimeConfig()
 const contractAddress = config.public.observationsContract as Address
-const { address } = useConnection()
+const { address, isConnected } = useConnection()
 
 // Use external data when provided, otherwise fall back to internal fetch
 const internal = props.observations
   ? null
   : useObservations(toRef(() => props.contract), toRef(() => props.tokenId))
 
-const displayObservations = computed(() => [...(props.observations ?? internal?.observations.value ?? [])].reverse())
+const allObservations = computed(() => props.observations ?? internal?.observations.value ?? [])
 const displayCount = computed(() => props.count ?? internal?.count.value ?? 0n)
 const displayPending = computed(() => props.externalPending ?? internal?.pending.value ?? false)
 
+// Threading: group observations into threads
+const threads = computed<ObservationThread[]>(() => {
+  const obs = allObservations.value
+  const topLevel = obs.filter((o) => o.parent === 0n)
+  const topLevelIds = new Set(topLevel.map((o) => o.id))
+
+  // Group responses by parent ID
+  const responsesByParent = new Map<string, ObservationData[]>()
+  for (const o of obs) {
+    if (o.parent !== 0n) {
+      const parentKey = o.parent.toString()
+      if (topLevelIds.has(parentKey)) {
+        const list = responsesByParent.get(parentKey) ?? []
+        list.push(o)
+        responsesByParent.set(parentKey, list)
+      } else {
+        // Orphan — treat as top-level
+        topLevel.push(o)
+        topLevelIds.add(o.id)
+      }
+    }
+  }
+
+  // Top-level reversed (newest first), responses chronological (oldest first)
+  return [...topLevel].reverse().map((o) => ({
+    observation: o,
+    responses: responsesByParent.get(o.id) ?? [],
+  }))
+})
+
+const replyingTo = ref<string | null>(null)
+
 const editingObservation = ref<ObservationData | null>(null)
 const deletingObservation = ref<ObservationData | null>(null)
-const createFormRef = ref<HTMLElement>()
+const createFormRef = ref<ComponentPublicInstance>()
 
 function isOwnObservation(obs: ObservationData): boolean {
   return !!address.value && obs.observer.toLowerCase() === address.value.toLowerCase()
 }
 
 function startEdit(obs: ObservationData) {
+  replyingTo.value = null
   editingObservation.value = obs
   nextTick(() => {
     createFormRef.value?.$el?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
@@ -130,6 +205,10 @@ function startEdit(obs: ObservationData) {
 
 function cancelEdit() {
   editingObservation.value = null
+}
+
+function startReply(id: string) {
+  replyingTo.value = replyingTo.value === id ? null : id
 }
 
 function startDelete(obs: ObservationData) {
@@ -166,17 +245,40 @@ const onComplete = () => {
   emit('complete')
 }
 
-const observationRefs = useTemplateRef<HTMLElement[]>('observationRefs')
+const onReplyComplete = () => {
+  replyingTo.value = null
+  internal?.refreshAndPoll()
+  emit('complete')
+}
+
+// Map-based ref tracking for scroll-to
+const observationRefMap = new Map<string, HTMLElement>()
+
+function setObservationRef(id: string, el: HTMLElement | null) {
+  if (el) {
+    observationRefMap.set(id, el)
+  } else {
+    observationRefMap.delete(id)
+  }
+}
 
 watch(
   () => props.focusedId,
   (id) => {
     if (id == null) return
-    const index = displayObservations.value.findIndex((obs) => obs.id === id)
-    if (index < 0) return
     nextTick(() => {
-      observationRefs.value?.[index]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+      observationRefMap.get(id)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
     })
+  },
+)
+
+// Watch external replyToId to open reply form
+watch(
+  () => props.replyToId,
+  (id) => {
+    if (id) {
+      replyingTo.value = id
+    }
   },
 )
 </script>
@@ -203,6 +305,27 @@ watch(
 .observation-list {
   display: grid;
   gap: var(--spacer);
+}
+
+.observation-thread:not(:last-child) {
+  padding-bottom: var(--spacer);
+  border-bottom: var(--border);
+}
+
+.observation-responses {
+  margin-left: var(--spacer-lg);
+  padding-left: var(--spacer);
+  border-left: 2px solid var(--border-color, var(--muted));
+  display: grid;
+  gap: var(--spacer);
+  margin-top: var(--spacer);
+}
+
+.observation-reply-form {
+  margin-left: var(--spacer-lg);
+  padding-left: var(--spacer);
+  border-left: 2px solid var(--accent, var(--color));
+  margin-top: var(--spacer);
 }
 
 .focused {

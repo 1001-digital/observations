@@ -29,6 +29,11 @@
           <ObservationTime :block-number="obs.blockNumber" />
         </template>
         <p class="observation-note">{{ obs.note }}</p>
+        <Button
+          v-if="isConnected && obs.parent === 0n"
+          class="small muted"
+          @click.stop="emit('replyTo', obs.id)"
+        >Reply</Button>
       </ObservationMarker>
 
       <ObservationMarker
@@ -75,6 +80,7 @@ const emit = defineEmits<{
   focusObservation: [id: string]
   clearFocus: []
   complete: []
+  replyTo: [id: string]
 }>()
 
 const { isConnected } = useConnection()
