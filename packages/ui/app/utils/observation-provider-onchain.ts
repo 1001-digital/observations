@@ -44,6 +44,32 @@ function resolveUpdates<T extends ObservationData>(events: T[]): T[] {
   return events.filter(e => !updateIds.has(e.id) && map.has(e.id))
 }
 
+function mapEvent(event: any): ObservationData {
+  return {
+    id: String(event.args.id!),
+    parent: event.args.parent!,
+    update: event.args.update!,
+    observer: event.args.observer!,
+    note: event.args.note!,
+    located: event.args.located!,
+    x: event.args.x!,
+    y: event.args.y!,
+    viewType: event.args.viewType!,
+    time: event.args.time!,
+    tip: event.args.tip!,
+    blockNumber: event.blockNumber,
+    transactionHash: event.transactionHash,
+  }
+}
+
+function mapRecentEvent(event: any): RecentObservationData {
+  return {
+    ...mapEvent(event),
+    collection: event.args.collection!,
+    tokenId: event.args.tokenId!,
+  }
+}
+
 function blockRanges (from: bigint, to: bigint): [bigint, bigint][] {
   const ranges: [bigint, bigint][] = []
   for (let start = from; start <= to; start += MAX_BLOCK_RANGE + 1n) {
@@ -80,23 +106,7 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
         })
       ))
 
-      const allItems: ObservationData[] = results.flat().map((event) => ({
-        id: String(event.args.id!),
-        parent: event.args.parent!,
-        update: event.args.update!,
-        observer: event.args.observer!,
-        note: event.args.note!,
-        located: event.args.located!,
-        x: event.args.x!,
-        y: event.args.y!,
-        viewType: event.args.viewType!,
-        time: event.args.time!,
-        tip: event.args.tip!,
-        blockNumber: event.blockNumber,
-        transactionHash: event.transactionHash,
-      }))
-
-      return { count, items: resolveUpdates(allItems) }
+      return { count, items: resolveUpdates(results.flat().map(mapEvent)) }
     },
 
     async fetchRecentObservations() {
@@ -116,25 +126,7 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
         })
       ))
 
-      const allItems = results.flat().map((event) => ({
-        id: String(event.args.id!),
-        parent: event.args.parent!,
-        update: event.args.update!,
-        observer: event.args.observer!,
-        note: event.args.note!,
-        located: event.args.located!,
-        x: event.args.x!,
-        y: event.args.y!,
-        viewType: event.args.viewType!,
-        time: event.args.time!,
-        tip: event.args.tip!,
-        blockNumber: event.blockNumber,
-        transactionHash: event.transactionHash,
-        collection: event.args.collection!,
-        tokenId: event.args.tokenId!,
-      })) as RecentObservationData[]
-
-      return resolveUpdates(allItems)
+      return resolveUpdates(results.flat().map(mapRecentEvent))
     },
 
     async fetchCollectionArtifacts(collection) {
@@ -193,25 +185,7 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
       const events = results.flat()
       events.sort((a, b) => Number(b.blockNumber - a.blockNumber))
 
-      const allItems = events.map((event) => ({
-        id: String(event.args.id!),
-        parent: event.args.parent!,
-        update: event.args.update!,
-        observer: event.args.observer!,
-        note: event.args.note!,
-        located: event.args.located!,
-        x: event.args.x!,
-        y: event.args.y!,
-        viewType: event.args.viewType!,
-        time: event.args.time!,
-        tip: event.args.tip!,
-        blockNumber: event.blockNumber,
-        transactionHash: event.transactionHash,
-        collection: event.args.collection!,
-        tokenId: event.args.tokenId!,
-      })) as RecentObservationData[]
-
-      return resolveUpdates(allItems).slice(0, 100)
+      return resolveUpdates(events.map(mapRecentEvent)).slice(0, 100)
     },
   }
 }

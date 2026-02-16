@@ -116,37 +116,16 @@ const parentId = computed(() =>
 
 const isUpdate = computed(() => !!props.editObservation)
 
-const effectiveX = computed(() => {
-  if (props.editObservation) return props.editObservation.x
-  return props.x ?? 0
-})
+const effectiveX = computed(() => props.editObservation?.x ?? props.x ?? 0)
+const effectiveY = computed(() => props.editObservation?.y ?? props.y ?? 0)
+const effectiveViewType = computed(() => props.editObservation?.viewType ?? props.viewType ?? 0)
+const effectiveTime = computed(() => props.editObservation?.time ?? props.time ?? 0)
 
-const effectiveY = computed(() => {
-  if (props.editObservation) return props.editObservation.y
-  return props.y ?? 0
-})
-
-const effectiveViewType = computed(() => {
-  if (props.editObservation) return props.editObservation.viewType
-  return props.viewType ?? 0
-})
-
-const effectiveTime = computed(() => {
-  if (props.editObservation) return props.editObservation.time
-  return props.time ?? 0
-})
-
-// Prefill note when entering edit mode
 watch(
   () => props.editObservation,
   (obs) => {
-    if (obs) {
-      note.value = obs.note
-      tip.value = 0n
-    } else {
-      note.value = ''
-      tip.value = 0n
-    }
+    note.value = obs?.note ?? ''
+    tip.value = 0n
   },
   { immediate: true },
 )
