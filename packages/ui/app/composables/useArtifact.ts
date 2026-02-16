@@ -16,9 +16,6 @@ const ERC1155_ABI = parseAbi([
 const ERC721_INTERFACE_ID = '0x80ac58cd'
 const ERC1155_INTERFACE_ID = '0xd9b67a26'
 
-const IPFS_GATEWAY = 'https://ipfs.io/ipfs/'
-const ARWEAVE_GATEWAY = 'https://arweave.net/'
-
 export interface TokenMetadata {
   name?: string
   description?: string
@@ -29,11 +26,14 @@ export interface TokenMetadata {
 
 export const resolveURI = (uri?: string): string => {
   if (!uri) return ''
+
+  const { ipfsGateway, arweaveGateway } = useAppConfig()
+
   if (uri.startsWith('data:')) return uri
   if (uri.startsWith('ipfs://'))
-    return IPFS_GATEWAY + uri.replace('ipfs://', '')
-  if (uri.startsWith('ar://')) return ARWEAVE_GATEWAY + uri.replace('ar://', '')
-  if (uri.startsWith('Qm') || uri.startsWith('baf')) return IPFS_GATEWAY + uri
+    return ipfsGateway + uri.replace('ipfs://', '')
+  if (uri.startsWith('ar://')) return arweaveGateway + uri.replace('ar://', '')
+  if (uri.startsWith('Qm') || uri.startsWith('baf')) return ipfsGateway + uri
   return uri
 }
 
