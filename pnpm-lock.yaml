@@ -66,8 +66,8 @@ importers:
         specifier: ^0.0.27
         version: 0.0.27(magicast@0.5.2)(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))
       '@1001-digital/layers.evm':
-        specifier: ^1.0.6
-        version: 1.0.6(7884697ef33ef4dc3fe4246b3bb00ffb)
+        specifier: ^1.0.7
+        version: 1.0.7(7884697ef33ef4dc3fe4246b3bb00ffb)
       nuxt:
         specifier: ^4.3.0
         version: 4.3.1(@electric-sql/pglite@0.2.13)(@parcel/watcher@2.5.6)(@types/node@22.19.11)(@vue/compiler-sfc@3.5.28)(bufferutil@4.1.0)(cac@6.7.14)(db0@0.3.4(@electric-sql/pglite@0.2.13)(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(gel@2.2.0)(kysely@0.26.3)(pg@8.18.0)))(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(gel@2.2.0)(kysely@0.26.3)(pg@8.18.0))(idb-keyval@6.2.2)(ioredis@5.9.2)(magicast@0.5.2)(optionator@0.9.4)(rollup@4.57.1)(terser@5.46.0)(tsx@4.21.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(yaml@2.8.2)
@@ -86,10 +86,10 @@ packages:
   '@1001-digital/layers.base@0.0.27':
     resolution: {integrity: sha512-2N7JN2Bj0Vyxj64zod+IKLgHs+93VhXTRLGMMrhvE7vdPBkcAISmBHRm4FQ2gRDRWAv1s//HA9ZQV4YMPzXjrA==}
 
-  '@1001-digital/layers.evm@1.0.6':
-    resolution: {integrity: sha512-TSK3oMYJIwZrU6DnLU3A3ff3Ci7kxcIfz0BlGM6sgm9uUC91FEPJknuA5rztPx2NJrUDL/szhc/ybsyNiluIUA==}
+  '@1001-digital/layers.evm@1.0.7':
+    resolution: {integrity: sha512-3mFzXQGQ1tDDaR0SzkDTNMVymFSoBjI66ZHj0gaW88KdDLPTh+URGtMLT7C8DyzdB2VNDhEonwa9e5wScux04g==}
     peerDependencies:
-      '@1001-digital/layers.base': ^0.0.26
+      '@1001-digital/layers.base': ^0.0.27
 
   '@1001-digital/ponder-ens@0.1.0':
     resolution: {integrity: sha512-Yg0RDnjDVGyG/kVTiZu8fCWPKQwkKa81zw7O5fz+6JVCBC/oXvEiCya3/S8DtV0H3yTe/CuXh9naFIXLSScflg==}
@@ -6512,7 +6512,7 @@ snapshots:
       - vite
       - vue
 
-  '@1001-digital/layers.evm@1.0.6(7884697ef33ef4dc3fe4246b3bb00ffb)':
+  '@1001-digital/layers.evm@1.0.7(7884697ef33ef4dc3fe4246b3bb00ffb)':
     dependencies:
       '@1001-digital/layers.base': 0.0.27(magicast@0.5.2)(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))
       '@metamask/sdk': 0.34.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
