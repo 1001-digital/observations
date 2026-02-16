@@ -23,7 +23,9 @@
         @close="emit('clearFocus')"
       >
         <template #title>
-          <EvmAccount :address="obs.observer" />
+          <NuxtLink :to="`/observer/${obs.observer}`">
+            <EvmAccount :address="obs.observer" />
+          </NuxtLink>
           <ObservationTime :block-number="obs.blockNumber" />
         </template>
         <p class="observation-note">{{ obs.note }}</p>

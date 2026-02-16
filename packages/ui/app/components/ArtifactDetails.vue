@@ -20,10 +20,7 @@
       <template v-if="details.showArtist && collection.owner">
         <dt>Artist</dt>
         <dd>
-          <NuxtLink
-            :to="`${blockExplorer}/address/${collection.owner}`"
-            target="_blank"
-          >
+          <NuxtLink :to="`/observer/${collection.owner}`">
             <EvmAccount :address="collection.owner" />
           </NuxtLink>
         </dd>
@@ -31,10 +28,7 @@
       <template v-if="details.showOwner && owner">
         <dt>Owner</dt>
         <dd>
-          <NuxtLink
-            :to="`${blockExplorer}/address/${owner}`"
-            target="_blank"
-          >
+          <NuxtLink :to="`/observer/${owner}`">
             <EvmAccount :address="owner" />
           </NuxtLink>
         </dd>
@@ -57,7 +51,6 @@ defineProps<{
 const {
   artifact: { details },
 } = useAppConfig()
-const blockExplorer = useBlockExplorer('mainnet')
 </script>
 
 <style scoped>

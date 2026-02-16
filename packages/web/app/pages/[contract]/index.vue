@@ -15,10 +15,7 @@
           <dl v-if="collectionData.owner" class="collection-meta">
             <dt>Artist</dt>
             <dd>
-              <NuxtLink
-                :to="`${blockExplorer}/address/${collectionData.owner}`"
-                target="_blank"
-              >
+              <NuxtLink :to="`/observer/${collectionData.owner}`">
                 <EvmAccount :address="collectionData.owner" />
               </NuxtLink>
             </dd>
@@ -100,7 +97,6 @@ const contract = route.params.contract as Address
 
 const { collection: collectionData, image: collectionImage, pending: collectionPending } = useCollection(ref(contract))
 const { artifacts, observations, pending } = useCollectionObservations(ref(contract))
-const blockExplorer = useBlockExplorer('mainnet')
 </script>
 
 <style scoped>
