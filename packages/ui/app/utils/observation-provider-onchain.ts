@@ -25,6 +25,9 @@ function resolveUpdates<T extends ObservationData>(events: T[]): T[] {
     const parent = map.get(parentId)
     if (!parent) continue
 
+    // Only allow the original observer to edit/delete their observation
+    if (parent.observer.toLowerCase() !== event.observer.toLowerCase()) continue
+
     if (event.note === '') {
       map.delete(parentId)
     } else {
@@ -34,6 +37,7 @@ function resolveUpdates<T extends ObservationData>(events: T[]): T[] {
       parent.y = event.y
       parent.viewType = event.viewType
       parent.time = event.time
+      parent.updatedBlock = event.blockNumber
     }
   }
 

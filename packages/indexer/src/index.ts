@@ -29,20 +29,23 @@ ponder.on("Observations:Observation", async ({ event, context }) => {
   // Process update events: modify the parent observation
   if (update && parent > 0) {
     const parentKey = { collection, tokenId, id: BigInt(parent) };
+    const parentRow = await context.db.find(observation, parentKey);
 
-    if (note === '') {
-      // Delete: mark parent as deleted
-      await context.db.update(observation, parentKey).set({ deleted: true });
-    } else {
-      // Edit: update parent's content fields
-      await context.db.update(observation, parentKey).set({
-        note,
-        located,
-        x,
-        y,
-        view: viewType,
-        time,
-      });
+    // Only allow the original observer to edit/delete their observation
+    if (parentRow && parentRow.observer === observer) {
+      if (note === '') {
+        await context.db.update(observation, parentKey).set({ deleted: true });
+      } else {
+        await context.db.update(observation, parentKey).set({
+          note,
+          located,
+          x,
+          y,
+          view: viewType,
+          time,
+          updatedBlock: event.block.number,
+        });
+      }
     }
   }
 

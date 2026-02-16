@@ -23,6 +23,7 @@ export interface ObservationData {
   time: number
   tip: bigint
   blockNumber: bigint
+  updatedBlock?: bigint
   transactionHash: string
 }
 
