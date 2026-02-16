@@ -15,6 +15,10 @@ export default defineAppConfig({
   evm: {
     defaultChain: 'sepolia',
     chains: {
+      mainnet: {
+        id: 1,
+        blockExplorer: 'https://etherscan.io',
+      },
       sepolia: {
         id: 11155111,
         blockExplorer: 'https://sepolia.etherscan.io',

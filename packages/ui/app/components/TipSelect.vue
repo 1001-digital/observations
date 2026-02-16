@@ -15,7 +15,8 @@
 <script setup lang="ts">
 const model = defineModel<bigint>({ default: 0n })
 
-const { ethUSDRaw } = usePriceFeed()
+const { ethUSDRaw, fetchPrice } = usePriceFeed()
+fetchPrice()
 
 const level = ref(-1)
 const active = computed(() => level.value >= 0)
@@ -27,26 +28,15 @@ const usdToWei = (usd: number) => {
   return BigInt(usd) * 10n ** 26n / ethUSDRaw.value
 }
 
-const updateModel = () => {
-  model.value = usdToWei(usdAmount.value)
-}
+const activate = () => { level.value = 0 }
+const double = () => { level.value++ }
+const clear = () => { level.value = -1 }
 
-const activate = () => {
-  level.value = 0
-  updateModel()
-}
-
-const double = () => {
-  level.value++
-  updateModel()
-}
-
-const clear = () => {
-  level.value = -1
-  model.value = 0n
-}
+watch([level, ethUSDRaw], () => {
+  model.value = active.value ? usdToWei(usdAmount.value) : 0n
+})
 
 watch(model, (v) => {
-  if (v === 0n) level.value = -1
+  if (v === 0n && ethUSDRaw.value) level.value = -1
 })
 </script>
