@@ -5,7 +5,7 @@
     </Button>
     <FormInputGroup v-else>
       <Button class="small" @click="double" title="Double tip">
-        {{ formatted }} ETH
+        ${{ usdAmount }}
       </Button>
       <Button class="muted small" @click="clear">&times;</Button>
     </FormInputGroup>
@@ -13,30 +13,32 @@
 </template>
 
 <script setup lang="ts">
-import { parseEther } from 'viem'
-
-const BASE = 0.001
-
 const model = defineModel<bigint>({ default: 0n })
+
+const { ethUSDRaw } = usePriceFeed()
 
 const level = ref(-1)
 const active = computed(() => level.value >= 0)
 
-const ethAmount = () => BASE * Math.pow(2, level.value)
+const usdAmount = computed(() => Math.pow(2, level.value))
 
-const formatted = computed(() => {
-  if (!active.value) return ''
-  return String(ethAmount())
-})
+const usdToWei = (usd: number) => {
+  if (!ethUSDRaw.value) return 0n
+  return BigInt(usd) * 10n ** 26n / ethUSDRaw.value
+}
+
+const updateModel = () => {
+  model.value = usdToWei(usdAmount.value)
+}
 
 const activate = () => {
   level.value = 0
-  model.value = parseEther(String(ethAmount()))
+  updateModel()
 }
 
 const double = () => {
   level.value++
-  model.value = parseEther(String(ethAmount()))
+  updateModel()
 }
 
 const clear = () => {
