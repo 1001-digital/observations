@@ -9,6 +9,37 @@ import {
 
 const MAX_BLOCK_RANGE = 5000n
 
+function resolveUpdates<T extends ObservationData>(events: T[]): T[] {
+  const map = new Map<string, T>()
+  const updateIds = new Set<string>()
+
+  for (const event of events) {
+    map.set(event.id, event)
+  }
+
+  for (const event of events) {
+    if (!event.update) continue
+    updateIds.add(event.id)
+
+    const parentId = String(event.parent)
+    const parent = map.get(parentId)
+    if (!parent) continue
+
+    if (event.note === '') {
+      map.delete(parentId)
+    } else {
+      parent.note = event.note
+      parent.located = event.located
+      parent.x = event.x
+      parent.y = event.y
+      parent.viewType = event.viewType
+      parent.time = event.time
+    }
+  }
+
+  return events.filter(e => !updateIds.has(e.id) && map.has(e.id))
+}
+
 function blockRanges (from: bigint, to: bigint): [bigint, bigint][] {
   const ranges: [bigint, bigint][] = []
   for (let start = from; start <= to; start += MAX_BLOCK_RANGE + 1n) {
@@ -45,7 +76,7 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
         })
       ))
 
-      const items: ObservationData[] = results.flat().map((event) => ({
+      const allItems: ObservationData[] = results.flat().map((event) => ({
         id: String(event.args.id!),
         parent: event.args.parent!,
         update: event.args.update!,
@@ -61,7 +92,7 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
         transactionHash: event.transactionHash,
       }))
 
-      return { count, items }
+      return { count, items: resolveUpdates(allItems) }
     },
 
     async fetchRecentObservations() {
@@ -81,7 +112,7 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
         })
       ))
 
-      return results.flat().map((event) => ({
+      const allItems = results.flat().map((event) => ({
         id: String(event.args.id!),
         parent: event.args.parent!,
         update: event.args.update!,
@@ -98,6 +129,8 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
         collection: event.args.collection!,
         tokenId: event.args.tokenId!,
       })) as RecentObservationData[]
+
+      return resolveUpdates(allItems)
     },
 
     async fetchCollectionArtifacts(collection) {
@@ -156,7 +189,7 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
       const events = results.flat()
       events.sort((a, b) => Number(b.blockNumber - a.blockNumber))
 
-      return events.slice(0, 100).map((event) => ({
+      const allItems = events.map((event) => ({
         id: String(event.args.id!),
         parent: event.args.parent!,
         update: event.args.update!,
@@ -173,6 +206,8 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
         collection: event.args.collection!,
         tokenId: event.args.tokenId!,
       })) as RecentObservationData[]
+
+      return resolveUpdates(allItems).slice(0, 100)
     },
   }
 }

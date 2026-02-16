@@ -37,7 +37,7 @@ const OBSERVATIONS_QUERY = `
       count
     }
     observations(
-      where: { collection: $collection, tokenId: $tokenId }
+      where: { collection: $collection, tokenId: $tokenId, update: false, deleted: false }
       orderBy: "block"
       orderDirection: "asc"
       limit: 1000
@@ -51,7 +51,7 @@ const OBSERVATIONS_QUERY = `
 
 const RECENT_OBSERVATIONS_QUERY = `
   query {
-    observations(orderBy: "block", orderDirection: "desc", limit: 100) {
+    observations(where: { update: false, deleted: false }, orderBy: "block", orderDirection: "desc", limit: 100) {
       items {
         id collection tokenId parent update observer note located x y view time tip block txHash
       }
@@ -78,7 +78,7 @@ const COLLECTION_ARTIFACTS_QUERY = `
 const COLLECTION_OBSERVATIONS_QUERY = `
   query($collection: String!) {
     observations(
-      where: { collection: $collection }
+      where: { collection: $collection, update: false, deleted: false }
       orderBy: "block"
       orderDirection: "desc"
       limit: 100
@@ -93,7 +93,7 @@ const COLLECTION_OBSERVATIONS_QUERY = `
 const OBSERVER_OBSERVATIONS_QUERY = `
   query($observer: String!, $limit: Int!, $after: String) {
     observations(
-      where: { observer: $observer }
+      where: { observer: $observer, update: false, deleted: false }
       orderBy: "block"
       orderDirection: "desc"
       limit: $limit

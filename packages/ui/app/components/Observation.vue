@@ -4,12 +4,18 @@
       <NuxtLink :to="`/observer/${observation.observer}`">
         <EvmAccount :address="observation.observer" />
       </NuxtLink>
-      <NuxtLink
-        :to="`${blockExplorer}/tx/${observation.transactionHash}`"
-        target="_blank"
-      >
-        <ObservationTime :block-number="observation.blockNumber" />
-      </NuxtLink>
+      <div class="observation-header-right">
+        <template v-if="editable">
+          <Button class="small muted" @click.stop="emit('edit')">edit</Button>
+          <Button class="small muted" @click.stop="emit('delete')">delete</Button>
+        </template>
+        <NuxtLink
+          :to="`${blockExplorer}/tx/${observation.transactionHash}`"
+          target="_blank"
+        >
+          <ObservationTime :block-number="observation.blockNumber" />
+        </NuxtLink>
+      </div>
     </div>
     <p class="observation-note">{{ observation.note }}</p>
     <small v-if="showLocation && observation.located" class="observation-location">
@@ -32,6 +38,12 @@ const props = defineProps<{
   observation: ObservationData
   showLocation?: boolean
   hasBothViews?: boolean
+  editable?: boolean
+}>()
+
+const emit = defineEmits<{
+  edit: []
+  delete: []
 }>()
 
 const blockExplorer = useBlockExplorer()
@@ -57,6 +69,12 @@ function formatTip(value: bigint): string {
     align-items: center;
     font-size: var(--font-sm);
     color: var(--muted);
+  }
+
+  .observation-header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacer-sm);
   }
 
   .observation-note {

@@ -16,6 +16,7 @@ export const observation = onchainTable(
     view: t.integer().notNull(),
     time: t.integer().notNull(),
     tip: t.bigint().notNull(),
+    deleted: t.boolean().notNull().default(false),
     block: t.bigint().notNull(),
     timestamp: t.bigint().notNull(),
     txHash: t.hex().notNull(),

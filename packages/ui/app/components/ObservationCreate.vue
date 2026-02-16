@@ -3,25 +3,42 @@
     <template v-if="isConnected">
       <FormTextarea
         v-model="note"
-        placeholder="Leave an observation..."
+        :placeholder="
+          editObservation
+            ? 'Update your observation...'
+            : 'Leave an observation...'
+        "
         :rows="3"
       />
-      <TipSelect v-model="tip" />
+      <TipSelect
+        v-if="!editObservation"
+        v-model="tip"
+      />
       <EvmTransactionFlow
         :request="submitObservation"
         :text="{
           title: {
-            confirm: 'Submit Observation',
-            requesting: 'Submitting Observation',
-            waiting: 'Submitting Observation',
-            complete: 'Observation Submitted',
-            error: 'Submission Failed',
+            confirm: editObservation
+              ? 'Update Observation'
+              : 'Submit Observation',
+            requesting: editObservation
+              ? 'Updating Observation'
+              : 'Submitting Observation',
+            waiting: editObservation
+              ? 'Updating Observation'
+              : 'Submitting Observation',
+            complete: editObservation
+              ? 'Observation Updated'
+              : 'Observation Submitted',
+            error: editObservation ? 'Update Failed' : 'Submission Failed',
           },
           lead: {
-            complete: 'Your observation has been recorded onchain.',
+            complete: editObservation
+              ? 'Your observation has been updated onchain.'
+              : 'Your observation has been recorded onchain.',
           },
           action: {
-            confirm: 'Submit',
+            confirm: editObservation ? 'Update' : 'Submit',
           },
         }"
         skip-confirmation
@@ -31,9 +48,14 @@
         <template #start="{ start }">
           <Actions>
             <Button
+              v-if="editObservation"
+              @click.stop.prevent="emit('cancel-edit')"
+              >Cancel</Button
+            >
+            <Button
               @click.stop.prevent="() => triggerTransactionFlow(start)"
               :disabled="!note.trim()"
-              >Observe</Button
+              >{{ editObservation ? 'Update' : 'Observe' }}</Button
             >
           </Actions>
         </template>
@@ -55,7 +77,7 @@
 import { writeContract } from '@wagmi/core'
 import type { Address } from 'viem'
 import type { Config } from '@wagmi/vue'
-import { ObservationsAbi } from '../utils/observations'
+import { ObservationsAbi, type ObservationData } from '../utils/observations'
 
 const props = defineProps<{
   contract: Address
@@ -64,10 +86,12 @@ const props = defineProps<{
   y?: number
   viewType?: number
   time?: number
+  editObservation?: ObservationData | null
 }>()
 
 const emit = defineEmits<{
   complete: []
+  'cancel-edit': []
 }>()
 
 const { $wagmi } = useNuxtApp()
@@ -81,7 +105,51 @@ const pending = defineModel<boolean>('pending')
 const note = ref('')
 const tip = ref(0n)
 
-const located = computed(() => props.x != null && props.y != null)
+const located = computed(() => {
+  if (props.editObservation) return props.editObservation.located
+  return props.x != null && props.y != null
+})
+
+const parentId = computed(() =>
+  props.editObservation ? BigInt(props.editObservation.id) : 0n,
+)
+
+const isUpdate = computed(() => !!props.editObservation)
+
+const effectiveX = computed(() => {
+  if (props.editObservation) return props.editObservation.x
+  return props.x ?? 0
+})
+
+const effectiveY = computed(() => {
+  if (props.editObservation) return props.editObservation.y
+  return props.y ?? 0
+})
+
+const effectiveViewType = computed(() => {
+  if (props.editObservation) return props.editObservation.viewType
+  return props.viewType ?? 0
+})
+
+const effectiveTime = computed(() => {
+  if (props.editObservation) return props.editObservation.time
+  return props.time ?? 0
+})
+
+// Prefill note when entering edit mode
+watch(
+  () => props.editObservation,
+  (obs) => {
+    if (obs) {
+      note.value = obs.note
+      tip.value = 0n
+    } else {
+      note.value = ''
+      tip.value = 0n
+    }
+  },
+  { immediate: true },
+)
 
 const triggerTransactionFlow = (cb: Function) => {
   pending.value = true
@@ -96,22 +164,22 @@ const submitObservation = () =>
       ? [
           props.contract,
           props.tokenId,
-          0n,
-          false,
+          parentId.value,
+          isUpdate.value,
           note.value,
-          props.x!,
-          props.y!,
-          props.viewType ?? 0,
-          props.time ?? 0,
+          effectiveX.value,
+          effectiveY.value,
+          effectiveViewType.value,
+          effectiveTime.value,
         ]
       : [
           props.contract,
           props.tokenId,
-          0n,
-          false,
+          parentId.value,
+          isUpdate.value,
           note.value,
-          props.viewType ?? 0,
-          props.time ?? 0,
+          effectiveViewType.value,
+          effectiveTime.value,
         ],
     value: tip.value,
   })

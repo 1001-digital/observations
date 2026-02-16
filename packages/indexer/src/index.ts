@@ -4,6 +4,7 @@ import { observation, artifact, collectionTips } from "ponder:schema";
 ponder.on("Observations:Observation", async ({ event, context }) => {
   const { collection, tokenId, observer, id, parent, update, note, located, x, y, viewType, time, tip } = event.args;
 
+  // Insert the event as its own row (preserves full event history)
   await context.db
     .insert(observation)
     .values({
@@ -24,6 +25,26 @@ ponder.on("Observations:Observation", async ({ event, context }) => {
       timestamp: event.block.timestamp,
       txHash: event.transaction.hash,
     });
+
+  // Process update events: modify the parent observation
+  if (update && parent > 0) {
+    const parentKey = { collection, tokenId, id: BigInt(parent) };
+
+    if (note === '') {
+      // Delete: mark parent as deleted
+      await context.db.update(observation, parentKey).set({ deleted: true });
+    } else {
+      // Edit: update parent's content fields
+      await context.db.update(observation, parentKey).set({
+        note,
+        located,
+        x,
+        y,
+        view: viewType,
+        time,
+      });
+    }
+  }
 
   await context.db
     .insert(artifact)
