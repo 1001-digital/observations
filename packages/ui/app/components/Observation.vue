@@ -6,8 +6,16 @@
       </NuxtLink>
       <div class="observation-header-right">
         <template v-if="editable">
-          <Button class="small muted" @click.stop="emit('edit')">edit</Button>
-          <Button class="small muted" @click.stop="emit('delete')">delete</Button>
+          <Button
+            class="small muted"
+            @click.stop="emit('edit')"
+            >edit</Button
+          >
+          <Button
+            class="small muted"
+            @click.stop="emit('delete')"
+            >delete</Button
+          >
         </template>
         <NuxtLink
           :to="`${blockExplorer}/tx/${observation.transactionHash}`"
@@ -18,23 +26,47 @@
       </div>
     </div>
     <p class="observation-note">{{ observation.note }}</p>
-    <small v-if="showLocation && observation.located" class="observation-location">
-      {{ (observation.x / 100).toFixed(1) }}% / {{ (observation.y / 100).toFixed(1) }}%
+    <small
+      v-if="showLocation && observation.located"
+      class="observation-location"
+    >
+      {{ (observation.x / 100).toFixed(1) }}% /
+      {{ (observation.y / 100).toFixed(1) }}%
     </small>
-    <small v-if="hasBothViews" class="observation-view-type">
+    <small
+      v-if="hasBothViews"
+      class="observation-view-type"
+    >
       {{ observation.viewType === 1 ? 'animation' : 'image' }}
     </small>
-    <small v-if="observation.updatedBlock" class="observation-updated">
+    <small
+      v-if="observation.updatedBlock"
+      class="observation-updated"
+    >
       updated <ObservationTime :block-number="observation.updatedBlock" />
     </small>
-    <small v-if="observation.tip > 0n" class="observation-tip">
+    <small
+      v-if="observation.tip > 0n"
+      class="observation-tip"
+    >
       {{ formatTip(observation.tip) }} ETH
     </small>
-    <div v-if="responseCount || canReply" class="observation-footer">
-      <small v-if="responseCount" class="observation-responses-count">
+    <div
+      v-if="responseCount || canReply"
+      class="observation-footer"
+    >
+      <small
+        v-if="responseCount"
+        class="observation-responses-count"
+      >
         {{ responseCount }} {{ responseCount === 1 ? 'reply' : 'replies' }}
       </small>
-      <Button v-if="canReply" class="small muted" @click.stop="emit('reply')">Reply</Button>
+      <Button
+        v-if="canReply"
+        class="small muted"
+        @click.stop="emit('reply')"
+        >Reply</Button
+      >
     </div>
   </div>
 </template>
@@ -43,7 +75,7 @@
 import { formatEther } from 'viem'
 import type { ObservationData } from '../utils/observations'
 
-const props = defineProps<{
+defineProps<{
   observation: ObservationData
   showLocation?: boolean
   hasBothViews?: boolean
@@ -112,6 +144,5 @@ function formatTip(value: bigint): string {
       color: var(--muted);
     }
   }
-
 }
 </style>
