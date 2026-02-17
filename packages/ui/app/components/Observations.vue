@@ -117,6 +117,7 @@
     </template>
 
     <EvmTransactionFlow
+      ref="deleteFlowRef"
       v-if="deletingObservation"
       :request="submitDelete"
       :text="{
@@ -229,6 +230,7 @@ const expandedThreads = ref<Set<string>>(new Set())
 
 const editingObservation = ref<ObservationData | null>(null)
 const deletingObservation = ref<ObservationData | null>(null)
+const deleteFlowRef = ref<{ initializeRequest: () => Promise<unknown> }>()
 
 function isOwnObservation(obs: ObservationData): boolean {
   return (
@@ -261,6 +263,9 @@ function startReply(id: string) {
 
 function startDelete(obs: ObservationData) {
   deletingObservation.value = obs
+  nextTick(() => {
+    deleteFlowRef.value?.initializeRequest()
+  })
 }
 
 const submitDelete = () => {
