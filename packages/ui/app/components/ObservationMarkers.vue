@@ -26,6 +26,7 @@
         :y="obs.y"
         :focused="focusedId === obs.id"
         :open="focusedId === obs.id"
+        :pending="replyingToId === obs.id && isReplyTransacting"
         @select="emit('focusObservation', obs.id)"
         @close="emit('clearFocus')"
       >
@@ -38,6 +39,7 @@
         <p class="observation-note">{{ obs.note }}</p>
         <ObservationCreate
           v-if="replyingToId === obs.id"
+          v-model:pending="isReplyTransacting"
           :contract="contract"
           :token-id="tokenId"
           :parent="BigInt(obs.id)"
@@ -100,6 +102,7 @@ const { isConnected } = useConnection()
 
 const replyingToId = ref<string | null>(null)
 const isTransacting = ref(false)
+const isReplyTransacting = ref(false)
 const mediaTime = ref(0)
 const observing = ref(true)
 const hasEmbed = ref(false)
