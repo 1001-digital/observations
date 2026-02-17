@@ -1,5 +1,8 @@
 <template>
-  <div class="observation">
+  <div
+    class="observation"
+    :id="observation.id"
+  >
     <div class="observation-header">
       <div class="observation-header-left">
         <NuxtLink :to="`/observer/${observation.observer}`">
@@ -13,7 +16,11 @@
           <ObservationTime :block-number="observation.blockNumber" />
         </NuxtLink>
       </div>
-      <Dropdown v-if="editable" v-model:open="showActions" align="end">
+      <Dropdown
+        v-if="editable"
+        v-model:open="showActions"
+        align="end"
+      >
         <template #trigger>
           <Button class="small muted">
             <Icon type="lucide:ellipsis-vertical" />
