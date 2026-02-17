@@ -5,7 +5,7 @@
         <EvmAccount :address="observation.observer" />
       </NuxtLink>
       <div class="observation-header-right">
-        <Dropdown v-if="editable" v-model:open="showActions">
+        <Dropdown v-if="editable" v-model:open="showActions" align="end">
           <template #trigger>
             <Button class="small muted">
               <Icon type="lucide:ellipsis-vertical" />
