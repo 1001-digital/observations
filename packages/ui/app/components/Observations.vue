@@ -48,14 +48,8 @@
               :editable="isOwnObservation(thread.observation)"
               :response-count="thread.responses.length"
               :replies-expanded="expandedThreads.has(thread.observation.id)"
-              :can-reply="
-                isConnected &&
-                !editingObservation &&
-                replyingTo !== thread.observation.id
-              "
               @edit="startEdit(thread.observation)"
               @delete="startDelete(thread.observation)"
-              @reply="startReply(thread.observation.id)"
               @toggle-replies="toggleReplies(thread.observation.id)"
             />
           </div>
@@ -91,6 +85,12 @@
             </div>
           </div>
 
+          <Button
+            v-if="isConnected && !editingObservation && replyingTo !== thread.observation.id"
+            class="small muted"
+            @click.stop="startReply(thread.observation.id)"
+            >Reply</Button
+          >
           <div
             v-if="replyingTo === thread.observation.id"
             class="observation-reply-form"

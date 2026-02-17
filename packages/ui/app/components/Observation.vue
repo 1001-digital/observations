@@ -57,23 +57,16 @@
       {{ formatTip(observation.tip) }} ETH
     </small>
     <div
-      v-if="responseCount || canReply"
+      v-if="responseCount"
       class="observation-footer"
     >
       <button
-        v-if="responseCount"
         class="observation-responses-toggle"
         @click.stop="emit('toggleReplies')"
       >
         {{ repliesExpanded ? '&#9662;' : '&#9656;' }}
         {{ responseCount }} {{ responseCount === 1 ? 'reply' : 'replies' }}
       </button>
-      <Button
-        v-if="canReply"
-        class="small muted"
-        @click.stop="emit('reply')"
-        >Reply</Button
-      >
     </div>
   </div>
 </template>
@@ -89,13 +82,11 @@ defineProps<{
   editable?: boolean
   responseCount?: number
   repliesExpanded?: boolean
-  canReply?: boolean
 }>()
 
 const emit = defineEmits<{
   edit: []
   delete: []
-  reply: []
   toggleReplies: []
 }>()
 
