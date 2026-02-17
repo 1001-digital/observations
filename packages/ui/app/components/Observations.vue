@@ -116,43 +116,20 @@
       </p>
     </template>
 
-    <EvmTransactionFlow
-      ref="deleteFlowRef"
+    <ObservationDelete
       v-if="deletingObservation"
-      :request="submitDelete"
-      :text="{
-        title: {
-          confirm: 'Delete Observation',
-          requesting: 'Deleting Observation',
-          waiting: 'Deleting Observation',
-          complete: 'Observation Deleted',
-          error: 'Deletion Failed',
-        },
-        lead: {
-          confirm: deletingObservation.note,
-          complete: 'Your observation has been deleted onchain.',
-        },
-        action: {
-          confirm: 'Delete',
-        },
-      }"
+      :observation="deletingObservation"
+      :contract="contract"
+      :token-id="tokenId"
       @complete="onDeleteComplete"
       @cancel="deletingObservation = null"
-    >
-      <template #complete="{ cancel }">
-        <Actions>
-          <Button @click="cancel">Close</Button>
-        </Actions>
-      </template>
-    </EvmTransactionFlow>
+    />
   </section>
 </template>
 
 <script setup lang="ts">
-import { writeContract } from '@wagmi/core'
 import type { Address } from 'viem'
-import type { Config } from '@wagmi/vue'
-import { ObservationsAbi, type ObservationData } from '../utils/observations'
+import type { ObservationData } from '../utils/observations'
 
 interface ObservationThread {
   observation: ObservationData
@@ -174,9 +151,6 @@ const emit = defineEmits<{
   focusObservation: [id: string]
 }>()
 
-const { $wagmi } = useNuxtApp()
-const config = useRuntimeConfig()
-const contractAddress = config.public.observationsContract as Address
 const { address, isConnected } = useConnection()
 
 // Use external data when provided, otherwise fall back to internal fetch
@@ -230,7 +204,6 @@ const expandedThreads = ref<Set<string>>(new Set())
 
 const editingObservation = ref<ObservationData | null>(null)
 const deletingObservation = ref<ObservationData | null>(null)
-const deleteFlowRef = ref<{ initializeRequest: () => Promise<unknown> }>()
 
 function isOwnObservation(obs: ObservationData): boolean {
   return (
@@ -263,39 +236,6 @@ function startReply(id: string) {
 
 function startDelete(obs: ObservationData) {
   deletingObservation.value = obs
-  nextTick(() => {
-    deleteFlowRef.value?.initializeRequest()
-  })
-}
-
-const submitDelete = () => {
-  const obs = deletingObservation.value!
-  return writeContract($wagmi as Config, {
-    address: contractAddress,
-    abi: ObservationsAbi,
-    functionName: obs.located ? 'observeAt' : 'observe',
-    args: obs.located
-      ? [
-          props.contract,
-          props.tokenId,
-          BigInt(obs.id),
-          true,
-          '',
-          obs.x,
-          obs.y,
-          obs.viewType,
-          obs.time,
-        ]
-      : [
-          props.contract,
-          props.tokenId,
-          BigInt(obs.id),
-          true,
-          '',
-          obs.viewType,
-          obs.time,
-        ],
-  })
 }
 
 const onDeleteComplete = () => {
