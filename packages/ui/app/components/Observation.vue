@@ -55,12 +55,14 @@
       v-if="responseCount || canReply"
       class="observation-footer"
     >
-      <small
+      <button
         v-if="responseCount"
-        class="observation-responses-count"
+        class="observation-responses-toggle"
+        @click.stop="emit('toggleReplies')"
       >
+        {{ repliesExpanded ? '&#9662;' : '&#9656;' }}
         {{ responseCount }} {{ responseCount === 1 ? 'reply' : 'replies' }}
-      </small>
+      </button>
       <Button
         v-if="canReply"
         class="small muted"
@@ -81,6 +83,7 @@ defineProps<{
   hasBothViews?: boolean
   editable?: boolean
   responseCount?: number
+  repliesExpanded?: boolean
   canReply?: boolean
 }>()
 
@@ -88,6 +91,7 @@ const emit = defineEmits<{
   edit: []
   delete: []
   reply: []
+  toggleReplies: []
 }>()
 
 const blockExplorer = useBlockExplorer()
@@ -140,8 +144,14 @@ function formatTip(value: bigint): string {
     gap: var(--spacer);
     font-size: var(--font-sm);
 
-    .observation-responses-count {
+    .observation-responses-toggle {
+      all: unset;
       color: var(--muted);
+      cursor: pointer;
+
+      &:hover {
+        color: var(--foreground, inherit);
+      }
     }
   }
 }

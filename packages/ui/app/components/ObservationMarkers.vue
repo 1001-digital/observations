@@ -37,6 +37,36 @@
           <ObservationTime :block-number="obs.blockNumber" />
         </template>
         <p class="observation-note">{{ obs.note }}</p>
+
+        <button
+          v-if="responsesByParent.get(obs.id)?.length"
+          class="popover-replies-toggle"
+          @click.stop="togglePopoverReplies(obs.id)"
+        >
+          {{ expandedReplies.has(obs.id) ? '&#9662;' : '&#9656;' }}
+          {{ responsesByParent.get(obs.id)!.length }}
+          {{ responsesByParent.get(obs.id)!.length === 1 ? 'reply' : 'replies' }}
+        </button>
+
+        <div
+          v-if="expandedReplies.has(obs.id)"
+          class="popover-replies"
+        >
+          <div
+            v-for="reply in responsesByParent.get(obs.id)"
+            :key="reply.id"
+            class="popover-reply"
+          >
+            <div class="popover-reply-header">
+              <NuxtLink :to="`/observer/${reply.observer}`">
+                <EvmAccount :address="reply.observer" />
+              </NuxtLink>
+              <ObservationTime :block-number="reply.blockNumber" />
+            </div>
+            <p class="observation-note">{{ reply.note }}</p>
+          </div>
+        </div>
+
         <ObservationCreate
           v-if="replyingToId === obs.id"
           v-model:pending="isReplyTransacting"
@@ -46,7 +76,7 @@
           @complete="onPopoverReplyComplete"
         />
         <Button
-          v-else-if="isConnected && obs.parent === 0n"
+          v-else-if="isConnected"
           class="small muted"
           @click.stop="replyingToId = obs.id"
           >Reply</Button
@@ -117,9 +147,33 @@ const locatedObservations = computed(() =>
   props.observations.filter(
     (obs) =>
       obs.located &&
+      obs.parent === 0n &&
       (props.viewType == null || obs.viewType === props.viewType),
   ),
 )
+
+const responsesByParent = computed(() => {
+  const map = new Map<string, ObservationData[]>()
+  for (const obs of props.observations) {
+    if (obs.parent !== 0n) {
+      const key = obs.parent.toString()
+      const list = map.get(key) ?? []
+      list.push(obs)
+      map.set(key, list)
+    }
+  }
+  return map
+})
+
+const expandedReplies = ref<Set<string>>(new Set())
+
+function togglePopoverReplies(id: string) {
+  if (expandedReplies.value.has(id)) {
+    expandedReplies.value.delete(id)
+  } else {
+    expandedReplies.value.add(id)
+  }
+}
 
 const container = ref<HTMLElement>()
 const overlayStyle = ref<Record<string, string> | null>(null)
@@ -234,8 +288,9 @@ const onPopoverReplyComplete = () => {
 
 watch(
   () => props.focusedId,
-  (id) => {
+  (id, oldId) => {
     replyingToId.value = null
+    if (oldId) expandedReplies.value.delete(oldId)
 
     if (!id) return
 
@@ -265,5 +320,33 @@ watch(
   &.non-interactive {
     pointer-events: none;
   }
+}
+</style>
+
+<style>
+.popover-replies-toggle {
+  all: unset;
+  font-size: var(--font-sm);
+  color: var(--muted);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--foreground, inherit);
+  }
+}
+
+.popover-replies {
+  display: grid;
+  gap: var(--spacer-sm);
+  padding-left: var(--spacer-sm);
+  border-left: 2px solid var(--border-color, var(--muted));
+}
+
+.popover-reply-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-sm);
+  color: var(--muted);
 }
 </style>

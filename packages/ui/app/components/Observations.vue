@@ -41,6 +41,7 @@
               :has-both-views="hasBothViews"
               :editable="isOwnObservation(thread.observation)"
               :response-count="thread.responses.length"
+              :replies-expanded="expandedThreads.has(thread.observation.id)"
               :can-reply="
                 isConnected &&
                 !editingObservation &&
@@ -49,11 +50,12 @@
               @edit="startEdit(thread.observation)"
               @delete="startDelete(thread.observation)"
               @reply="startReply(thread.observation.id)"
+              @toggle-replies="toggleReplies(thread.observation.id)"
             />
           </div>
 
           <div
-            v-if="thread.responses.length"
+            v-if="thread.responses.length && expandedThreads.has(thread.observation.id)"
             class="observation-responses"
           >
             <div
@@ -205,6 +207,7 @@ const threads = computed<ObservationThread[]>(() => {
 })
 
 const replyingTo = ref<string | null>(null)
+const expandedThreads = ref<Set<string>>(new Set())
 
 const editingObservation = ref<ObservationData | null>(null)
 const deletingObservation = ref<ObservationData | null>(null)
@@ -232,8 +235,17 @@ function cancelEdit() {
   editingObservation.value = null
 }
 
+function toggleReplies(id: string) {
+  if (expandedThreads.value.has(id)) {
+    expandedThreads.value.delete(id)
+  } else {
+    expandedThreads.value.add(id)
+  }
+}
+
 function startReply(id: string) {
   replyingTo.value = replyingTo.value === id ? null : id
+  if (replyingTo.value) expandedThreads.value.add(id)
 }
 
 function startDelete(obs: ObservationData) {
@@ -291,6 +303,13 @@ watch(
   () => props.focusedId,
   (id) => {
     if (id == null) return
+
+    // Auto-expand thread if focusing a reply
+    const thread = threads.value.find((t) =>
+      t.responses.some((r) => r.id === id),
+    )
+    if (thread) expandedThreads.value.add(thread.observation.id)
+
     nextTick(() => {
       observationRefMap
         .get(id)
