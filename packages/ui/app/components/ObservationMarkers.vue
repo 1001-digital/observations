@@ -3,12 +3,19 @@
     ref="container"
     class="observation-markers-container"
   >
-    <slot :observing="observing" :has-embed="hasEmbed" :toggle-observing="toggleObserving" />
+    <slot
+      :observing="observing"
+      :has-embed="hasEmbed"
+      :toggle-observing="toggleObserving"
+    />
 
     <div
       v-if="overlayStyle"
       class="marker-overlay"
-      :class="{ 'can-place': isConnected && observing, 'non-interactive': !observing }"
+      :class="{
+        'can-place': isConnected && observing,
+        'non-interactive': !observing,
+      }"
       :style="overlayStyle"
       @click="onOverlayClick"
     >
@@ -29,11 +36,19 @@
           <ObservationTime :block-number="obs.blockNumber" />
         </template>
         <p class="observation-note">{{ obs.note }}</p>
+        <ObservationCreate
+          v-if="replyingToId === obs.id"
+          :contract="contract"
+          :token-id="tokenId"
+          :parent="BigInt(obs.id)"
+          @complete="onPopoverReplyComplete"
+        />
         <Button
-          v-if="isConnected && obs.parent === 0n"
+          v-else-if="isConnected && obs.parent === 0n"
           class="small muted"
-          @click.stop="emit('replyTo', obs.id)"
-        >Reply</Button>
+          @click.stop="replyingToId = obs.id"
+          >Reply</Button
+        >
       </ObservationMarker>
 
       <ObservationMarker
@@ -56,7 +71,6 @@
           @complete="emit('complete')"
         />
       </ObservationMarker>
-
     </div>
   </div>
 </template>
@@ -80,22 +94,28 @@ const emit = defineEmits<{
   focusObservation: [id: string]
   clearFocus: []
   complete: []
-  replyTo: [id: string]
 }>()
 
 const { isConnected } = useConnection()
 
+const replyingToId = ref<string | null>(null)
 const isTransacting = ref(false)
 const mediaTime = ref(0)
 const observing = ref(true)
 const hasEmbed = ref(false)
-const toggleObserving = () => { observing.value = !observing.value }
+const toggleObserving = () => {
+  observing.value = !observing.value
+}
 
 const findMediaElement = (): HTMLMediaElement | null =>
   container.value?.querySelector<HTMLMediaElement>('video, audio') ?? null
 
 const locatedObservations = computed(() =>
-  props.observations.filter((obs) => obs.located && (props.viewType == null || obs.viewType === props.viewType)),
+  props.observations.filter(
+    (obs) =>
+      obs.located &&
+      (props.viewType == null || obs.viewType === props.viewType),
+  ),
 )
 
 const container = ref<HTMLElement>()
@@ -195,23 +215,36 @@ const onOverlayClick = (event: MouseEvent) => {
   emit('placeMarker', x, y)
 }
 
-watch(() => props.pendingMarker, (val, old) => {
-  if (old && !val) {
-    findMediaElement()?.play()
-  }
-})
+watch(
+  () => props.pendingMarker,
+  (val, old) => {
+    if (old && !val) {
+      findMediaElement()?.play()
+    }
+  },
+)
 
-watch(() => props.focusedId, (id) => {
-  if (!id) return
+const onPopoverReplyComplete = () => {
+  replyingToId.value = null
+  emit('complete')
+}
 
-  const obs = props.observations.find((o) => o.id === id)
-  if (!obs?.time) return
+watch(
+  () => props.focusedId,
+  (id) => {
+    replyingToId.value = null
 
-  const media = findMediaElement()
-  if (media) {
-    media.currentTime = obs.time
-  }
-})
+    if (!id) return
+
+    const obs = props.observations.find((o) => o.id === id)
+    if (!obs?.time) return
+
+    const media = findMediaElement()
+    if (media) {
+      media.currentTime = obs.time
+    }
+  },
+)
 </script>
 
 <style scoped>
@@ -230,5 +263,4 @@ watch(() => props.focusedId, (id) => {
     pointer-events: none;
   }
 }
-
 </style>

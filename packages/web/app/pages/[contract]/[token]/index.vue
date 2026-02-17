@@ -14,7 +14,6 @@
         @focus-observation="focusObservation"
         @clear-focus="clearFocus"
         @complete="onMarkerComplete"
-        @reply-to="onMarkerReply"
         v-slot="{ observing, hasEmbed, toggleObserving }"
       >
         <ArtifactVisual
@@ -66,8 +65,7 @@
           :external-pending="observationsPending"
           :focused-id="focusedId"
           :has-both-views="!!image && !!animationUrl"
-          :reply-to-id="replyTargetId"
-          @complete="onObservationsComplete"
+          @complete="refreshAndPoll"
           @focus-observation="focusObservation"
         />
       </template>
@@ -131,18 +129,6 @@ if (initialHash) {
 
 // Sync focused observation to hash and switch view
 watch(focusedId, syncFocusToRoute)
-
-const replyTargetId = ref<string | null>(null)
-
-const onMarkerReply = (id: string) => {
-  focusObservation(id)
-  replyTargetId.value = id
-}
-
-const onObservationsComplete = () => {
-  replyTargetId.value = null
-  refreshAndPoll()
-}
 
 const onMarkerComplete = () => {
   discardMarker()

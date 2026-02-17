@@ -28,7 +28,10 @@
           class="observation-thread"
         >
           <div
-            :ref="(el) => setObservationRef(thread.observation.id, el as HTMLElement)"
+            :ref="
+              (el) =>
+                setObservationRef(thread.observation.id, el as HTMLElement)
+            "
             :class="{ focused: focusedId === thread.observation.id }"
             @click="emit('focusObservation', thread.observation.id)"
           >
@@ -38,14 +41,21 @@
               :has-both-views="hasBothViews"
               :editable="isOwnObservation(thread.observation)"
               :response-count="thread.responses.length"
-              :can-reply="isConnected && !editingObservation"
+              :can-reply="
+                isConnected &&
+                !editingObservation &&
+                replyingTo !== thread.observation.id
+              "
               @edit="startEdit(thread.observation)"
               @delete="startDelete(thread.observation)"
               @reply="startReply(thread.observation.id)"
             />
           </div>
 
-          <div v-if="thread.responses.length" class="observation-responses">
+          <div
+            v-if="thread.responses.length"
+            class="observation-responses"
+          >
             <div
               v-for="response in thread.responses"
               :key="response.id"
@@ -64,7 +74,10 @@
             </div>
           </div>
 
-          <div v-if="replyingTo === thread.observation.id" class="observation-reply-form">
+          <div
+            v-if="replyingTo === thread.observation.id"
+            class="observation-reply-form"
+          >
             <ObservationCreate
               :contract="contract"
               :token-id="tokenId"
@@ -133,7 +146,6 @@ const props = defineProps<{
   externalPending?: boolean
   focusedId?: string | null
   hasBothViews?: boolean
-  replyToId?: string | null
 }>()
 
 const emit = defineEmits<{
@@ -149,11 +161,18 @@ const { address, isConnected } = useConnection()
 // Use external data when provided, otherwise fall back to internal fetch
 const internal = props.observations
   ? null
-  : useObservations(toRef(() => props.contract), toRef(() => props.tokenId))
+  : useObservations(
+      toRef(() => props.contract),
+      toRef(() => props.tokenId),
+    )
 
-const allObservations = computed(() => props.observations ?? internal?.observations.value ?? [])
+const allObservations = computed(
+  () => props.observations ?? internal?.observations.value ?? [],
+)
 const displayCount = computed(() => props.count ?? internal?.count.value ?? 0n)
-const displayPending = computed(() => props.externalPending ?? internal?.pending.value ?? false)
+const displayPending = computed(
+  () => props.externalPending ?? internal?.pending.value ?? false,
+)
 
 // Threading: group observations into threads
 const threads = computed<ObservationThread[]>(() => {
@@ -192,14 +211,20 @@ const deletingObservation = ref<ObservationData | null>(null)
 const createFormRef = ref<ComponentPublicInstance>()
 
 function isOwnObservation(obs: ObservationData): boolean {
-  return !!address.value && obs.observer.toLowerCase() === address.value.toLowerCase()
+  return (
+    !!address.value &&
+    obs.observer.toLowerCase() === address.value.toLowerCase()
+  )
 }
 
 function startEdit(obs: ObservationData) {
   replyingTo.value = null
   editingObservation.value = obs
   nextTick(() => {
-    createFormRef.value?.$el?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    createFormRef.value?.$el?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+    })
   })
 }
 
@@ -267,18 +292,10 @@ watch(
   (id) => {
     if (id == null) return
     nextTick(() => {
-      observationRefMap.get(id)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+      observationRefMap
+        .get(id)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
     })
-  },
-)
-
-// Watch external replyToId to open reply form
-watch(
-  () => props.replyToId,
-  (id) => {
-    if (id) {
-      replyingTo.value = id
-    }
   },
 )
 </script>
@@ -313,7 +330,7 @@ watch(
 }
 
 .observation-responses {
-  margin-left: var(--spacer-lg);
+  margin-left: var(--spacer-sm);
   padding-left: var(--spacer);
   border-left: 2px solid var(--border-color, var(--muted));
   display: grid;
@@ -322,9 +339,6 @@ watch(
 }
 
 .observation-reply-form {
-  margin-left: var(--spacer-lg);
-  padding-left: var(--spacer);
-  border-left: 2px solid var(--accent, var(--color));
   margin-top: var(--spacer);
 }
 
