@@ -5,18 +5,15 @@
         <EvmAccount :address="observation.observer" />
       </NuxtLink>
       <div class="observation-header-right">
-        <template v-if="editable">
-          <Button
-            class="small muted"
-            @click.stop="emit('edit')"
-            >edit</Button
-          >
-          <Button
-            class="small muted"
-            @click.stop="emit('delete')"
-            >delete</Button
-          >
-        </template>
+        <Dropdown v-if="editable" v-model:open="showActions">
+          <template #trigger>
+            <Button class="small muted">
+              <Icon type="lucide:ellipsis-vertical" />
+            </Button>
+          </template>
+          <DropdownItem @select="emit('edit')">Edit</DropdownItem>
+          <DropdownItem @select="emit('delete')">Delete</DropdownItem>
+        </Dropdown>
         <NuxtLink
           :to="`${blockExplorer}/tx/${observation.transactionHash}`"
           target="_blank"
@@ -94,6 +91,7 @@ const emit = defineEmits<{
   toggleReplies: []
 }>()
 
+const showActions = ref(false)
 const blockExplorer = useBlockExplorer()
 
 function formatTip(value: bigint): string {
