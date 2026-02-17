@@ -5,12 +5,9 @@
     </h2>
 
     <ObservationCreate
-      ref="createFormRef"
       :contract="contract"
       :token-id="tokenId"
-      :edit-observation="editingObservation"
       @complete="onComplete"
-      @cancel-edit="cancelEdit"
     />
 
     <Loading
@@ -35,7 +32,16 @@
             :class="{ focused: focusedId === thread.observation.id }"
             @click="emit('focusObservation', thread.observation.id)"
           >
+            <ObservationCreate
+              v-if="editingObservation?.id === thread.observation.id"
+              :contract="contract"
+              :token-id="tokenId"
+              :edit-observation="editingObservation"
+              @complete="onComplete"
+              @cancel-edit="cancelEdit"
+            />
             <Observation
+              v-else
               :observation="thread.observation"
               show-location
               :has-multiple-view-modes="hasMultipleViewModes"
@@ -65,7 +71,16 @@
               :class="{ focused: focusedId === response.id }"
               @click="emit('focusObservation', response.id)"
             >
+              <ObservationCreate
+                v-if="editingObservation?.id === response.id"
+                :contract="contract"
+                :token-id="tokenId"
+                :edit-observation="editingObservation"
+                @complete="onComplete"
+                @cancel-edit="cancelEdit"
+              />
               <Observation
+                v-else
                 :observation="response"
                 show-location
                 :has-multiple-view-modes="hasMultipleViewModes"
@@ -136,7 +151,6 @@
 import { writeContract } from '@wagmi/core'
 import type { Address } from 'viem'
 import type { Config } from '@wagmi/vue'
-import type { ComponentPublicInstance } from 'vue'
 import { ObservationsAbi, type ObservationData } from '../utils/observations'
 
 interface ObservationThread {
@@ -215,7 +229,6 @@ const expandedThreads = ref<Set<string>>(new Set())
 
 const editingObservation = ref<ObservationData | null>(null)
 const deletingObservation = ref<ObservationData | null>(null)
-const createFormRef = ref<ComponentPublicInstance>()
 
 function isOwnObservation(obs: ObservationData): boolean {
   return (
@@ -227,12 +240,6 @@ function isOwnObservation(obs: ObservationData): boolean {
 function startEdit(obs: ObservationData) {
   replyingTo.value = null
   editingObservation.value = obs
-  nextTick(() => {
-    createFormRef.value?.$el?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'nearest',
-    })
-  })
 }
 
 function cancelEdit() {
