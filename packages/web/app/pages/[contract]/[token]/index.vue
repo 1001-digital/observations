@@ -64,7 +64,7 @@
           :count="observationCount"
           :external-pending="observationsPending"
           :focused-id="focusedId"
-          :has-both-views="!!image && !!animationUrl"
+          :has-multiple-view-modes="!!image && !!animationUrl"
           @complete="refreshAndPoll"
           @focus-observation="focusObservation"
         />

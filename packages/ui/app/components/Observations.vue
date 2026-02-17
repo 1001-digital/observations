@@ -38,7 +38,7 @@
             <Observation
               :observation="thread.observation"
               show-location
-              :has-both-views="hasBothViews"
+              :has-multiple-view-modes="hasMultipleViewModes"
               :editable="isOwnObservation(thread.observation)"
               :response-count="thread.responses.length"
               :replies-expanded="expandedThreads.has(thread.observation.id)"
@@ -68,7 +68,7 @@
               <Observation
                 :observation="response"
                 show-location
-                :has-both-views="hasBothViews"
+                :has-multiple-view-modes="hasMultipleViewModes"
                 :editable="isOwnObservation(response)"
                 @edit="startEdit(response)"
                 @delete="startDelete(response)"
@@ -151,7 +151,7 @@ const props = defineProps<{
   count?: bigint
   externalPending?: boolean
   focusedId?: string | null
-  hasBothViews?: boolean
+  hasMultipleViewModes?: boolean
 }>()
 
 const emit = defineEmits<{

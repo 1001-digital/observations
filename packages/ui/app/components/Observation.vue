@@ -32,7 +32,7 @@
       {{ (observation.y / 100).toFixed(1) }}%
     </small>
     <small
-      v-if="hasBothViews"
+      v-if="hasMultipleViewModes"
       class="observation-view-type"
     >
       {{ observation.viewType === 1 ? 'animation' : 'image' }}
@@ -78,7 +78,7 @@ import type { ObservationData } from '../utils/observations'
 defineProps<{
   observation: ObservationData
   showLocation?: boolean
-  hasBothViews?: boolean
+  hasMultipleViewModes?: boolean
   editable?: boolean
   responseCount?: number
   repliesExpanded?: boolean
