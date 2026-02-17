@@ -24,8 +24,8 @@
         :key="obs.id"
         :x="obs.x"
         :y="obs.y"
-        :focused="focusedId === obs.id"
-        :open="focusedId === obs.id"
+        :focused="effectiveFocusedId === obs.id"
+        :open="effectiveFocusedId === obs.id"
         :pending="replyingToId === obs.id && isReplyTransacting"
         @select="emit('focusObservation', obs.id)"
         @close="emit('clearFocus')"
@@ -165,6 +165,16 @@ const responsesByParent = computed(() => {
   return map
 })
 
+// Resolve focusedId to the parent observation id when it's a reply
+const effectiveFocusedId = computed(() => {
+  const id = props.focusedId
+  if (!id) return null
+  // Check if it's a reply and resolve to its parent
+  const obs = props.observations.find((o) => o.id === id)
+  if (obs && obs.parent !== 0n) return obs.parent.toString()
+  return id
+})
+
 const expandedReplies = ref<Set<string>>(new Set())
 
 function togglePopoverReplies(id: string) {
@@ -287,14 +297,19 @@ const onPopoverReplyComplete = () => {
 }
 
 watch(
-  () => props.focusedId,
+  effectiveFocusedId,
   (id, oldId) => {
     replyingToId.value = null
     if (oldId) expandedReplies.value.delete(oldId)
 
     if (!id) return
 
-    const obs = props.observations.find((o) => o.id === id)
+    // Auto-expand replies in popover when focusing a reply
+    if (props.focusedId !== id) {
+      expandedReplies.value.add(id)
+    }
+
+    const obs = props.observations.find((o) => o.id === props.focusedId)
     if (!obs?.time) return
 
     const media = findMediaElement()

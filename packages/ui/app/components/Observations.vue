@@ -304,11 +304,9 @@ watch(
   (id) => {
     if (id == null) return
 
-    // Auto-expand thread if focusing a reply
-    const thread = threads.value.find((t) =>
-      t.responses.some((r) => r.id === id),
-    )
-    if (thread) expandedThreads.value.add(thread.observation.id)
+    // Auto-expand thread when focusing a top-level observation with replies
+    const thread = threads.value.find((t) => t.observation.id === id)
+    if (thread?.responses.length) expandedThreads.value.add(id)
 
     nextTick(() => {
       observationRefMap
