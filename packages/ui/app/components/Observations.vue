@@ -103,7 +103,7 @@
               :y="thread.observation.located ? thread.observation.y : undefined"
               :view-type="thread.observation.viewType"
               :time="thread.observation.time"
-              @complete="onReplyComplete"
+              @complete="onComplete"
             />
           </div>
         </div>
@@ -121,7 +121,7 @@
       :observation="deletingObservation"
       :contract="contract"
       :token-id="tokenId"
-      @complete="onDeleteComplete"
+      @complete="onComplete"
       @cancel="deletingObservation = null"
     />
   </section>
@@ -238,19 +238,9 @@ function startDelete(obs: ObservationData) {
   deletingObservation.value = obs
 }
 
-const onDeleteComplete = () => {
-  deletingObservation.value = null
-  internal?.refreshAndPoll()
-  emit('complete')
-}
-
-const onComplete = () => {
+function onComplete() {
   editingObservation.value = null
-  internal?.refreshAndPoll()
-  emit('complete')
-}
-
-const onReplyComplete = () => {
+  deletingObservation.value = null
   replyingTo.value = null
   internal?.refreshAndPoll()
   emit('complete')
