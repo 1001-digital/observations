@@ -1,26 +1,27 @@
 <template>
   <div class="observation">
     <div class="observation-header">
-      <NuxtLink :to="`/observer/${observation.observer}`">
-        <EvmAccount :address="observation.observer" />
-      </NuxtLink>
-      <div class="observation-header-right">
-        <Dropdown v-if="editable" v-model:open="showActions" align="end">
-          <template #trigger>
-            <Button class="small muted">
-              <Icon type="lucide:ellipsis-vertical" />
-            </Button>
-          </template>
-          <DropdownItem @select="emit('edit')">Edit</DropdownItem>
-          <DropdownItem @select="emit('delete')">Delete</DropdownItem>
-        </Dropdown>
+      <div class="observation-header-left">
+        <NuxtLink :to="`/observer/${observation.observer}`">
+          <EvmAccount :address="observation.observer" />
+        </NuxtLink>
         <NuxtLink
+          class="observation-time"
           :to="`${blockExplorer}/tx/${observation.transactionHash}`"
           target="_blank"
         >
           <ObservationTime :block-number="observation.blockNumber" />
         </NuxtLink>
       </div>
+      <Dropdown v-if="editable" v-model:open="showActions" align="end">
+        <template #trigger>
+          <Button class="small muted">
+            <Icon type="lucide:ellipsis-vertical" />
+          </Button>
+        </template>
+        <DropdownItem @select="emit('edit')">Edit</DropdownItem>
+        <DropdownItem @select="emit('delete')">Delete</DropdownItem>
+      </Dropdown>
     </div>
     <p class="observation-note">{{ observation.note }}</p>
     <small
@@ -114,13 +115,16 @@ function formatTip(value: bigint): string {
     justify-content: space-between;
     align-items: center;
     font-size: var(--font-sm);
-    color: var(--muted);
   }
 
-  .observation-header-right {
+  .observation-header-left {
     display: flex;
     align-items: center;
     gap: var(--spacer-sm);
+
+    .observation-time {
+      color: var(--muted);
+    }
   }
 
   .observation-note {
