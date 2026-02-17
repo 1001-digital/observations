@@ -300,13 +300,15 @@ function setObservationRef(id: string, el: HTMLElement | null) {
 }
 
 watch(
-  () => props.focusedId,
-  (id) => {
+  [() => props.focusedId, threads],
+  ([id]) => {
     if (id == null) return
 
-    // Auto-expand thread when focusing a top-level observation with replies
-    const thread = threads.value.find((t) => t.observation.id === id)
-    if (thread?.responses.length) expandedThreads.value.add(id)
+    // Auto-expand thread if focusing a reply (e.g. from URI hash)
+    const thread = threads.value.find((t) =>
+      t.responses.some((r) => r.id === id),
+    )
+    if (thread) expandedThreads.value.add(thread.observation.id)
 
     nextTick(() => {
       observationRefMap
@@ -314,6 +316,7 @@ watch(
         ?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
     })
   },
+  { immediate: true },
 )
 </script>
 

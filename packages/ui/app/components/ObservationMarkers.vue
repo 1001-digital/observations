@@ -317,6 +317,7 @@ watch(
       media.currentTime = obs.time
     }
   },
+  { immediate: true },
 )
 </script>
 
