@@ -8,6 +8,10 @@
 :root {
   color-scheme: light;
 }
+
+html {
+  scrollbar-gutter: auto;
+}
 </style>
 
 <style scoped>
