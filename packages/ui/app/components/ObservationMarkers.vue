@@ -73,6 +73,10 @@
           :contract="contract"
           :token-id="tokenId"
           :parent="BigInt(obs.id)"
+          :x="obs.x"
+          :y="obs.y"
+          :view-type="obs.viewType"
+          :time="obs.time"
           @complete="onPopoverReplyComplete"
         />
         <Button

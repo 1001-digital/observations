@@ -84,6 +84,10 @@
               :contract="contract"
               :token-id="tokenId"
               :parent="BigInt(thread.observation.id)"
+              :x="thread.observation.located ? thread.observation.x : undefined"
+              :y="thread.observation.located ? thread.observation.y : undefined"
+              :view-type="thread.observation.viewType"
+              :time="thread.observation.time"
               @complete="onReplyComplete"
             />
           </div>
