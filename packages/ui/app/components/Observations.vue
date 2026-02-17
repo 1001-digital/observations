@@ -55,7 +55,10 @@
           </div>
 
           <div
-            v-if="thread.responses.length && expandedThreads.has(thread.observation.id)"
+            v-if="
+              thread.responses.length &&
+              expandedThreads.has(thread.observation.id)
+            "
             class="observation-responses"
           >
             <div
@@ -86,7 +89,11 @@
           </div>
 
           <Button
-            v-if="isConnected && !editingObservation && replyingTo !== thread.observation.id"
+            v-if="
+              isConnected &&
+              !editingObservation &&
+              replyingTo !== thread.observation.id
+            "
             class="small muted"
             @click.stop="startReply(thread.observation.id)"
             >Reply</Button
@@ -302,9 +309,14 @@ watch(
   gap: var(--spacer);
 }
 
-.observation-thread:not(:last-child) {
-  padding-bottom: var(--spacer);
-  border-bottom: var(--border);
+.observation-thread {
+  display: grid;
+  gap: var(--spacer);
+
+  &:not(:last-child) {
+    padding-bottom: var(--spacer);
+    border-bottom: var(--border);
+  }
 }
 
 .observation-responses {
@@ -313,11 +325,6 @@ watch(
   border-left: 2px solid var(--border-color, var(--muted));
   display: grid;
   gap: var(--spacer);
-  margin-top: var(--spacer);
-}
-
-.observation-reply-form {
-  margin-top: var(--spacer);
 }
 
 .focused {
