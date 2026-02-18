@@ -16,6 +16,7 @@ export const observation = onchainTable(
     view: t.integer().notNull(),
     time: t.integer().notNull(),
     tip: t.bigint().notNull(),
+    recipient: t.hex().notNull(),
     deleted: t.boolean().notNull().default(false),
     updatedBlock: t.bigint(),
     block: t.bigint().notNull(),
@@ -26,6 +27,7 @@ export const observation = onchainTable(
     pk: primaryKey({ columns: [table.collection, table.tokenId, table.id] }),
     collectionIdx: index().on(table.collection),
     observerIdx: index().on(table.observer),
+    recipientIdx: index().on(table.recipient),
     artifactIdx: index().on(table.collection, table.tokenId),
   }),
 );
@@ -44,10 +46,10 @@ export const artifact = onchainTable(
   }),
 );
 
-export const collectionTips = onchainTable(
-  "collection_tips",
+export const tips = onchainTable(
+  "tips",
   (t) => ({
-    collection: t.hex().primaryKey(),
+    recipient: t.hex().primaryKey(),
     totalTipped: t.bigint().notNull(),
     totalClaimed: t.bigint().notNull(),
     balance: t.bigint().notNull(),
