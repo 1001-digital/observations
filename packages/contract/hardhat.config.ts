@@ -49,4 +49,9 @@ export default defineConfig({
       accounts: [configVariable("VV_DEV_PRIV_KEY")],
     },
   },
+  verify: {
+    etherscan: {
+      apiKey: configVariable("ETHERSCAN_API_KEY"),
+    },
+  },
 });
