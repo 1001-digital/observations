@@ -37,13 +37,13 @@
         </template>
 
         <p
-          v-if="focusedReply && effectiveFocusedId === obs.id"
+          v-if="focusedReplyParent && effectiveFocusedId === obs.id"
           class="popover-in-response-to"
         >
           in response to
-          <a @click.stop.prevent="emit('focusObservation', obs.id)">
-            &ldquo;{{ truncate(obs.note) }}&rdquo;
-            by <EvmAccount :address="obs.observer" />
+          <a @click.stop.prevent="emit('focusObservation', focusedReplyParent.id)">
+            &ldquo;{{ truncate(focusedReplyParent.note) }}&rdquo;
+            by <EvmAccount :address="focusedReplyParent.observer" />
           </a>
         </p>
 
@@ -146,6 +146,13 @@ const focusedReply = computed(() => {
   const obs = props.observations.find((o) => o.id === id)
   if (obs && obs.parent !== 0n) return obs
   return null
+})
+
+// The direct parent of the focused reply
+const focusedReplyParent = computed(() => {
+  if (!focusedReply.value) return null
+  const parentId = focusedReply.value.parent.toString()
+  return props.observations.find((o) => o.id === parentId) ?? null
 })
 
 function displayObs(obs: ObservationData): ObservationData {
