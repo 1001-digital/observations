@@ -123,6 +123,7 @@ function onComplete() {
 .observations {
   display: grid;
   gap: var(--spacer);
+  min-height: 10rem;
 
   h2 {
     font-size: var(--font-lg);

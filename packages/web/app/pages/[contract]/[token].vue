@@ -216,10 +216,6 @@ provide(observationNavigationKey, {
   }
 }
 
-.observations {
-  min-height: 10rem;
-}
-
 .visual-actions.actions {
   margin-top: var(--spacer-sm);
   justify-content: center;
