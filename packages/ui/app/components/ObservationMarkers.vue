@@ -26,9 +26,7 @@
         :y="obs.y"
         :focused="effectiveFocusedId === obs.id"
         :open="effectiveFocusedId === obs.id"
-        :pending="replyingToId === obs.id && isReplyTransacting"
         @select="emit('focusObservation', obs.id)"
-        @close="emit('clearFocus')"
       >
         <template #title>
           <NuxtLink :to="`/observer/${displayObs(obs).observer}`">
@@ -49,54 +47,6 @@
         </p>
 
         <p class="observation-note">{{ displayObs(obs).note }}</p>
-
-        <button
-          v-if="responsesByParent.get(obs.id)?.length"
-          class="popover-replies-toggle"
-          @click.stop="togglePopoverReplies(obs.id)"
-        >
-          {{ expandedReplies.has(obs.id) ? '&#9662;' : '&#9656;' }}
-          {{ responsesByParent.get(obs.id)!.length }}
-          {{ responsesByParent.get(obs.id)!.length === 1 ? 'reply' : 'replies' }}
-        </button>
-
-        <div
-          v-if="expandedReplies.has(obs.id)"
-          class="popover-replies"
-        >
-          <div
-            v-for="reply in responsesByParent.get(obs.id)"
-            :key="reply.id"
-            class="popover-reply"
-          >
-            <div class="popover-reply-header">
-              <NuxtLink :to="`/observer/${reply.observer}`">
-                <EvmAccount :address="reply.observer" />
-              </NuxtLink>
-              <ObservationTime :block-number="reply.blockNumber" />
-            </div>
-            <p class="observation-note">{{ reply.note }}</p>
-          </div>
-        </div>
-
-        <ObservationCreate
-          v-if="replyingToId === obs.id"
-          v-model:pending="isReplyTransacting"
-          :contract="contract"
-          :token-id="tokenId"
-          :parent="BigInt(obs.id)"
-          :x="obs.x"
-          :y="obs.y"
-          :view-type="obs.viewType"
-          :time="obs.time"
-          @complete="onPopoverReplyComplete"
-        />
-        <Button
-          v-else-if="isConnected"
-          class="small muted"
-          @click.stop="replyingToId = obs.id"
-          >Reply</Button
-        >
       </ObservationMarker>
 
       <ObservationMarker
@@ -146,9 +96,7 @@ const emit = defineEmits<{
 
 const { isConnected } = useConnection()
 
-const replyingToId = ref<string | null>(null)
 const isTransacting = ref(false)
-const isReplyTransacting = ref(false)
 const mediaTime = ref(0)
 const observing = ref(true)
 const hasEmbed = ref(false)
@@ -168,30 +116,29 @@ const locatedObservations = computed(() =>
   ),
 )
 
-const responsesByParent = computed(() => {
-  const map = new Map<string, ObservationData[]>()
-  for (const obs of props.observations) {
-    if (obs.parent !== 0n) {
-      const key = obs.parent.toString()
-      const list = map.get(key) ?? []
-      list.push(obs)
-      map.set(key, list)
-    }
-  }
-  return map
-})
-
-// Resolve focusedId to the parent observation id when it's a reply
+// Walk the full parent chain to root (not just 1 level), with cycle protection
 const effectiveFocusedId = computed(() => {
   const id = props.focusedId
   if (!id) return null
-  // Check if it's a reply and resolve to its parent
+
   const obs = props.observations.find((o) => o.id === id)
-  if (obs && obs.parent !== 0n) return obs.parent.toString()
-  return id
+  if (!obs || obs.parent === 0n) return id
+
+  // Walk up the parent chain to the root
+  let current = obs
+  const seen = new Set<string>([id])
+  while (current.parent !== 0n) {
+    const parentId = current.parent.toString()
+    if (seen.has(parentId)) break // cycle protection
+    seen.add(parentId)
+    const parent = props.observations.find((o) => o.id === parentId)
+    if (!parent) break
+    current = parent
+  }
+  return current.id
 })
 
-// The actual focused observation when it's a reply
+// The actual focused observation when it's a reply (not root)
 const focusedReply = computed(() => {
   const id = props.focusedId
   if (!id) return null
@@ -209,16 +156,6 @@ function displayObs(obs: ObservationData): ObservationData {
 function truncate(text: string, max = 20): string {
   if (text.length <= max) return text
   return text.slice(0, max).trimEnd() + '\u2026'
-}
-
-const expandedReplies = ref<Set<string>>(new Set())
-
-function togglePopoverReplies(id: string) {
-  if (expandedReplies.value.has(id)) {
-    expandedReplies.value.delete(id)
-  } else {
-    expandedReplies.value.add(id)
-  }
 }
 
 const container = ref<HTMLElement>()
@@ -327,17 +264,9 @@ watch(
   },
 )
 
-const onPopoverReplyComplete = () => {
-  replyingToId.value = null
-  emit('complete')
-}
-
 watch(
   effectiveFocusedId,
-  (id, oldId) => {
-    replyingToId.value = null
-    if (oldId) expandedReplies.value.delete(oldId)
-
+  (id) => {
     if (!id) return
 
     const obs = props.observations.find((o) => o.id === props.focusedId)
@@ -383,31 +312,5 @@ watch(
       color: var(--foreground, inherit);
     }
   }
-}
-
-.popover-replies-toggle {
-  all: unset;
-  font-size: var(--font-sm);
-  color: var(--muted);
-  cursor: pointer;
-
-  &:hover {
-    color: var(--foreground, inherit);
-  }
-}
-
-.popover-replies {
-  display: grid;
-  gap: var(--spacer-sm);
-  padding-left: var(--spacer-sm);
-  border-left: 2px solid var(--border-color, var(--muted));
-}
-
-.popover-reply-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: var(--font-sm);
-  color: var(--muted);
 }
 </style>

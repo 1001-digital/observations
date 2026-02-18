@@ -1,136 +1,59 @@
 <template>
   <section class="observations">
-    <h2>
-      Observations <small v-if="displayCount > 0n">({{ displayCount }})</small>
-    </h2>
-
-    <ObservationCreate
-      :contract="contract"
-      :token-id="tokenId"
-      @complete="onComplete"
-    />
-
-    <Loading
-      v-if="displayPending"
-      spinner
-    />
+    <template v-if="focusedId && focusedObservationExists">
+      <ObservationDetail
+        :contract="contract"
+        :token-id="tokenId"
+        :observations="allObservations"
+        :focused-id="focusedId"
+        :has-multiple-view-modes="hasMultipleViewModes"
+        @focus-observation="emit('focusObservation', $event)"
+        @clear-focus="emit('clearFocus')"
+        @complete="onComplete"
+      />
+    </template>
     <template v-else>
-      <div
-        v-if="threads.length"
-        class="observation-list"
-      >
+      <h2>
+        Observations <small v-if="displayCount > 0n">({{ displayCount }})</small>
+      </h2>
+
+      <ObservationCreate
+        :contract="contract"
+        :token-id="tokenId"
+        @complete="onComplete"
+      />
+
+      <Loading
+        v-if="displayPending"
+        spinner
+      />
+      <template v-else>
         <div
-          v-for="thread in threads"
-          :key="thread.observation.id"
-          class="observation-thread"
+          v-if="threads.length"
+          class="observation-list"
         >
           <div
-            :ref="
-              (el) =>
-                setObservationRef(thread.observation.id, el as HTMLElement)
-            "
-            :class="{ focused: focusedId === thread.observation.id }"
+            v-for="thread in threads"
+            :key="thread.observation.id"
+            class="observation-thread"
             @click="emit('focusObservation', thread.observation.id)"
           >
-            <ObservationCreate
-              v-if="editingObservation?.id === thread.observation.id"
-              :contract="contract"
-              :token-id="tokenId"
-              :edit-observation="editingObservation"
-              @complete="onComplete"
-              @cancel-edit="cancelEdit"
-            />
             <Observation
-              v-else
               :observation="thread.observation"
               show-location
               :has-multiple-view-modes="hasMultipleViewModes"
-              :editable="isOwnObservation(thread.observation)"
               :response-count="thread.responses.length"
-              :replies-expanded="expandedThreads.has(thread.observation.id)"
-              @edit="startEdit(thread.observation)"
-              @delete="startDelete(thread.observation)"
-              @toggle-replies="toggleReplies(thread.observation.id)"
-            />
-          </div>
-
-          <div
-            v-if="
-              thread.responses.length &&
-              expandedThreads.has(thread.observation.id)
-            "
-            class="observation-responses"
-          >
-            <div
-              v-for="response in thread.responses"
-              :key="response.id"
-              :ref="(el) => setObservationRef(response.id, el as HTMLElement)"
-              :class="{ focused: focusedId === response.id }"
-              @click="emit('focusObservation', response.id)"
-            >
-              <ObservationCreate
-                v-if="editingObservation?.id === response.id"
-                :contract="contract"
-                :token-id="tokenId"
-                :edit-observation="editingObservation"
-                @complete="onComplete"
-                @cancel-edit="cancelEdit"
-              />
-              <Observation
-                v-else
-                :observation="response"
-                show-location
-                :has-multiple-view-modes="hasMultipleViewModes"
-                :editable="isOwnObservation(response)"
-                @edit="startEdit(response)"
-                @delete="startDelete(response)"
-              />
-            </div>
-          </div>
-
-          <Button
-            v-if="
-              isConnected &&
-              !editingObservation &&
-              replyingTo !== thread.observation.id
-            "
-            class="small muted"
-            @click.stop="startReply(thread.observation.id)"
-            >Reply</Button
-          >
-          <div
-            v-if="replyingTo === thread.observation.id"
-            class="observation-reply-form"
-          >
-            <ObservationCreate
-              :contract="contract"
-              :token-id="tokenId"
-              :parent="BigInt(thread.observation.id)"
-              :x="thread.observation.located ? thread.observation.x : undefined"
-              :y="thread.observation.located ? thread.observation.y : undefined"
-              :view-type="thread.observation.viewType"
-              :time="thread.observation.time"
-              @complete="onComplete"
             />
           </div>
         </div>
-      </div>
-      <p
-        v-else
-        class="empty"
-      >
-        No observations yet.
-      </p>
+        <p
+          v-else
+          class="empty"
+        >
+          No observations yet.
+        </p>
+      </template>
     </template>
-
-    <ObservationDelete
-      v-if="deletingObservation"
-      :observation="deletingObservation"
-      :contract="contract"
-      :token-id="tokenId"
-      @complete="onComplete"
-      @cancel="deletingObservation = null"
-    />
   </section>
 </template>
 
@@ -156,9 +79,8 @@ const props = defineProps<{
 const emit = defineEmits<{
   complete: []
   focusObservation: [id: string]
+  clearFocus: []
 }>()
-
-const { address, isConnected } = useConnection()
 
 // Use external data when provided, otherwise fall back to internal fetch
 const internal = props.observations
@@ -176,113 +98,45 @@ const displayPending = computed(
   () => props.externalPending ?? internal?.pending.value ?? false,
 )
 
-// Threading: group observations into threads
+const focusedObservationExists = computed(
+  () => !!props.focusedId && allObservations.value.some((o) => o.id === props.focusedId),
+)
+
+// Threading: group observations into threads (root observations only)
 const threads = computed<ObservationThread[]>(() => {
   const obs = allObservations.value
-  const topLevel = obs.filter((o) => o.parent === 0n)
-  const topLevelIds = new Set(topLevel.map((o) => o.id))
+  const rootObs = obs.filter((o) => o.parent === 0n)
 
-  // Group responses by parent ID
-  const responsesByParent = new Map<string, ObservationData[]>()
+  // Count all descendants per root
+  const responsesByRoot = new Map<string, ObservationData[]>()
   for (const o of obs) {
     if (o.parent !== 0n) {
-      const parentKey = o.parent.toString()
-      if (topLevelIds.has(parentKey)) {
-        const list = responsesByParent.get(parentKey) ?? []
-        list.push(o)
-        responsesByParent.set(parentKey, list)
-      } else {
-        // Orphan — treat as top-level
-        topLevel.push(o)
-        topLevelIds.add(o.id)
+      // Walk parent chain to find root
+      let parentId = o.parent.toString()
+      const seen = new Set<string>()
+      while (parentId !== '0') {
+        if (seen.has(parentId)) break
+        seen.add(parentId)
+        const parent = obs.find((p) => p.id === parentId)
+        if (!parent || parent.parent === 0n) break
+        parentId = parent.parent.toString()
       }
+      const list = responsesByRoot.get(parentId) ?? []
+      list.push(o)
+      responsesByRoot.set(parentId, list)
     }
   }
 
-  // Top-level reversed (newest first), responses chronological (oldest first)
-  return [...topLevel].reverse().map((o) => ({
+  return [...rootObs].reverse().map((o) => ({
     observation: o,
-    responses: responsesByParent.get(o.id) ?? [],
+    responses: responsesByRoot.get(o.id) ?? [],
   }))
 })
 
-const replyingTo = ref<string | null>(null)
-const expandedThreads = ref<Set<string>>(new Set())
-
-const editingObservation = ref<ObservationData | null>(null)
-const deletingObservation = ref<ObservationData | null>(null)
-
-function isOwnObservation(obs: ObservationData): boolean {
-  return (
-    !!address.value &&
-    obs.observer.toLowerCase() === address.value.toLowerCase()
-  )
-}
-
-function startEdit(obs: ObservationData) {
-  replyingTo.value = null
-  editingObservation.value = obs
-}
-
-function cancelEdit() {
-  editingObservation.value = null
-}
-
-function toggleReplies(id: string) {
-  if (expandedThreads.value.has(id)) {
-    expandedThreads.value.delete(id)
-  } else {
-    expandedThreads.value.add(id)
-  }
-}
-
-function startReply(id: string) {
-  replyingTo.value = replyingTo.value === id ? null : id
-  if (replyingTo.value) expandedThreads.value.add(id)
-}
-
-function startDelete(obs: ObservationData) {
-  deletingObservation.value = obs
-}
-
 function onComplete() {
-  editingObservation.value = null
-  deletingObservation.value = null
-  replyingTo.value = null
   internal?.refreshAndPoll()
   emit('complete')
 }
-
-// Map-based ref tracking for scroll-to
-const observationRefMap = new Map<string, HTMLElement>()
-
-function setObservationRef(id: string, el: HTMLElement | null) {
-  if (el) {
-    observationRefMap.set(id, el)
-  } else {
-    observationRefMap.delete(id)
-  }
-}
-
-watch(
-  [() => props.focusedId, threads],
-  ([id]) => {
-    if (id == null) return
-
-    // Auto-expand thread if focusing a reply (e.g. from URI hash)
-    const thread = threads.value.find((t) =>
-      t.responses.some((r) => r.id === id),
-    )
-    if (thread) expandedThreads.value.add(thread.observation.id)
-
-    nextTick(() => {
-      observationRefMap
-        .get(id)
-        ?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-    })
-  },
-  { immediate: true },
-)
 </script>
 
 <style scoped>
@@ -312,24 +166,11 @@ watch(
 .observation-thread {
   display: grid;
   gap: var(--spacer);
+  cursor: pointer;
 
   &:not(:last-child) {
     padding-bottom: var(--spacer);
     border-bottom: var(--border);
   }
-}
-
-.observation-responses {
-  margin-left: var(--spacer-sm);
-  padding-left: var(--spacer);
-  border-left: 2px solid var(--border-color, var(--muted));
-  display: grid;
-  gap: var(--spacer);
-}
-
-.focused {
-  outline: 2px solid var(--accent, var(--color));
-  outline-offset: var(--spacer-xs);
-  border-radius: var(--spacer-xs);
 }
 </style>

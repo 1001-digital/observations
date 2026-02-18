@@ -55,7 +55,9 @@ const emit = defineEmits<{
 const isOpen = computed({
   get: () => props.open ?? false,
   set: (value) => {
-    if (!value && !props.pending) emit('close')
+    // Only emit close when popover is not externally controlled
+    // (i.e. open via pending marker, not via focusedId)
+    if (!value && !props.pending && !props.focused) emit('close')
   },
 })
 

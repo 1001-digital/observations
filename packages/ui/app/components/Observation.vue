@@ -60,13 +60,9 @@
       v-if="responseCount"
       class="observation-footer"
     >
-      <button
-        class="observation-responses-toggle"
-        @click.stop="emit('toggleReplies')"
-      >
-        {{ repliesExpanded ? '&#9662;' : '&#9656;' }}
+      <span class="observation-responses-count">
         {{ responseCount }} {{ responseCount === 1 ? 'reply' : 'replies' }}
-      </button>
+      </span>
     </div>
   </div>
 </template>
@@ -81,13 +77,11 @@ defineProps<{
   hasMultipleViewModes?: boolean
   editable?: boolean
   responseCount?: number
-  repliesExpanded?: boolean
 }>()
 
 const emit = defineEmits<{
   edit: []
   delete: []
-  toggleReplies: []
 }>()
 
 const showActions = ref(false)
@@ -144,14 +138,8 @@ function formatTip(value: bigint): string {
     gap: var(--spacer);
     font-size: var(--font-sm);
 
-    .observation-responses-toggle {
-      all: unset;
+    .observation-responses-count {
       color: var(--muted);
-      cursor: pointer;
-
-      &:hover {
-        color: var(--foreground, inherit);
-      }
     }
   }
 }

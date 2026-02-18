@@ -67,6 +67,7 @@
           :has-multiple-view-modes="!!image && !!animationUrl"
           @complete="refreshAndPoll"
           @focus-observation="focusObservation"
+          @clear-focus="clearFocus"
         />
       </template>
     </div>
