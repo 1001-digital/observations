@@ -265,6 +265,10 @@ const onOverlayClick = (event: MouseEvent) => {
   emit('placeMarker', x, y)
 }
 
+watch(hasEmbed, (val) => {
+  if (!val) observing.value = true
+})
+
 watch(
   () => props.pendingMarker,
   (val, old) => {
