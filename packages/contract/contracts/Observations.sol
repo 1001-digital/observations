@@ -23,6 +23,10 @@ import { ClaimableTips } from "./ClaimableTips.sol";
 contract Observations {
     using ClaimableTips for ClaimableTips.Tips;
 
+    error InvalidRecipient();
+    error InvalidParent();
+    error UpdateRequiresParent();
+
     /// @dev Tracks observation history for a given artifact.
     struct Artifact {
         uint64 count;
@@ -72,9 +76,9 @@ contract Observations {
         uint32 time,
         address tipRecipient
     ) external payable {
-        require(msg.value == 0 || tipRecipient != address(0), "Invalid recipient");
+        if (msg.value != 0 && tipRecipient == address(0)) revert InvalidRecipient();
         uint64 id = _record(collection, tokenId, parent, update);
-        tips[tipRecipient].deposit();
+        if (msg.value > 0) tips[tipRecipient].deposit();
 
         emit Observation(collection, tokenId, msg.sender, id, parent, update, note, false, 0, 0, viewType, time, msg.value, tipRecipient);
     }
@@ -102,12 +106,15 @@ contract Observations {
         uint32 time,
         address tipRecipient
     ) external payable {
-        require(msg.value == 0 || tipRecipient != address(0), "Invalid recipient");
+        if (msg.value != 0 && tipRecipient == address(0)) revert InvalidRecipient();
         uint64 id = _record(collection, tokenId, parent, update);
-        tips[tipRecipient].deposit();
+        if (msg.value > 0) tips[tipRecipient].deposit();
 
         emit Observation(collection, tokenId, msg.sender, id, parent, update, note, true, x, y, viewType, time, msg.value, tipRecipient);
     }
+
+    error TipsNotYetClaimable();
+    error NotAuthorized();
 
     /// @notice Claim accumulated tips for a recipient.
     /// @param tipRecipient The recipient address to claim tips for.
@@ -115,14 +122,11 @@ contract Observations {
         bool authorized = msg.sender == tipRecipient;
 
         if (!authorized && msg.sender == ClaimableTips.UNCLAIMED_TIPS_RECIPIENT) {
-            require(
-                block.timestamp - tips[tipRecipient].unclaimedSince > 365 days,
-                "Tips not yet claimable"
-            );
+            if (block.timestamp - tips[tipRecipient].unclaimedSince <= 365 days) revert TipsNotYetClaimable();
             authorized = true;
         }
 
-        require(authorized, "Not authorized");
+        if (!authorized) revert NotAuthorized();
 
         tips[tipRecipient].claim(tipRecipient);
     }
@@ -140,8 +144,8 @@ contract Observations {
         unchecked { ++a.count; }
         id = a.count;
 
-        require(parent < id, "Invalid parent");
-        require(!update || parent != 0, "Update requires parent");
+        if (parent >= id) revert InvalidParent();
+        if (update && parent == 0) revert UpdateRequiresParent();
     }
 }
 

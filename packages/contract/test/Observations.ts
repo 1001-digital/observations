@@ -254,7 +254,7 @@ describe("Observations", async function () {
 
     await assert.rejects(
       observations.write.claimTips([recipient], { account: otherWallet.account }),
-      /Not authorized/,
+      /NotAuthorized/,
     );
   });
 
@@ -263,7 +263,7 @@ describe("Observations", async function () {
 
     await assert.rejects(
       observations.write.claimTips([walletClient.account.address]),
-      /No tips to claim/,
+      /NoTipsToClaim/,
     );
   });
 
@@ -280,7 +280,7 @@ describe("Observations", async function () {
 
     await assert.rejects(
       observations.write.claimTips([recipient], { account: unclaimedTipsRecipient }),
-      /Tips not yet claimable/,
+      /TipsNotYetClaimable/,
     );
 
     await publicClient.request({ method: "hardhat_stopImpersonatingAccount" as any, params: [unclaimedTipsRecipient] });
@@ -414,7 +414,7 @@ describe("Observations", async function () {
     // but the ETH transfer to MockNoReceive fails because it has no receive/fallback.
     await assert.rejects(
       mockNoReceive.write.claim([observations.address]),
-      /Transfer failed/,
+      /TransferFailed/,
     );
   });
 
@@ -434,7 +434,7 @@ describe("Observations", async function () {
 
     await assert.rejects(
       observations.write.observe([collection, tokenId, 0n, false, "Bad tip.", 0, 0, zeroAddress], { value: parseEther("0.01") }),
-      /Invalid recipient/,
+      /InvalidRecipient/,
     );
   });
 
@@ -534,7 +534,7 @@ describe("Observations", async function () {
 
     await assert.rejects(
       observations.write.observe([collection, tokenId, 5n, false, "Bad ref.", 0, 0, zeroAddress]),
-      /Invalid parent/,
+      /InvalidParent/,
     );
   });
 
@@ -543,7 +543,7 @@ describe("Observations", async function () {
 
     await assert.rejects(
       observations.write.observe([collection, tokenId, 0n, true, "Bad update.", 0, 0, zeroAddress]),
-      /Update requires parent/,
+      /UpdateRequiresParent/,
     );
   });
 
@@ -581,7 +581,7 @@ describe("Observations", async function () {
     // Token 99 has no observations — parent=1 is invalid for it
     await assert.rejects(
       observations.write.observe([collection, otherToken, 1n, false, "Bad cross-ref.", 0, 0, zeroAddress]),
-      /Invalid parent/,
+      /InvalidParent/,
     );
   });
 

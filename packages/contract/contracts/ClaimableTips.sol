@@ -17,6 +17,9 @@ library ClaimableTips {
         uint256 amount
     );
 
+    error NoTipsToClaim();
+    error TransferFailed();
+
     /// @notice Can sweep tips left uncollected for over 1 year.
     /// @dev This is a developer safe multisig account.
     address internal constant UNCLAIMED_TIPS_RECIPIENT = 0x5Ca3d797BF631603efCB3885C8B50A6d60834600;
@@ -33,7 +36,7 @@ library ClaimableTips {
     /// @param recipient The recipient address (used in the emitted event).
     function claim(Tips storage t, address recipient) internal {
         uint256 amount = t.balance;
-        require(amount > 0, "No tips to claim");
+        if (amount == 0) revert NoTipsToClaim();
 
         // Effects before interactions (single SSTORE — clears both packed fields)
         t.balance = 0;
@@ -41,7 +44,7 @@ library ClaimableTips {
 
         // Transfer
         (bool sent, ) = msg.sender.call{value: amount}("");
-        require(sent, "Transfer failed");
+        if (!sent) revert TransferFailed();
 
         emit TipsClaimed(recipient, msg.sender, amount);
     }
