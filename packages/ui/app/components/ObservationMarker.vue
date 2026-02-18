@@ -9,6 +9,7 @@
       :side="popoverSide"
       :collision-padding="12"
       :title="title"
+      :dismissable="!focused"
       arrow
       closable
       class="observation-popover"
@@ -25,13 +26,6 @@
           @click.stop="emit('select')"
         />
       </template>
-      <!-- <Button -->
-      <!--   class="marker-popover-close" -->
-      <!--   aria-label="Close" -->
-      <!--   @click="emit('close')" -->
-      <!-- > -->
-      <!--   <Icon type="close" /> -->
-      <!-- </Button> -->
       <slot />
     </Popover>
   </div>
@@ -55,9 +49,7 @@ const emit = defineEmits<{
 const isOpen = computed({
   get: () => props.open ?? false,
   set: (value) => {
-    // Only emit close when popover is not externally controlled
-    // (i.e. open via pending marker, not via focusedId)
-    if (!value && !props.pending && !props.focused) emit('close')
+    if (!value && !props.pending) emit('close')
   },
 })
 

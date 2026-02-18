@@ -27,6 +27,7 @@
         :focused="effectiveFocusedId === obs.id"
         :open="effectiveFocusedId === obs.id"
         @select="emit('focusObservation', obs.id)"
+        @close="emit('clearFocus')"
       >
         <template #title>
           <NuxtLink :to="`/observer/${displayObs(obs).observer}`">
