@@ -9,6 +9,7 @@ export interface TokenPageData {
   refreshAndPoll: () => void
   contract: Readonly<Ref<Address>>
   tokenId: Readonly<Ref<bigint>>
+  recipient: Readonly<Ref<Address | undefined>>
   hasMultipleViewModes: Readonly<Ref<boolean>>
 }
 

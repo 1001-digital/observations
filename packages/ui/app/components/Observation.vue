@@ -54,7 +54,8 @@
       v-if="observation.tip > 0n"
       class="observation-tip"
     >
-      {{ formatTip(observation.tip) }} ETH
+      {{ formatTip(observation.tip) }} ETH<template v-if="showTipRecipient">
+        &rarr; <EvmAccount :address="observation.recipient" /></template>
     </small>
     <div
       v-if="responseCount"
@@ -68,15 +69,16 @@
 </template>
 
 <script setup lang="ts">
-import { formatEther } from 'viem'
+import { formatEther, zeroAddress, type Address } from 'viem'
 import type { ObservationData } from '../utils/observations'
 
-defineProps<{
+const props = defineProps<{
   observation: ObservationData
   showLocation?: boolean
   hasMultipleViewModes?: boolean
   editable?: boolean
   responseCount?: number
+  expectedTipRecipient?: Address
 }>()
 
 const emit = defineEmits<{
@@ -86,6 +88,16 @@ const emit = defineEmits<{
 
 const showActions = ref(false)
 const blockExplorer = useBlockExplorer()
+
+const showTipRecipient = computed(() => {
+  const { tip, recipient } = props.observation
+  return (
+    tip > 0n &&
+    recipient !== zeroAddress &&
+    (!props.expectedTipRecipient ||
+      recipient.toLowerCase() !== props.expectedTipRecipient.toLowerCase())
+  )
+})
 
 function formatTip(value: bigint): string {
   const formatted = formatEther(value)

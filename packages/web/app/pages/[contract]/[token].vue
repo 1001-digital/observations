@@ -5,6 +5,7 @@
         v-if="metadata"
         :contract="contract"
         :token-id="tokenId"
+        :recipient="recipient"
         :observations="observations"
         :pending-marker="pendingMarker"
         :focused-id="focusedId"
@@ -74,6 +75,7 @@ const { metadata, owner, image, animationUrl, pending, error } = useArtifact(
   toRef(tokenId),
 )
 const { collection } = useCollection(toRef(contract))
+const recipient = computed(() => collection.value?.owner)
 const { showAnimation } = useArtifactView(animationUrl, pending)
 
 const {
@@ -142,6 +144,7 @@ provide(tokenPageDataKey, {
   refreshAndPoll,
   contract,
   tokenId,
+  recipient,
   hasMultipleViewModes,
 })
 

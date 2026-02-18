@@ -2,6 +2,7 @@
   <Observations
     :contract="contract"
     :token-id="tokenId"
+    :recipient="recipient"
     :observations="observations"
     :count="count"
     :external-pending="pending"
@@ -12,6 +13,6 @@
 </template>
 
 <script setup lang="ts">
-const { observations, count, pending, refreshAndPoll, contract, tokenId, hasMultipleViewModes } = useTokenPageData()
+const { observations, count, pending, refreshAndPoll, contract, tokenId, recipient, hasMultipleViewModes } = useTokenPageData()
 const { focusObservation } = useObservationNavigation()
 </script>

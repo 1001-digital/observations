@@ -30,6 +30,7 @@
       :observation="focused"
       show-location
       :has-multiple-view-modes="hasMultipleViewModes"
+      :expected-tip-recipient="focusedExpectedRecipient"
       :editable="isOwn"
       @edit="editingObservation = focused"
       @delete="deletingObservation = focused"
@@ -49,6 +50,7 @@
         <Observation
           :observation="response"
           :has-multiple-view-modes="hasMultipleViewModes"
+          :expected-tip-recipient="focused.observer"
           :response-count="countDirectResponses(response.id)"
         />
       </div>
@@ -58,6 +60,7 @@
       :contract="contract"
       :token-id="tokenId"
       :parent="BigInt(focusedId)"
+      :recipient="focused.observer"
       :x="focused.located ? focused.x : undefined"
       :y="focused.located ? focused.y : undefined"
       :view-type="focused.viewType"
@@ -83,6 +86,7 @@ import type { ObservationData } from '../utils/observations'
 const props = defineProps<{
   contract: Address
   tokenId: bigint
+  recipient?: Address
   observations: ObservationData[]
   focusedId: string
   hasMultipleViewModes?: boolean
@@ -118,6 +122,13 @@ const directResponses = computed(() =>
     (o) => o.parent.toString() === props.focusedId,
   ),
 )
+
+// Expected tip recipient for the focused observation:
+// root → collection artist, reply → parent observer
+const focusedExpectedRecipient = computed(() =>
+  parentObservation.value?.observer ?? props.recipient,
+)
+
 
 function countDirectResponses(id: string): number {
   return props.observations.filter((o) => o.parent.toString() === id).length

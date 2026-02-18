@@ -27,6 +27,7 @@ interface PonderObservation {
   view: number
   time: number
   tip: string
+  recipient: string
   updatedBlock: string | null
   block: string
   txHash: string
@@ -44,7 +45,7 @@ const OBSERVATIONS_QUERY = `
       limit: 1000
     ) {
       items {
-        id parent update observer note located x y view time tip updatedBlock block txHash
+        id parent update observer note located x y view time tip recipient updatedBlock block txHash
       }
     }
   }
@@ -54,7 +55,7 @@ const RECENT_OBSERVATIONS_QUERY = `
   query {
     observations(where: { update: false, deleted: false }, orderBy: "block", orderDirection: "desc", limit: 100) {
       items {
-        id collection tokenId parent update observer note located x y view time tip updatedBlock block txHash
+        id collection tokenId parent update observer note located x y view time tip recipient updatedBlock block txHash
       }
     }
   }
@@ -85,7 +86,7 @@ const COLLECTION_OBSERVATIONS_QUERY = `
       limit: 100
     ) {
       items {
-        id collection tokenId parent update observer note located x y view time tip updatedBlock block txHash
+        id collection tokenId parent update observer note located x y view time tip recipient updatedBlock block txHash
       }
     }
   }
@@ -101,7 +102,7 @@ const OBSERVER_OBSERVATIONS_QUERY = `
       after: $after
     ) {
       items {
-        id collection tokenId parent update observer note located x y view time tip updatedBlock block txHash
+        id collection tokenId parent update observer note located x y view time tip recipient updatedBlock block txHash
       }
       pageInfo {
         endCursor
@@ -125,6 +126,7 @@ function mapObservation(raw: PonderObservation): ObservationData {
     viewType: raw.view,
     time: raw.time,
     tip: BigInt(raw.tip || '0'),
+    recipient: raw.recipient as Address,
     blockNumber: BigInt(raw.block),
     updatedBlock: raw.updatedBlock ? BigInt(raw.updatedBlock) : undefined,
     transactionHash: raw.txHash,

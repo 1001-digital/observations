@@ -13,7 +13,7 @@
         :rows="3"
       />
       <TipSelect
-        v-if="!editObservation && !isReply"
+        v-if="!editObservation && recipient"
         v-model="tip"
       />
       <EvmTransactionFlow
@@ -91,7 +91,7 @@
 
 <script setup lang="ts">
 import { writeContract } from '@wagmi/core'
-import type { Address } from 'viem'
+import { type Address, zeroAddress } from 'viem'
 import type { Config } from '@wagmi/vue'
 import { ObservationsAbi, type ObservationData } from '../utils/observations'
 
@@ -104,6 +104,7 @@ const props = defineProps<{
   time?: number
   editObservation?: ObservationData | null
   parent?: bigint
+  recipient?: Address
 }>()
 
 const emit = defineEmits<{
@@ -154,6 +155,10 @@ const triggerTransactionFlow = (cb: Function) => {
   pending.value = true
   cb()
 }
+const effectiveRecipient = computed(() =>
+  tip.value > 0n ? (props.recipient ?? zeroAddress) : zeroAddress,
+)
+
 const submitObservation = () =>
   writeContract($wagmi as Config, {
     address: contractAddress,
@@ -170,6 +175,7 @@ const submitObservation = () =>
           effectiveY.value,
           effectiveViewType.value,
           effectiveTime.value,
+          effectiveRecipient.value,
         ]
       : [
           props.contract,
@@ -179,6 +185,7 @@ const submitObservation = () =>
           note.value,
           effectiveViewType.value,
           effectiveTime.value,
+          effectiveRecipient.value,
         ],
     value: tip.value,
   })

@@ -3,6 +3,7 @@
     v-if="observation"
     :contract="contract"
     :token-id="tokenId"
+    :recipient="recipient"
     :observations="observations"
     :focused-id="focusedId"
     :has-multiple-view-modes="hasMultipleViewModes"
@@ -17,7 +18,7 @@
 
 <script setup lang="ts">
 const route = useRoute()
-const { observations, pending, refreshAndPoll, contract, tokenId, hasMultipleViewModes } = useTokenPageData()
+const { observations, pending, refreshAndPoll, contract, tokenId, recipient, hasMultipleViewModes } = useTokenPageData()
 const { focusObservation, clearFocus } = useObservationNavigation()
 
 const focusedId = computed(() => route.params.id as string)

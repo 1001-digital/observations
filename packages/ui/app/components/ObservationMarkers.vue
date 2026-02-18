@@ -63,6 +63,7 @@
           v-model:pending="isTransacting"
           :contract="contract"
           :token-id="tokenId"
+          :recipient="recipient"
           :x="pendingMarker.x"
           :y="pendingMarker.y"
           :view-type="viewType"
@@ -81,6 +82,7 @@ import type { ObservationData } from '../utils/observations'
 const props = defineProps<{
   contract: Address
   tokenId: bigint
+  recipient?: Address
   observations: ObservationData[]
   pendingMarker: { x: number; y: number } | null
   focusedId: string | null

@@ -57,6 +57,7 @@ function mapEvent(event: any): ObservationData {
     viewType: event.args.viewType!,
     time: event.args.time!,
     tip: event.args.tip!,
+    recipient: event.args.recipient!,
     blockNumber: event.blockNumber,
     transactionHash: event.transactionHash,
   }
