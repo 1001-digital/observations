@@ -43,13 +43,14 @@ contract Observations {
         int32 y,
         uint8 viewType,
         uint32 time,
-        uint256 tip
+        uint256 tip,
+        address recipient
     );
 
     /// @dev collection => tokenId => Artifact
     mapping(address => mapping(uint256 => Artifact)) public artifacts;
 
-    /// @notice Accumulated tips per collection.
+    /// @notice Accumulated tips per recipient.
     mapping(address => ClaimableTips.Tips) public tips;
 
     /// @notice Leave an observation on an artifact.
@@ -60,6 +61,7 @@ contract Observations {
     /// @param note The observation text.
     /// @param viewType The view type (0 = image, 1 = animation).
     /// @param time The time in seconds within the media (0 = no specific time).
+    /// @param recipient The address to receive the tip.
     function observe(
         address collection,
         uint256 tokenId,
@@ -67,12 +69,14 @@ contract Observations {
         bool update,
         string calldata note,
         uint8 viewType,
-        uint32 time
+        uint32 time,
+        address recipient
     ) external payable {
+        require(msg.value == 0 || recipient != address(0), "Invalid recipient");
         uint64 id = _record(collection, tokenId, parent, update);
-        tips[collection].deposit();
+        tips[recipient].deposit();
 
-        emit Observation(collection, tokenId, msg.sender, id, parent, update, note, false, 0, 0, viewType, time, msg.value);
+        emit Observation(collection, tokenId, msg.sender, id, parent, update, note, false, 0, 0, viewType, time, msg.value, recipient);
     }
 
     /// @notice Leave an observation at specific coordinates on an artifact.
@@ -85,6 +89,7 @@ contract Observations {
     /// @param y The y coordinate on the artifact.
     /// @param viewType The view type (0 = image, 1 = animation).
     /// @param time The time in seconds within the media (0 = no specific time).
+    /// @param recipient The address to receive the tip.
     function observeAt(
         address collection,
         uint256 tokenId,
@@ -94,18 +99,32 @@ contract Observations {
         int32 x,
         int32 y,
         uint8 viewType,
-        uint32 time
+        uint32 time,
+        address recipient
     ) external payable {
+        require(msg.value == 0 || recipient != address(0), "Invalid recipient");
         uint64 id = _record(collection, tokenId, parent, update);
-        tips[collection].deposit();
+        tips[recipient].deposit();
 
-        emit Observation(collection, tokenId, msg.sender, id, parent, update, note, true, x, y, viewType, time, msg.value);
+        emit Observation(collection, tokenId, msg.sender, id, parent, update, note, true, x, y, viewType, time, msg.value, recipient);
     }
 
-    /// @notice Claim accumulated tips for a collection.
-    /// @param collection The collection address to claim tips for.
-    function claimTips(address collection) external {
-        tips[collection].claim(collection);
+    /// @notice Claim accumulated tips for a recipient.
+    /// @param recipient The recipient address to claim tips for.
+    function claimTips(address recipient) external {
+        bool authorized = msg.sender == recipient;
+
+        if (!authorized && msg.sender == ClaimableTips.UNCLAIMED_TIPS_RECIPIENT) {
+            require(
+                block.timestamp - tips[recipient].unclaimedSince > 365 days,
+                "Tips not yet claimable"
+            );
+            authorized = true;
+        }
+
+        require(authorized, "Not authorized");
+
+        tips[recipient].claim(recipient);
     }
 
     /// @dev Track the observation count and first observation block for an artifact.
