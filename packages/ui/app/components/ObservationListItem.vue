@@ -19,7 +19,7 @@
       >
         <template #default="{ metadata, image }">
           <NuxtLink
-            :to="`/${observation.collection}/${observation.tokenId}#${observation.id}`"
+            :to="`/${observation.collection}/${observation.tokenId}/${observation.id}`"
             class="observation-list-item-preview"
           >
             <img
@@ -35,7 +35,7 @@
     </div>
     <slot v-else name="link">
       <NuxtLink
-        :to="`/${observation.collection}/${observation.tokenId}#${observation.id}`"
+        :to="`/${observation.collection}/${observation.tokenId}/${observation.id}`"
         class="observation-list-item-link"
       >
         {{ shortAddress(observation.collection) }} / #{{ observation.tokenId }}

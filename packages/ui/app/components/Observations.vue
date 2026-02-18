@@ -1,58 +1,44 @@
 <template>
   <section class="observations">
-    <template v-if="focusedId && focusedObservationExists">
-      <ObservationDetail
-        :contract="contract"
-        :token-id="tokenId"
-        :observations="allObservations"
-        :focused-id="focusedId"
-        :has-multiple-view-modes="hasMultipleViewModes"
-        @focus-observation="emit('focusObservation', $event)"
-        @clear-focus="emit('clearFocus')"
-        @complete="onComplete"
-      />
-    </template>
+    <h2>
+      Observations <small v-if="displayCount > 0n">({{ displayCount }})</small>
+    </h2>
+
+    <ObservationCreate
+      :contract="contract"
+      :token-id="tokenId"
+      @complete="onComplete"
+    />
+
+    <Loading
+      v-if="displayPending"
+      spinner
+    />
     <template v-else>
-      <h2>
-        Observations <small v-if="displayCount > 0n">({{ displayCount }})</small>
-      </h2>
-
-      <ObservationCreate
-        :contract="contract"
-        :token-id="tokenId"
-        @complete="onComplete"
-      />
-
-      <Loading
-        v-if="displayPending"
-        spinner
-      />
-      <template v-else>
+      <div
+        v-if="threads.length"
+        class="observation-list"
+      >
         <div
-          v-if="threads.length"
-          class="observation-list"
+          v-for="thread in threads"
+          :key="thread.observation.id"
+          class="observation-thread"
+          @click="emit('focusObservation', thread.observation.id)"
         >
-          <div
-            v-for="thread in threads"
-            :key="thread.observation.id"
-            class="observation-thread"
-            @click="emit('focusObservation', thread.observation.id)"
-          >
-            <Observation
-              :observation="thread.observation"
-              show-location
-              :has-multiple-view-modes="hasMultipleViewModes"
-              :response-count="thread.responses.length"
-            />
-          </div>
+          <Observation
+            :observation="thread.observation"
+            show-location
+            :has-multiple-view-modes="hasMultipleViewModes"
+            :response-count="thread.responses.length"
+          />
         </div>
-        <p
-          v-else
-          class="empty"
-        >
-          No observations yet.
-        </p>
-      </template>
+      </div>
+      <p
+        v-else
+        class="empty"
+      >
+        No observations yet.
+      </p>
     </template>
   </section>
 </template>
@@ -72,14 +58,12 @@ const props = defineProps<{
   observations?: ObservationData[]
   count?: bigint
   externalPending?: boolean
-  focusedId?: string | null
   hasMultipleViewModes?: boolean
 }>()
 
 const emit = defineEmits<{
   complete: []
   focusObservation: [id: string]
-  clearFocus: []
 }>()
 
 // Use external data when provided, otherwise fall back to internal fetch
@@ -96,10 +80,6 @@ const allObservations = computed(
 const displayCount = computed(() => props.count ?? internal?.count.value ?? 0n)
 const displayPending = computed(
   () => props.externalPending ?? internal?.pending.value ?? false,
-)
-
-const focusedObservationExists = computed(
-  () => !!props.focusedId && allObservations.value.some((o) => o.id === props.focusedId),
 )
 
 // Threading: group observations into threads (root observations only)
