@@ -368,7 +368,7 @@ describe("Observations", async function () {
     await attacker.write.setTarget([observations.address, attacker.address]);
 
     // The re-entrant receive() will try to call claimTips again.
-    // Balance is zeroed before the transfer, so the re-entrant call should revert with "No tips to claim".
+    // Balance is zeroed before the transfer, so the re-entrant call should revert with NoTipsToClaim.
     await assert.rejects(
       attacker.write.claim(),
       (err: any) => {
@@ -402,7 +402,7 @@ describe("Observations", async function () {
     assert.equal(remainingB, tipB);
   });
 
-  it("Should revert with 'Transfer failed' when recipient cannot receive ETH", async function () {
+  it("Should revert with TransferFailed when recipient cannot receive ETH", async function () {
     const observations = await viem.deployContract("Observations");
     const mockNoReceive = await viem.deployContract("MockNoReceive");
     const tip = parseEther("0.01");
