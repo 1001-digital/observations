@@ -38,10 +38,5 @@ export const useArtifactView = (
     { immediate: true },
   )
 
-  const animationQueryValue = (value: boolean) => {
-    const isDefault = value === (artifact.defaultView === 'animation')
-    return isDefault ? undefined : String(value)
-  }
-
-  return { showAnimation, animationQueryValue }
+  return { showAnimation }
 }

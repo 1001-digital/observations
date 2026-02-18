@@ -8,7 +8,7 @@
         :observations="observations"
         :pending-marker="pendingMarker"
         :focused-id="focusedId"
-        :view-type="animationUrl && image ? (showAnimation ? 1 : 0) : undefined"
+        :view-type="hasMultipleViewModes ? (effectiveShowAnimation ? 1 : 0) : undefined"
         @place-marker="onPlaceMarker"
         @discard-marker="discardMarker"
         @focus-observation="focusObservation"
@@ -17,7 +17,7 @@
         v-slot="{ observing, hasEmbed, toggleObserving }"
       >
         <ArtifactVisual
-          v-model:show-animation="showAnimation"
+          v-model:show-animation="effectiveShowAnimation"
           :image="image"
           :animation-url="animationUrl"
           :name="metadata.name"
@@ -25,11 +25,11 @@
         <Actions v-if="(animationUrl && image) || hasEmbed" class="visual-actions">
           <Tooltip v-if="animationUrl && image">
             <template #trigger>
-              <Button class="small" @click="showAnimation = !showAnimation">
-                <Icon :type="showAnimation ? 'lucide:image' : 'lucide:play'" />
+              <Button class="small" @click="effectiveShowAnimation = !effectiveShowAnimation">
+                <Icon :type="effectiveShowAnimation ? 'lucide:image' : 'lucide:play'" />
               </Button>
             </template>
-            {{ showAnimation ? 'Show image' : 'Show animation' }}
+            {{ effectiveShowAnimation ? 'Show image' : 'Show animation' }}
           </Tooltip>
           <Tooltip v-if="hasEmbed">
             <template #trigger>
@@ -74,7 +74,7 @@ const { metadata, owner, image, animationUrl, pending, error } = useArtifact(
   toRef(tokenId),
 )
 const { collection } = useCollection(toRef(contract))
-const { showAnimation, animationQueryValue } = useArtifactView(animationUrl, pending)
+const { showAnimation } = useArtifactView(animationUrl, pending)
 
 const {
   observations,
@@ -98,44 +98,28 @@ const basePath = computed(() =>
 
 const hasMultipleViewModes = computed(() => !!image.value && !!animationUrl.value)
 
+// When an observation is focused, derive view mode from its viewType
+const effectiveShowAnimation = computed({
+  get() {
+    if (focusedId.value && hasMultipleViewModes.value) {
+      const obs = observations.value.find((o) => o.id === focusedId.value)
+      if (obs) return obs.viewType === 1
+    }
+    return showAnimation.value
+  },
+  set(value: boolean) {
+    showAnimation.value = value
+  },
+})
+
 // Navigation helpers
 const focusObservation = (id: string) => {
   pendingMarker.value = null
-  const query = { ...route.query }
-  const obs = observations.value.find((o) => o.id === id)
-  if (obs && animationUrl.value) {
-    const animation = animationQueryValue(obs.viewType === 1)
-    if (animation != null) {
-      query.animation = animation
-    } else {
-      delete query.animation
-    }
-  }
-  navigateTo({ path: `${basePath.value}/${id}`, query })
+  navigateTo({ path: `${basePath.value}/${id}`, query: route.query })
 }
 
 const clearFocus = () => {
   navigateTo({ path: basePath.value || '/', query: route.query })
-}
-
-// Sync animation query for direct navigation to detail view
-const directId = route.params.id as string | undefined
-if (directId) {
-  watch(observations, () => {
-    if (!animationUrl.value) return
-    const obs = observations.value.find((o) => o.id === directId)
-    if (!obs) return
-    const animation = animationQueryValue(obs.viewType === 1)
-    const query = { ...route.query }
-    if (animation != null) {
-      if (query.animation === animation) return
-      query.animation = animation
-    } else {
-      if (!query.animation) return
-      delete query.animation
-    }
-    navigateTo({ path: route.path, query }, { replace: true })
-  }, { once: true })
 }
 
 const onPlaceMarker = (x: number, y: number) => {
