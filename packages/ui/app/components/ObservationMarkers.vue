@@ -31,60 +31,80 @@
         @close="emit('clearFocus')"
       >
         <template #title>
-          <NuxtLink :to="`/observer/${obs.observer}`">
-            <EvmAccount :address="obs.observer" />
-          </NuxtLink>
-          <ObservationTime :block-number="obs.blockNumber" />
+          <template v-if="focusedReply && effectiveFocusedId === obs.id">
+            <NuxtLink :to="`/observer/${focusedReply.observer}`">
+              <EvmAccount :address="focusedReply.observer" />
+            </NuxtLink>
+            <ObservationTime :block-number="focusedReply.blockNumber" />
+          </template>
+          <template v-else>
+            <NuxtLink :to="`/observer/${obs.observer}`">
+              <EvmAccount :address="obs.observer" />
+            </NuxtLink>
+            <ObservationTime :block-number="obs.blockNumber" />
+          </template>
         </template>
-        <p class="observation-note">{{ obs.note }}</p>
 
-        <button
-          v-if="responsesByParent.get(obs.id)?.length"
-          class="popover-replies-toggle"
-          @click.stop="togglePopoverReplies(obs.id)"
-        >
-          {{ expandedReplies.has(obs.id) ? '&#9662;' : '&#9656;' }}
-          {{ responsesByParent.get(obs.id)!.length }}
-          {{ responsesByParent.get(obs.id)!.length === 1 ? 'reply' : 'replies' }}
-        </button>
+        <template v-if="focusedReply && effectiveFocusedId === obs.id">
+          <p class="popover-in-response-to">
+            in response to
+            <a @click.stop.prevent="emit('focusObservation', obs.id)">
+              <EvmAccount :address="obs.observer" />
+            </a>
+          </p>
+          <p class="observation-note">{{ focusedReply.note }}</p>
+        </template>
+        <template v-else>
+          <p class="observation-note">{{ obs.note }}</p>
 
-        <div
-          v-if="expandedReplies.has(obs.id)"
-          class="popover-replies"
-        >
-          <div
-            v-for="reply in responsesByParent.get(obs.id)"
-            :key="reply.id"
-            class="popover-reply"
+          <button
+            v-if="responsesByParent.get(obs.id)?.length"
+            class="popover-replies-toggle"
+            @click.stop="togglePopoverReplies(obs.id)"
           >
-            <div class="popover-reply-header">
-              <NuxtLink :to="`/observer/${reply.observer}`">
-                <EvmAccount :address="reply.observer" />
-              </NuxtLink>
-              <ObservationTime :block-number="reply.blockNumber" />
-            </div>
-            <p class="observation-note">{{ reply.note }}</p>
-          </div>
-        </div>
+            {{ expandedReplies.has(obs.id) ? '&#9662;' : '&#9656;' }}
+            {{ responsesByParent.get(obs.id)!.length }}
+            {{ responsesByParent.get(obs.id)!.length === 1 ? 'reply' : 'replies' }}
+          </button>
 
-        <ObservationCreate
-          v-if="replyingToId === obs.id"
-          v-model:pending="isReplyTransacting"
-          :contract="contract"
-          :token-id="tokenId"
-          :parent="BigInt(obs.id)"
-          :x="obs.x"
-          :y="obs.y"
-          :view-type="obs.viewType"
-          :time="obs.time"
-          @complete="onPopoverReplyComplete"
-        />
-        <Button
-          v-else-if="isConnected"
-          class="small muted"
-          @click.stop="replyingToId = obs.id"
-          >Reply</Button
-        >
+          <div
+            v-if="expandedReplies.has(obs.id)"
+            class="popover-replies"
+          >
+            <div
+              v-for="reply in responsesByParent.get(obs.id)"
+              :key="reply.id"
+              class="popover-reply"
+            >
+              <div class="popover-reply-header">
+                <NuxtLink :to="`/observer/${reply.observer}`">
+                  <EvmAccount :address="reply.observer" />
+                </NuxtLink>
+                <ObservationTime :block-number="reply.blockNumber" />
+              </div>
+              <p class="observation-note">{{ reply.note }}</p>
+            </div>
+          </div>
+
+          <ObservationCreate
+            v-if="replyingToId === obs.id"
+            v-model:pending="isReplyTransacting"
+            :contract="contract"
+            :token-id="tokenId"
+            :parent="BigInt(obs.id)"
+            :x="obs.x"
+            :y="obs.y"
+            :view-type="obs.viewType"
+            :time="obs.time"
+            @complete="onPopoverReplyComplete"
+          />
+          <Button
+            v-else-if="isConnected"
+            class="small muted"
+            @click.stop="replyingToId = obs.id"
+            >Reply</Button
+          >
+        </template>
       </ObservationMarker>
 
       <ObservationMarker
@@ -177,6 +197,15 @@ const effectiveFocusedId = computed(() => {
   const obs = props.observations.find((o) => o.id === id)
   if (obs && obs.parent !== 0n) return obs.parent.toString()
   return id
+})
+
+// The actual focused observation when it's a reply
+const focusedReply = computed(() => {
+  const id = props.focusedId
+  if (!id) return null
+  const obs = props.observations.find((o) => o.id === id)
+  if (obs && obs.parent !== 0n) return obs
+  return null
 })
 
 const expandedReplies = ref<Set<string>>(new Set())
@@ -308,11 +337,6 @@ watch(
 
     if (!id) return
 
-    // Auto-expand replies in popover when focusing a reply
-    if (props.focusedId !== id) {
-      expandedReplies.value.add(id)
-    }
-
     const obs = props.observations.find((o) => o.id === props.focusedId)
     if (!obs?.time) return
 
@@ -344,6 +368,20 @@ watch(
 </style>
 
 <style>
+.popover-in-response-to {
+  font-size: var(--font-sm);
+  color: var(--muted);
+
+  a {
+    cursor: pointer;
+    text-decoration: underline;
+
+    &:hover {
+      color: var(--foreground, inherit);
+    }
+  }
+}
+
 .popover-replies-toggle {
   all: unset;
   font-size: var(--font-sm);
