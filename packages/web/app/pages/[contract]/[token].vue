@@ -122,11 +122,11 @@ const clearFocus = () => {
   navigateTo({ path: basePath.value || '/', query: route.query })
 }
 
-const onPlaceMarker = (x: number, y: number) => {
-  placeMarker(x, y)
+const onPlaceMarker = async (x: number, y: number) => {
   if (route.params.id) {
-    navigateTo({ path: basePath.value || '/', query: route.query })
+    await navigateTo({ path: basePath.value || '/', query: route.query })
   }
+  placeMarker(x, y)
 }
 
 const onMarkerComplete = () => {
