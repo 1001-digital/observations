@@ -126,7 +126,7 @@ function mapObservation(raw: PonderObservation): ObservationData {
     viewType: raw.view,
     time: raw.time,
     tip: BigInt(raw.tip || '0'),
-    recipient: raw.recipient as Address,
+    tipRecipient: raw.recipient as Address,
     blockNumber: BigInt(raw.block),
     updatedBlock: raw.updatedBlock ? BigInt(raw.updatedBlock) : undefined,
     transactionHash: raw.txHash,

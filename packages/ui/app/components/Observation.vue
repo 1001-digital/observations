@@ -55,7 +55,7 @@
       class="observation-tip"
     >
       {{ formatTip(observation.tip) }} ETH<template v-if="showTipRecipient">
-        &rarr; <EvmAccount :address="observation.recipient" /></template>
+        &rarr; <EvmAccount :address="observation.tipRecipient" /></template>
     </small>
     <div
       v-if="responseCount"
@@ -90,12 +90,12 @@ const showActions = ref(false)
 const blockExplorer = useBlockExplorer()
 
 const showTipRecipient = computed(() => {
-  const { tip, recipient } = props.observation
+  const { tip, tipRecipient } = props.observation
   return (
     tip > 0n &&
-    recipient !== zeroAddress &&
+    tipRecipient !== zeroAddress &&
     (!props.expectedTipRecipient ||
-      recipient.toLowerCase() !== props.expectedTipRecipient.toLowerCase())
+      tipRecipient.toLowerCase() !== props.expectedTipRecipient.toLowerCase())
   )
 })
 

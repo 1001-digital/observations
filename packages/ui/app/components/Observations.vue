@@ -7,7 +7,7 @@
     <ObservationCreate
       :contract="contract"
       :token-id="tokenId"
-      :recipient="recipient"
+      :tip-recipient="tipRecipient"
       @complete="onComplete"
     />
 
@@ -30,7 +30,7 @@
             :observation="thread.observation"
             show-location
             :has-multiple-view-modes="hasMultipleViewModes"
-            :expected-tip-recipient="recipient"
+            :expected-tip-recipient="tipRecipient"
             :response-count="thread.responses.length"
           />
         </div>
@@ -57,7 +57,7 @@ interface ObservationThread {
 const props = defineProps<{
   contract: Address
   tokenId: bigint
-  recipient?: Address
+  tipRecipient?: Address
   observations?: ObservationData[]
   count?: bigint
   externalPending?: boolean

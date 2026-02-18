@@ -60,7 +60,7 @@
       :contract="contract"
       :token-id="tokenId"
       :parent="BigInt(focusedId)"
-      :recipient="focused.observer"
+      :tip-recipient="focused.observer"
       :x="focused.located ? focused.x : undefined"
       :y="focused.located ? focused.y : undefined"
       :view-type="focused.viewType"
@@ -86,7 +86,7 @@ import type { ObservationData } from '../utils/observations'
 const props = defineProps<{
   contract: Address
   tokenId: bigint
-  recipient?: Address
+  tipRecipient?: Address
   observations: ObservationData[]
   focusedId: string
   hasMultipleViewModes?: boolean
@@ -126,7 +126,7 @@ const directResponses = computed(() =>
 // Expected tip recipient for the focused observation:
 // root → collection artist, reply → parent observer
 const focusedExpectedRecipient = computed(() =>
-  parentObservation.value?.observer ?? props.recipient,
+  parentObservation.value?.observer ?? props.tipRecipient,
 )
 
 

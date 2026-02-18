@@ -2,7 +2,7 @@ import { ponder } from "ponder:registry";
 import { observation, artifact, tips } from "ponder:schema";
 
 ponder.on("Observations:Observation", async ({ event, context }) => {
-  const { collection, tokenId, observer, id, parent, update, note, located, x, y, viewType, time, tip, recipient } = event.args;
+  const { collection, tokenId, observer, id, parent, update, note, located, x, y, viewType, time, tip, tipRecipient } = event.args;
 
   // Insert the event as its own row (preserves full event history)
   await context.db
@@ -21,7 +21,7 @@ ponder.on("Observations:Observation", async ({ event, context }) => {
       view: viewType,
       time,
       tip,
-      recipient,
+      recipient: tipRecipient,
       block: event.block.number,
       timestamp: event.block.timestamp,
       txHash: event.transaction.hash,
@@ -66,7 +66,7 @@ ponder.on("Observations:Observation", async ({ event, context }) => {
     await context.db
       .insert(tips)
       .values({
-        recipient,
+        recipient: tipRecipient,
         totalTipped: tip,
         totalClaimed: 0n,
         balance: tip,

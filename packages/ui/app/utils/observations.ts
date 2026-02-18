@@ -1,13 +1,13 @@
 import { parseAbi, type Address } from 'viem'
 
 export const ObservationsAbi = parseAbi([
-  'event Observation(address indexed collection, uint256 indexed tokenId, address indexed observer, uint64 id, uint64 parent, bool update, string note, bool located, int32 x, int32 y, uint8 viewType, uint32 time, uint256 tip, address recipient)',
+  'event Observation(address indexed collection, uint256 indexed tokenId, address indexed observer, uint64 id, uint64 parent, bool update, string note, bool located, int32 x, int32 y, uint8 viewType, uint32 time, uint256 tip, address tipRecipient)',
   'event TipsClaimed(address indexed recipient, address indexed claimant, uint256 amount)',
   'function artifacts(address, uint256) view returns (uint64 count, uint128 firstBlock)',
-  'function observe(address collection, uint256 tokenId, uint64 parent, bool update, string note, uint8 viewType, uint32 time, address recipient) payable',
-  'function observeAt(address collection, uint256 tokenId, uint64 parent, bool update, string note, int32 x, int32 y, uint8 viewType, uint32 time, address recipient) payable',
+  'function observe(address collection, uint256 tokenId, uint64 parent, bool update, string note, uint8 viewType, uint32 time, address tipRecipient) payable',
+  'function observeAt(address collection, uint256 tokenId, uint64 parent, bool update, string note, int32 x, int32 y, uint8 viewType, uint32 time, address tipRecipient) payable',
   'function tips(address) view returns (uint128 balance, uint128 unclaimedSince)',
-  'function claimTips(address recipient)',
+  'function claimTips(address tipRecipient)',
 ])
 
 export interface ObservationData {
@@ -22,7 +22,7 @@ export interface ObservationData {
   viewType: number
   time: number
   tip: bigint
-  recipient: Address
+  tipRecipient: Address
   blockNumber: bigint
   updatedBlock?: bigint
   transactionHash: string

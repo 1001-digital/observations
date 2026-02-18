@@ -13,7 +13,7 @@
         :rows="3"
       />
       <TipSelect
-        v-if="!editObservation && recipient"
+        v-if="!editObservation && tipRecipient"
         v-model="tip"
       />
       <EvmTransactionFlow
@@ -104,7 +104,7 @@ const props = defineProps<{
   time?: number
   editObservation?: ObservationData | null
   parent?: bigint
-  recipient?: Address
+  tipRecipient?: Address
 }>()
 
 const emit = defineEmits<{
@@ -156,7 +156,7 @@ const triggerTransactionFlow = (cb: Function) => {
   cb()
 }
 const effectiveRecipient = computed(() =>
-  tip.value > 0n ? (props.recipient ?? zeroAddress) : zeroAddress,
+  tip.value > 0n ? (props.tipRecipient ?? zeroAddress) : zeroAddress,
 )
 
 const submitObservation = () =>
