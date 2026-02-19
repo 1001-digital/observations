@@ -10,7 +10,6 @@ export const observation = onchainTable(
     parent: t.bigint().notNull(),
     update: t.boolean().notNull(),
     note: t.text().notNull(),
-    located: t.boolean().notNull(),
     x: t.integer().notNull(),
     y: t.integer().notNull(),
     view: t.integer().notNull(),

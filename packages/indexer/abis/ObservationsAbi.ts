@@ -10,7 +10,6 @@ export const ObservationsAbi = [
       { indexed: false, name: "parent", type: "uint64" },
       { indexed: false, name: "update", type: "bool" },
       { indexed: false, name: "note", type: "string" },
-      { indexed: false, name: "located", type: "bool" },
       { indexed: false, name: "x", type: "int32" },
       { indexed: false, name: "y", type: "int32" },
       { indexed: false, name: "viewType", type: "uint8" },
@@ -44,22 +43,6 @@ export const ObservationsAbi = [
   {
     type: "function",
     name: "observe",
-    stateMutability: "payable",
-    inputs: [
-      { name: "collection", type: "address" },
-      { name: "tokenId", type: "uint256" },
-      { name: "parent", type: "uint64" },
-      { name: "update", type: "bool" },
-      { name: "note", type: "string" },
-      { name: "viewType", type: "uint8" },
-      { name: "time", type: "uint32" },
-      { name: "tipRecipient", type: "address" },
-    ],
-    outputs: [],
-  },
-  {
-    type: "function",
-    name: "observeAt",
     stateMutability: "payable",
     inputs: [
       { name: "collection", type: "address" },
