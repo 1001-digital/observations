@@ -1,0 +1,43 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_28-0bc086046c4daccc24c13b6c098496bf84918fc0",
+  "solcVersion": "0.8.28",
+  "solcLongVersion": "0.8.28+commit.7893614a",
+  "userSourceNameMap": {
+    "contracts/Observations.sol": "project/contracts/Observations.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "cancun",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata"
+          ]
+        }
+      },
+      "remappings": [],
+      "viaIR": true
+    },
+    "sources": {
+      "project/contracts/ClaimableTips.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.28;\n\n/// @notice Tracks claimable ETH tips per recipient.\n/// Recipients can claim at any time.\n/// If unclaimed for over 1 year, the unclaimed tips recipient can sweep.\nlibrary ClaimableTips {\n\n    struct Tips {\n        uint128 balance;\n        uint128 unclaimedSince;\n    }\n\n    event TipsClaimed(\n        address indexed recipient,\n        address indexed claimant,\n        uint256 amount\n    );\n\n    error NoTipsToClaim();\n    error TransferFailed();\n\n    /// @notice Can sweep tips left uncollected for over 1 year.\n    /// @dev This is a developer safe multisig account.\n    address internal constant UNCLAIMED_TIPS_RECIPIENT = 0x5Ca3d797BF631603efCB3885C8B50A6d60834600;\n\n    /// @dev Accumulate a tip for a recipient.\n    function deposit(Tips storage t) internal {\n        if (msg.value == 0) return;\n        if (t.balance == 0) t.unclaimedSince = uint128(block.timestamp);\n        t.balance += uint128(msg.value);\n    }\n\n    /// @dev Claim accumulated tips. The calling contract handles authorization.\n    /// @param t The tips storage to claim from.\n    /// @param recipient The recipient address (used in the emitted event).\n    function claim(Tips storage t, address recipient) internal {\n        uint256 amount = t.balance;\n        if (amount == 0) revert NoTipsToClaim();\n\n        // Effects before interactions (single SSTORE — clears both packed fields)\n        t.balance = 0;\n        t.unclaimedSince = 0;\n\n        // Transfer\n        (bool sent, ) = msg.sender.call{value: amount}(\"\");\n        if (!sent) revert TransferFailed();\n\n        emit TipsClaimed(recipient, msg.sender, amount);\n    }\n}\n"
+      },
+      "project/contracts/Observations.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.28;\n\nimport { ClaimableTips } from \"./ClaimableTips.sol\";\n\n/**\n-------------------------------------\n|                                   |\n|     ·  ·  ·  ·  ·  ·  ●  ·  ·     |\n|     ·  ·  ·  ·  ·  ·  ·  ·  ·     |\n|     ·  ●  ·  ·  ·  ·  ·  ·  ·     |\n|     ·  ·  ·  ·  ●  ·  ·  ·  ·     |\n|     ·  ·  ·  ·  ·  ·  ·  ·  ●     |\n|     ·  ·  ●  ·  ·  ·  ·  ·  ·     |\n|     ·  ·  ·  ·  ·  ·  ·  ●  ·     |\n|     ·  ●  ·  ·  ·  ●  ·  ·  ·     |\n|     ·  ·  ·  ●  ·  ·  ·  ·  ·     |\n|                                   |\n-------------------------------------\n@title  Observations\n@notice Leave observations on Ethereum artifacts.\n*/\ncontract Observations {\n    using ClaimableTips for ClaimableTips.Tips;\n\n    error InvalidRecipient();\n    error InvalidParent();\n    error UpdateRequiresParent();\n\n    /// @dev Tracks observation history for a given artifact.\n    struct Artifact {\n        uint64 count;\n        uint128 firstBlock;\n    }\n\n    /// @notice Emitted when someone leaves an observation.\n    event Observation(\n        address indexed collection,\n        uint256 indexed tokenId,\n        address indexed observer,\n        uint64 id,\n        uint64 parent,\n        bool update,\n        string note,\n        int32 x,\n        int32 y,\n        uint8 viewType,\n        uint32 time,\n        uint256 tip,\n        address tipRecipient\n    );\n\n    /// @dev collection => tokenId => Artifact\n    mapping(address => mapping(uint256 => Artifact)) public artifacts;\n\n    /// @notice Accumulated tips per recipient.\n    mapping(address => ClaimableTips.Tips) public tips;\n\n    /// @notice Leave an observation on an artifact.\n    /// @param collection The token contract address.\n    /// @param tokenId The token ID within that collection.\n    /// @param parent The ID of the parent observation (0 = top-level).\n    /// @param update Whether this is an update to the parent observation.\n    /// @param note The observation text.\n    /// @param x The x coordinate on the artifact (0 = not located).\n    /// @param y The y coordinate on the artifact (0 = not located).\n    /// @param viewType The view type (0 = image, 1 = animation).\n    /// @param time The time in seconds within the media (0 = no specific time).\n    /// @param tipRecipient The address to receive the tip.\n    function observe(\n        address collection,\n        uint256 tokenId,\n        uint64 parent,\n        bool update,\n        string calldata note,\n        int32 x,\n        int32 y,\n        uint8 viewType,\n        uint32 time,\n        address tipRecipient\n    ) external payable {\n        if (msg.value != 0 && tipRecipient == address(0)) revert InvalidRecipient();\n        uint64 id = _record(collection, tokenId, parent, update);\n        if (msg.value > 0) tips[tipRecipient].deposit();\n\n        emit Observation(collection, tokenId, msg.sender, id, parent, update,\n                         note, x, y, viewType, time,\n                         msg.value, tipRecipient);\n    }\n\n    error TipsNotYetClaimable();\n    error NotAuthorized();\n\n    /// @notice Claim accumulated tips for a recipient.\n    /// @param tipRecipient The recipient address to claim tips for.\n    function claimTips(address tipRecipient) external {\n        bool authorized = msg.sender == tipRecipient;\n\n        if (!authorized && msg.sender == ClaimableTips.UNCLAIMED_TIPS_RECIPIENT) {\n            if (block.timestamp - tips[tipRecipient].unclaimedSince <= 365 days)\n              revert TipsNotYetClaimable();\n            authorized = true;\n        }\n\n        if (!authorized) revert NotAuthorized();\n\n        tips[tipRecipient].claim(tipRecipient);\n    }\n\n    /// @dev Track the observation count and first observation block for an artifact.\n    function _record(\n        address collection, uint256 tokenId, uint64 parent, bool update\n    ) internal returns (uint64 id) {\n        Artifact storage a = artifacts[collection][tokenId];\n\n        if (a.count == 0) {\n            a.firstBlock = uint128(block.number);\n        }\n\n        unchecked { ++a.count; }\n        id = a.count;\n\n        if (parent >= id) revert InvalidParent();\n        if (update && parent == 0) revert UpdateRequiresParent();\n    }\n}\n\n// - by jalil, inspired by Sam Spratt's \"The Monument Game\"\n"
+      }
+    }
+  }
+}
