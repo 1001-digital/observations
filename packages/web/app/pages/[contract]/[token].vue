@@ -114,6 +114,8 @@ const effectiveShowAnimation = computed({
   },
 })
 
+const viewType = computed(() => effectiveShowAnimation.value ? 1 : 0)
+
 // Navigation helpers
 const focusObservation = (id: string) => {
   pendingMarker.value = null
@@ -146,6 +148,7 @@ provide(tokenPageDataKey, {
   tokenId,
   tipRecipient,
   hasMultipleViewModes,
+  viewType,
 })
 
 provide(observationNavigationKey, {

@@ -11,6 +11,7 @@ export interface TokenPageData {
   tokenId: Readonly<Ref<bigint>>
   tipRecipient: Readonly<Ref<Address | undefined>>
   hasMultipleViewModes: Readonly<Ref<boolean>>
+  viewType: Readonly<Ref<number>>
 }
 
 export interface ObservationNavigation {

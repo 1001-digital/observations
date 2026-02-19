@@ -8,6 +8,7 @@
       :contract="contract"
       :token-id="tokenId"
       :tip-recipient="tipRecipient"
+      :view-type="viewType"
       @complete="onComplete"
     />
 
@@ -62,6 +63,7 @@ const props = defineProps<{
   count?: bigint
   externalPending?: boolean
   hasMultipleViewModes?: boolean
+  viewType?: number
 }>()
 
 const emit = defineEmits<{
