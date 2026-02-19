@@ -32,7 +32,6 @@ function resolveUpdates<T extends ObservationData>(events: T[]): T[] {
       map.delete(parentId)
     } else {
       parent.note = event.note
-      parent.located = event.located
       parent.x = event.x
       parent.y = event.y
       parent.viewType = event.viewType
@@ -51,7 +50,6 @@ function mapEvent(event: any): ObservationData {
     update: event.args.update!,
     observer: event.args.observer!,
     note: event.args.note!,
-    located: event.args.located!,
     x: event.args.x!,
     y: event.args.y!,
     viewType: event.args.viewType!,

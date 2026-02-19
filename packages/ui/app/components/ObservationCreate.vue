@@ -123,11 +123,6 @@ const pending = defineModel<boolean>('pending')
 const note = ref('')
 const tip = ref(0n)
 
-const located = computed(() => {
-  if (props.editObservation) return props.editObservation.located
-  return props.x != null && props.y != null
-})
-
 const parentId = computed(() => {
   if (props.editObservation) return BigInt(props.editObservation.id)
   return props.parent ?? 0n
@@ -163,30 +158,19 @@ const submitObservation = () =>
   writeContract($wagmi as Config, {
     address: contractAddress,
     abi: ObservationsAbi,
-    functionName: located.value ? 'observeAt' : 'observe',
-    args: located.value
-      ? [
-          props.contract,
-          props.tokenId,
-          parentId.value,
-          isUpdate.value,
-          note.value,
-          effectiveX.value,
-          effectiveY.value,
-          effectiveViewType.value,
-          effectiveTime.value,
-          effectiveRecipient.value,
-        ]
-      : [
-          props.contract,
-          props.tokenId,
-          parentId.value,
-          isUpdate.value,
-          note.value,
-          effectiveViewType.value,
-          effectiveTime.value,
-          effectiveRecipient.value,
-        ],
+    functionName: 'observe',
+    args: [
+      props.contract,
+      props.tokenId,
+      parentId.value,
+      isUpdate.value,
+      note.value,
+      effectiveX.value,
+      effectiveY.value,
+      effectiveViewType.value,
+      effectiveTime.value,
+      effectiveRecipient.value,
+    ],
     value: tip.value,
   })
 

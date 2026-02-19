@@ -32,7 +32,7 @@
     </div>
     <p class="observation-note">{{ observation.note }}</p>
     <small
-      v-if="showLocation && observation.located"
+      v-if="showLocation && (observation.x !== 0 || observation.y !== 0)"
       class="observation-location"
     >
       {{ (observation.x / 100).toFixed(1) }}% /

@@ -57,30 +57,19 @@ const submitDelete = () => {
   return writeContract($wagmi as Config, {
     address: contractAddress,
     abi: ObservationsAbi,
-    functionName: obs.located ? 'observeAt' : 'observe',
-    args: obs.located
-      ? [
-          props.contract,
-          props.tokenId,
-          BigInt(obs.id),
-          true,
-          '',
-          obs.x,
-          obs.y,
-          obs.viewType,
-          obs.time,
-          zeroAddress,
-        ]
-      : [
-          props.contract,
-          props.tokenId,
-          BigInt(obs.id),
-          true,
-          '',
-          obs.viewType,
-          obs.time,
-          zeroAddress,
-        ],
+    functionName: 'observe',
+    args: [
+      props.contract,
+      props.tokenId,
+      BigInt(obs.id),
+      true,
+      '',
+      obs.x,
+      obs.y,
+      obs.viewType,
+      obs.time,
+      zeroAddress,
+    ],
   })
 }
 

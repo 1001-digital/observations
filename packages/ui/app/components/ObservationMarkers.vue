@@ -113,7 +113,7 @@ const findMediaElement = (): HTMLMediaElement | null =>
 const locatedObservations = computed(() =>
   props.observations.filter(
     (obs) =>
-      obs.located &&
+      (obs.x !== 0 || obs.y !== 0) &&
       obs.parent === 0n &&
       (props.viewType == null || obs.viewType === props.viewType),
   ),
