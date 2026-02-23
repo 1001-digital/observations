@@ -10,7 +10,9 @@ export default defineAppConfig({
     '0x036721e5a769cc48b3189efbb9cce4471e8a48b1/15455',
     '0x036721e5a769cc48b3189efbb9cce4471e8a48b1/1001',
   ],
-  ipfsGateway: 'https://ipfs.vv.xyz/ipfs/',
+  evm: {
+    ipfsGateway: 'https://ipfs.vv.xyz/ipfs/',
+  },
   observations: {
     mode: 'indexer' as 'indexer' | 'onchain',
   },

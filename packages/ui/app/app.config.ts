@@ -12,10 +12,10 @@ export default defineAppConfig({
   observations: {
     mode: 'onchain' as 'indexer' | 'onchain',
   },
-  ipfsGateway: 'https://ipfs.io/ipfs/',
-  arweaveGateway: 'https://arweave.net/',
   evm: {
     defaultChain: 'sepolia',
+    ipfsGateway: 'https://ipfs.io/ipfs/',
+    arweaveGateway: 'https://arweave.net/',
     chains: {
       mainnet: {
         id: 1,
