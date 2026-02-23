@@ -1,5 +1,6 @@
 <template>
   <EvmTransactionFlow
+    chain="sepolia"
     ref="flowRef"
     :request="submitDelete"
     :text="{

@@ -17,6 +17,7 @@
         v-model="tip"
       />
       <EvmTransactionFlow
+        chain="sepolia"
         :request="submitObservation"
         :text="{
           title: {
@@ -71,7 +72,9 @@
             <Button
               @click.stop.prevent="() => triggerTransactionFlow(start)"
               :disabled="!note.trim()"
-              >{{ editObservation ? 'Update' : isReply ? 'Reply' : 'Observe' }}</Button
+              >{{
+                editObservation ? 'Update' : isReply ? 'Reply' : 'Observe'
+              }}</Button
             >
           </Actions>
         </template>
@@ -128,14 +131,20 @@ const parentId = computed(() => {
   return props.parent ?? 0n
 })
 
-const isReply = computed(() => !props.editObservation && (props.parent ?? 0n) > 0n)
+const isReply = computed(
+  () => !props.editObservation && (props.parent ?? 0n) > 0n,
+)
 
 const isUpdate = computed(() => !!props.editObservation)
 
 const effectiveX = computed(() => props.editObservation?.x ?? props.x ?? 0)
 const effectiveY = computed(() => props.editObservation?.y ?? props.y ?? 0)
-const effectiveViewType = computed(() => props.editObservation?.viewType ?? props.viewType ?? 0)
-const effectiveTime = computed(() => props.editObservation?.time ?? props.time ?? 0)
+const effectiveViewType = computed(
+  () => props.editObservation?.viewType ?? props.viewType ?? 0,
+)
+const effectiveTime = computed(
+  () => props.editObservation?.time ?? props.time ?? 0,
+)
 
 watch(
   () => props.editObservation,
@@ -154,8 +163,8 @@ const effectiveRecipient = computed(() =>
   tip.value > 0n ? (props.tipRecipient ?? zeroAddress) : zeroAddress,
 )
 
-const submitObservation = () =>
-  writeContract($wagmi as Config, {
+const submitObservation = () => {
+  return writeContract($wagmi as Config, {
     address: contractAddress,
     abi: ObservationsAbi,
     functionName: 'observe',
@@ -173,6 +182,7 @@ const submitObservation = () =>
     ],
     value: tip.value,
   })
+}
 
 const onComplete = () => {
   pending.value = false
