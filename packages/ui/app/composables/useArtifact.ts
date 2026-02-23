@@ -1,6 +1,7 @@
 import { getContract, type Address, type PublicClient } from 'viem'
 import { getPublicClient } from '@wagmi/core'
 import { parseAbi } from 'viem'
+import { resolveUri } from '@1001-digital/components'
 
 const ERC721_ABI = parseAbi([
   'function tokenURI(uint256 tokenId) view returns (string)',
@@ -25,16 +26,11 @@ export interface TokenMetadata {
 }
 
 export const resolveURI = (uri?: string): string => {
-  if (!uri) return ''
-
-  const { ipfsGateway, arweaveGateway } = useAppConfig()
-
-  if (uri.startsWith('data:')) return uri
-  if (uri.startsWith('ipfs://'))
-    return ipfsGateway + uri.replace('ipfs://', '')
-  if (uri.startsWith('ar://')) return arweaveGateway + uri.replace('ar://', '')
-  if (uri.startsWith('Qm') || uri.startsWith('baf')) return ipfsGateway + uri
-  return uri
+  const { evm } = useAppConfig()
+  return resolveUri(uri, {
+    ipfsGateway: evm?.ipfsGateway,
+    arweaveGateway: evm?.arweaveGateway,
+  })
 }
 
 const fetchTokenURI = async (
