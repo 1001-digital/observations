@@ -1,5 +1,12 @@
 {
   "name": "@1001-digital/observations",
   "private": true,
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "^3.8.1"
+  }
 }
