@@ -1,11 +1,12 @@
 <template>
-  <div class="app">
-    <header class="app-header">
-      <ConnectProfile />
-    </header>
-    <NuxtPage />
-    <Toasts />
-  </div>
+  <Globals>
+    <div class="app">
+      <header class="app-header">
+        <ConnectProfile />
+      </header>
+      <NuxtPage />
+    </div>
+  </Globals>
 </template>
 
 <style>
