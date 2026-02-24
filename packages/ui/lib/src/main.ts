@@ -20,6 +20,8 @@ import App from './App.vue'
 
 const env = import.meta.env
 
+const title = env.VITE_TITLE || 'OBSERVATIONS'
+
 const indexerEndpoints = [
   env.VITE_INDEXER_ENDPOINT_1,
   env.VITE_INDEXER_ENDPOINT_2,
@@ -34,8 +36,18 @@ const observationsConfig: ObservationsConfig = {
   token: env.VITE_TOKEN || undefined,
   indexerEndpoints,
   mode: indexerEndpoints.length ? 'indexer' : 'onchain',
-  exampleArtifacts: [],
-  ipfsGateway: 'https://ipfs.io/ipfs/',
+  exampleArtifacts: [
+    '0x7c4111e3bb57b636906a7246db1e70876fd97d97/2',
+    '0x7c4111e3bb57b636906a7246db1e70876fd97d97/3',
+    '0x7c4111e3bb57b636906a7246db1e70876fd97d97/4',
+    '0x66736f0484b079b662264ccb9099ed2b1edf7fdd/7',
+    '0x66736f0484b079b662264ccb9099ed2b1edf7fdd/2',
+    '0x66736f0484b079b662264ccb9099ed2b1edf7fdd/4',
+    '0x036721e5a769cc48b3189efbb9cce4471e8a48b1/1',
+    '0x036721e5a769cc48b3189efbb9cce4471e8a48b1/15455',
+    '0x036721e5a769cc48b3189efbb9cce4471e8a48b1/1001',
+  ],
+  ipfsGateway: 'https://ipfs.vv.xyz/ipfs/',
   arweaveGateway: 'https://arweave.net/',
   artifact: {
     defaultView: 'animation',
@@ -58,6 +70,7 @@ app.provide(ObservationsConfigKey, observationsConfig)
 app.provide(LinkComponentKey, RouterLink)
 app.provide(IconAliasesKey, defaultIconAliases)
 app.provide(EvmConfigKey, {
+  title,
   defaultChain: 'sepolia',
   chains: {
     mainnet: { id: 1, blockExplorer: 'https://etherscan.io' },
@@ -67,6 +80,9 @@ app.provide(EvmConfigKey, {
     mode: 'indexer',
     indexerUrls: ensIndexerUrls,
   },
+  ipfsGateway: 'https://ipfs.vv.xyz/ipfs/',
+  arweaveGateway: 'https://arweave.net/',
+  walletConnectProjectId: env.VITE_WALLET_CONNECT_PROJECT_ID || undefined,
 })
 
 app.mount('#app')
