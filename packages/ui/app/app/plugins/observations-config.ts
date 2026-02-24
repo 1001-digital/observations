@@ -1,5 +1,5 @@
 import type { Address } from 'viem'
-import { ObservationsConfigKey, type ObservationsConfig } from '@1001-digital/observations-ui'
+import { ObservationsConfigKey, type ObservationsConfig } from '@1001-digital/observations-components'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const runtimeConfig = useRuntimeConfig()

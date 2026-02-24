@@ -82,7 +82,7 @@ import {
   useObservationMarkers,
   tokenPageDataKey,
   observationNavigationKey,
-} from '@1001-digital/observations-ui'
+} from '@1001-digital/observations-components'
 
 const route = useRoute()
 const router = useRouter()

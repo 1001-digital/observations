@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path'
 const currentDir = dirname(fileURLToPath(import.meta.url))
 
 const observationsSrc = fileURLToPath(
-  new URL('../ui/src', import.meta.url),
+  new URL('../components/src', import.meta.url),
 )
 
 export default defineNuxtConfig({
@@ -25,7 +25,7 @@ export default defineNuxtConfig({
       `${observationsSrc}/utils`,
     ],
     transform: {
-      include: [/@1001-digital\/components/, /@1001-digital\/observations-ui/],
+      include: [/@1001-digital\/components/, /@1001-digital\/observations-components/],
     },
   },
   vite: {
