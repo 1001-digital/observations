@@ -1,7 +1,8 @@
-import { createResolver } from 'nuxt/kit'
+import { fileURLToPath } from 'node:url'
 
-const { resolve } = createResolver(import.meta.url)
-const observationsPkg = resolve('../../node_modules/@1001-digital/observations/src')
+const observationsSrc = fileURLToPath(
+  new URL('../observations/src', import.meta.url),
+)
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -9,14 +10,14 @@ export default defineNuxtConfig({
   extends: ['@1001-digital/layers.base', '@1001-digital/layers.evm'],
   components: [
     {
-      path: `${observationsPkg}/components`,
+      path: `${observationsSrc}/components`,
       pathPrefix: false,
     },
   ],
   imports: {
     dirs: [
-      `${observationsPkg}/composables`,
-      `${observationsPkg}/utils`,
+      `${observationsSrc}/composables`,
+      `${observationsSrc}/utils`,
     ],
     transform: {
       include: [/@1001-digital\/components/, /@1001-digital\/observations/],
