@@ -12,6 +12,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@1001-digital/ponder-artifacts": "^0.1.1",
     "@1001-digital/ponder-ens": "^0.1.0",
     "ponder": "^0.16.3",
     "hono": "^4.5.0",

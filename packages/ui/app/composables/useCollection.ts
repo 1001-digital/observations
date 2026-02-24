@@ -2,6 +2,7 @@ import { getContract, type Address, type PublicClient } from 'viem'
 import { getPublicClient } from '@wagmi/core'
 import { parseAbi } from 'viem'
 import { resolveURI } from './useArtifact'
+import { getIndexerUrls } from '../utils/observations'
 
 const COLLECTION_ABI = parseAbi([
   'function name() view returns (string)',
@@ -17,6 +18,49 @@ export interface CollectionData {
   description?: string
   image?: string
   [key: string]: unknown
+}
+
+function getArtifactBaseUrls(indexerUrls: string[]): string[] {
+  return indexerUrls
+    .map((url) => {
+      try {
+        return new URL(url).origin
+      } catch {
+        return null
+      }
+    })
+    .filter(Boolean) as string[]
+}
+
+async function fetchCollectionFromIndexer(
+  baseUrls: string[],
+  address: Address,
+): Promise<CollectionData | null> {
+  for (const baseUrl of baseUrls) {
+    try {
+      const data = await $fetch<{
+        name: string | null
+        symbol: string | null
+        owner: string | null
+        description: string | null
+        image: string | null
+        data: Record<string, unknown> | null
+      }>(`${baseUrl}/artifacts/${address.toLowerCase()}`)
+      if (data) {
+        return {
+          ...(data.data ?? {}),
+          ...(data.name && { name: data.name }),
+          ...(data.symbol && { symbol: data.symbol }),
+          ...(data.owner && { owner: data.owner as Address }),
+          ...(data.description && { description: data.description }),
+          ...(data.image && { image: data.image }),
+        }
+      }
+    } catch {
+      // Try next endpoint
+    }
+  }
+  return null
 }
 
 const fetchContractURI = async (uri: string): Promise<CollectionData> => {
@@ -35,7 +79,7 @@ const fetchContractURI = async (uri: string): Promise<CollectionData> => {
   return await $fetch(resolved)
 }
 
-const fetchCollection = async (
+const fetchCollectionOnChain = async (
   client: PublicClient,
   address: Address,
 ): Promise<CollectionData> => {
@@ -69,14 +113,24 @@ export const useCollection = (contract: Ref<Address>) => {
   const { $wagmi } = useNuxtApp()
   const chainId = useChainConfig('mainnet').id
   const client = getPublicClient($wagmi, { chainId }) as PublicClient
+  const config = useRuntimeConfig()
+  const indexerUrls = getIndexerUrls(config.public.observations)
+  const baseUrls = getArtifactBaseUrls(indexerUrls)
 
   const {
     data: collection,
     pending,
     error,
-  } = useAsyncData(`collection-${contract.value}`, () =>
-    fetchCollection(client, contract.value),
-  )
+  } = useAsyncData(`collection-${contract.value}`, async () => {
+    // Try indexer first
+    if (baseUrls.length) {
+      const cached = await fetchCollectionFromIndexer(baseUrls, contract.value)
+      if (cached) return cached
+    }
+
+    // Fall back to direct RPC
+    return fetchCollectionOnChain(client, contract.value)
+  })
 
   const image = computed(() => resolveURI(collection.value?.image))
 

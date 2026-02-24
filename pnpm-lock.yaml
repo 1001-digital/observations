@@ -38,6 +38,9 @@ importers:
 
   packages/indexer:
     dependencies:
+      '@1001-digital/ponder-artifacts':
+        specifier: ^0.1.1
+        version: 0.1.1(@electric-sql/pglite@0.2.13)(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(gel@2.2.0)(kysely@0.26.3)(pg@8.18.0))(hono@4.11.9)(pg@8.18.0)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
       '@1001-digital/ponder-ens':
         specifier: ^0.1.0
         version: 0.1.0(@electric-sql/pglite@0.2.13)(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(gel@2.2.0)(kysely@0.26.3)(pg@8.18.0))(hono@4.11.9)(pg@8.18.0)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
@@ -110,6 +113,20 @@ packages:
     resolution: {integrity: sha512-hmNbNChFSZAUa49za/2eLXlBj5r9WqVA6gMSevcSeQlBJ6I6FBO71etedfJepv0mvA/sGtvhtv7kQlCtr77aQw==}
     peerDependencies:
       '@1001-digital/layers.base': ^1.0.1
+
+  '@1001-digital/ponder-artifacts@0.1.1':
+    resolution: {integrity: sha512-vu/eamj0oMJyLU0yaBPrfMYHWNizRxah+h1jRYQv8cAffbM+OnNb1PalO1I5UZGYwzcpiW/eZDsVnWQ3dfXgSw==}
+    peerDependencies:
+      '@electric-sql/pglite': '>=0.2.0'
+      drizzle-orm: '>=0.38.0'
+      hono: '>=4.0.0'
+      pg: '>=8.0.0'
+      viem: '>=2.0.0'
+    peerDependenciesMeta:
+      '@electric-sql/pglite':
+        optional: true
+      pg:
+        optional: true
 
   '@1001-digital/ponder-ens@0.1.0':
     resolution: {integrity: sha512-Yg0RDnjDVGyG/kVTiZu8fCWPKQwkKa81zw7O5fz+6JVCBC/oXvEiCya3/S8DtV0H3yTe/CuXh9naFIXLSScflg==}
@@ -6658,6 +6675,15 @@ snapshots:
       - utf-8-validate
       - vue
       - zod
+
+  '@1001-digital/ponder-artifacts@0.1.1(@electric-sql/pglite@0.2.13)(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(gel@2.2.0)(kysely@0.26.3)(pg@8.18.0))(hono@4.11.9)(pg@8.18.0)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))':
+    dependencies:
+      drizzle-orm: 0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(gel@2.2.0)(kysely@0.26.3)(pg@8.18.0)
+      hono: 4.11.9
+      viem: 2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
+    optionalDependencies:
+      '@electric-sql/pglite': 0.2.13
+      pg: 8.18.0
 
   '@1001-digital/ponder-ens@0.1.0(@electric-sql/pglite@0.2.13)(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(gel@2.2.0)(kysely@0.26.3)(pg@8.18.0))(hono@4.11.9)(pg@8.18.0)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))':
     dependencies:
