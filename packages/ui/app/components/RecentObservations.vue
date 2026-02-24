@@ -28,6 +28,10 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { Loading } from '@1001-digital/components'
+import { useRecentObservations } from '../composables/useRecentObservations'
+
 const { observations, pending } = useRecentObservations()
 
 const displayObservations = computed(() => [...observations.value].reverse())

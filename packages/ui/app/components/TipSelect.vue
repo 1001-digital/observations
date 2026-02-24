@@ -13,7 +13,9 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, watch, defineModel } from 'vue'
 import { parseEther } from 'viem'
+import { usePriceFeed } from '@1001-digital/components'
 
 const model = defineModel<bigint>({ default: 0n })
 

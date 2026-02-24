@@ -1,19 +1,23 @@
+import { computed, watch, type Ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useObservationsConfig } from '../utils/config'
+
 export const useArtifactView = (
   animationUrl: Ref<string>,
   pending: Ref<boolean>,
 ) => {
   const route = useRoute()
   const router = useRouter()
-  const { artifact } = useAppConfig()
+  const config = useObservationsConfig()
 
   const showAnimation = computed({
     get() {
       if (route.query.animation === 'true') return true
       if (route.query.animation === 'false') return false
-      return artifact.defaultView === 'animation'
+      return config.artifact.defaultView === 'animation'
     },
     set(value: boolean) {
-      const isDefault = value === (artifact.defaultView === 'animation')
+      const isDefault = value === (config.artifact.defaultView === 'animation')
       router.replace({
         query: {
           ...route.query,

@@ -1,11 +1,14 @@
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import type { Address } from 'viem'
+import { useObservationsConfig } from '../utils/config'
 
 export const useArtifactScope = () => {
-  const { contract, token } = useRuntimeConfig().public
+  const config = useObservationsConfig()
 
   return {
-    contract: (contract as Address) || undefined,
-    token: token ? BigInt(token) : undefined,
+    contract: config.contract || undefined,
+    token: config.token ? BigInt(config.token) : undefined,
   }
 }
 

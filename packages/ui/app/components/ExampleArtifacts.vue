@@ -29,8 +29,9 @@
 
 <script setup lang="ts">
 import type { Address } from 'viem'
+import { useObservationsConfig } from '../utils/config'
 
-const { exampleArtifacts: artifacts } = useAppConfig()
+const { exampleArtifacts: artifacts } = useObservationsConfig()
 </script>
 
 <style scoped>

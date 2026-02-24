@@ -1,8 +1,13 @@
+import { computed, type Ref } from 'vue'
 import { getContract, type Address, type PublicClient } from 'viem'
 import { getPublicClient } from '@wagmi/core'
+import { useConfig } from '@wagmi/vue'
 import { parseAbi } from 'viem'
+import { useChainConfig } from '@1001-digital/components'
 import { resolveURI } from './useArtifact'
-import { type ObservationsMode, getIndexerUrls } from '../utils/observations'
+import { type ObservationsMode } from '../utils/observations'
+import { useObservationsConfig } from '../utils/config'
+import { useAsyncFetch } from './useAsyncFetch'
 
 const COLLECTION_ABI = parseAbi([
   'function name() view returns (string)',
@@ -38,14 +43,16 @@ async function fetchCollectionFromIndexer(
 ): Promise<CollectionData | null> {
   for (const baseUrl of baseUrls) {
     try {
-      const data = await $fetch<{
+      const res = await fetch(`${baseUrl}/artifacts/${address.toLowerCase()}`)
+      if (!res.ok) continue
+      const data: {
         name: string | null
         symbol: string | null
         owner: string | null
         description: string | null
         image: string | null
         data: Record<string, unknown> | null
-      }>(`${baseUrl}/artifacts/${address.toLowerCase()}`)
+      } = await res.json()
       if (data) {
         return {
           ...(data.data ?? {}),
@@ -76,7 +83,8 @@ const fetchContractURI = async (uri: string): Promise<CollectionData> => {
     return JSON.parse(jsonStr)
   }
 
-  return await $fetch(resolved)
+  const res = await fetch(resolved)
+  return await res.json()
 }
 
 const fetchCollectionOnChain = async (
@@ -109,7 +117,7 @@ const fetchCollectionOnChain = async (
   }
 }
 
-async function resolve(
+async function resolveCollection(
   strategies: ObservationsMode[],
   baseUrls: string[],
   client: PublicClient,
@@ -132,15 +140,13 @@ async function resolve(
 }
 
 export const useCollection = (contract: Ref<Address>) => {
-  const { $wagmi } = useNuxtApp()
-  const appConfig = useAppConfig()
+  const wagmi = useConfig()
+  const config = useObservationsConfig()
   const chainId = useChainConfig('mainnet').id
-  const client = getPublicClient($wagmi, { chainId }) as PublicClient
-  const config = useRuntimeConfig()
-  const indexerUrls = getIndexerUrls(config.public.observations)
-  const baseUrls = getArtifactBaseUrls(indexerUrls)
+  const client = getPublicClient(wagmi, { chainId }) as PublicClient
+  const baseUrls = getArtifactBaseUrls(config.indexerEndpoints)
 
-  const mode = computed<ObservationsMode>(() => (appConfig as any).observations?.mode || 'onchain')
+  const mode = computed<ObservationsMode>(() => config.mode)
   const strategies = computed<ObservationsMode[]>(() => mode.value === 'indexer'
     ? ['indexer', 'onchain']
     : ['onchain', 'indexer'],
@@ -150,8 +156,8 @@ export const useCollection = (contract: Ref<Address>) => {
     data: collection,
     pending,
     error,
-  } = useAsyncData(`collection-${contract.value}`, () =>
-    resolve(strategies.value, baseUrls, client, contract.value),
+  } = useAsyncFetch(`collection-${contract.value}`, () =>
+    resolveCollection(strategies.value, baseUrls, client, contract.value),
   )
 
   const image = computed(() => resolveURI(collection.value?.image))

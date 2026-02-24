@@ -23,8 +23,12 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 const contract = ref('')
 const token = ref('')
 
-const go = () => navigateTo(`/${contract.value}/${token.value}`)
+const go = () => router.push(`/${contract.value}/${token.value}`)
 </script>

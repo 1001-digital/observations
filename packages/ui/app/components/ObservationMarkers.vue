@@ -30,9 +30,9 @@
         @close="emit('clearFocus')"
       >
         <template #title>
-          <NuxtLink :to="`/observer/${displayObs(obs).observer}`">
+          <component :is="LinkComponent" :to="`/observer/${displayObs(obs).observer}`">
             <EvmAccount :address="displayObs(obs).observer" />
-          </NuxtLink>
+          </component>
           <ObservationTime :block-number="displayObs(obs).blockNumber" />
         </template>
 
@@ -76,7 +76,10 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, watch, inject, onMounted, onBeforeUnmount } from 'vue'
 import type { Address } from 'viem'
+import { useConnection } from '@wagmi/vue'
+import { LinkComponentKey, EvmAccount } from '@1001-digital/components'
 import type { ObservationData } from '../utils/observations'
 
 const props = defineProps<{
@@ -97,6 +100,7 @@ const emit = defineEmits<{
   complete: []
 }>()
 
+const LinkComponent = inject(LinkComponentKey, 'a')
 const { isConnected } = useConnection()
 
 const isTransacting = ref(false)

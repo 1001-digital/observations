@@ -5,16 +5,16 @@
   >
     <div class="observation-header">
       <div class="observation-header-left">
-        <NuxtLink :to="`/observer/${observation.observer}`">
+        <component :is="LinkComponent" :to="`/observer/${observation.observer}`">
           <EvmAccount :address="observation.observer" />
-        </NuxtLink>
-        <NuxtLink
+        </component>
+        <a
           class="observation-time"
-          :to="`${blockExplorer}/tx/${observation.transactionHash}`"
+          :href="`${blockExplorer}/tx/${observation.transactionHash}`"
           target="_blank"
         >
           <ObservationTime :block-number="observation.blockNumber" />
-        </NuxtLink>
+        </a>
       </div>
       <Dropdown
         v-if="editable"
@@ -69,7 +69,9 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, inject } from 'vue'
 import { formatEther, zeroAddress, type Address } from 'viem'
+import { LinkComponentKey, useBlockExplorer, EvmAccount } from '@1001-digital/components'
 import type { ObservationData } from '../utils/observations'
 
 const props = defineProps<{
@@ -86,6 +88,7 @@ const emit = defineEmits<{
   delete: []
 }>()
 
+const LinkComponent = inject(LinkComponentKey, 'a')
 const showActions = ref(false)
 const blockExplorer = useBlockExplorer()
 

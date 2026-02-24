@@ -1,15 +1,15 @@
 <template>
   <div class="observation-list-item">
     <div v-if="!hideObserver" class="observation-list-item-header">
-      <NuxtLink :to="`/observer/${observation.observer}`">
+      <component :is="LinkComponent" :to="`/observer/${observation.observer}`">
         <EvmAccount :address="observation.observer" />
-      </NuxtLink>
-      <NuxtLink
-        :to="`${blockExplorer}/tx/${observation.transactionHash}`"
+      </component>
+      <a
+        :href="`${blockExplorer}/tx/${observation.transactionHash}`"
         target="_blank"
       >
         <ObservationTime :block-number="observation.blockNumber" />
-      </NuxtLink>
+      </a>
     </div>
     <p class="observation-list-item-note">{{ observation.note }}</p>
     <div v-if="showArtifactPreview" class="observation-list-item-artifact">
@@ -18,7 +18,7 @@
         :token-id="observation.tokenId"
       >
         <template #default="{ metadata, image }">
-          <NuxtLink
+          <component :is="LinkComponent"
             :to="`/${observation.collection}/${observation.tokenId}/${observation.id}`"
             class="observation-list-item-preview"
           >
@@ -29,22 +29,24 @@
               class="observation-list-item-thumbnail"
             />
             <span>{{ metadata.name || `${shortAddress(observation.collection)} / #${observation.tokenId}` }}</span>
-          </NuxtLink>
+          </component>
         </template>
       </Artifact>
     </div>
     <slot v-else name="link">
-      <NuxtLink
+      <component :is="LinkComponent"
         :to="`/${observation.collection}/${observation.tokenId}/${observation.id}`"
         class="observation-list-item-link"
       >
         {{ shortAddress(observation.collection) }} / #{{ observation.tokenId }}
-      </NuxtLink>
+      </component>
     </slot>
   </div>
 </template>
 
 <script setup lang="ts">
+import { inject } from 'vue'
+import { LinkComponentKey, useBlockExplorer, shortAddress, EvmAccount } from '@1001-digital/components'
 import type { RecentObservationData } from '../utils/observations'
 
 const props = defineProps<{
@@ -53,6 +55,7 @@ const props = defineProps<{
   showArtifactPreview?: boolean
 }>()
 
+const LinkComponent = inject(LinkComponentKey, 'a')
 const blockExplorer = useBlockExplorer()
 </script>
 

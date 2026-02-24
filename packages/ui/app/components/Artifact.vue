@@ -30,7 +30,12 @@
 </template>
 
 <script setup lang="ts">
+import { toRef } from 'vue'
 import type { Address } from 'viem'
+import { Loading, Alert } from '@1001-digital/components'
+import { useArtifact } from '../composables/useArtifact'
+import { useCollection } from '../composables/useCollection'
+import { useArtifactView } from '../composables/useArtifactView'
 
 const props = defineProps<{
   contract: Address

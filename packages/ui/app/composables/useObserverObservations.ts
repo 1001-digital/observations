@@ -1,11 +1,13 @@
+import { ref, computed, watch, toValue, type Ref } from 'vue'
 import type { RecentObservationData } from '../utils/observations'
 import { fetchObserverObservations } from '../utils/observation-provider-indexer'
+import { useObservationsConfig } from '../utils/config'
 
 const PAGE_SIZE = 50
 
 export const useObserverObservations = (observer: Ref<string | undefined>) => {
-  const config = useRuntimeConfig()
-  const indexerUrls = computed(() => getIndexerUrls(config.public.observations))
+  const config = useObservationsConfig()
+  const indexerUrls = computed(() => config.indexerEndpoints)
 
   const observations = ref<RecentObservationData[]>([])
   const totalCount = ref(0)

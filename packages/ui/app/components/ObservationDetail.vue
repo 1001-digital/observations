@@ -80,7 +80,10 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import type { Address } from 'viem'
+import { useConnection } from '@wagmi/vue'
+import { EvmAccount } from '@1001-digital/components'
 import type { ObservationData } from '../utils/observations'
 
 const props = defineProps<{

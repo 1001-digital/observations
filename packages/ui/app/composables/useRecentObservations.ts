@@ -1,15 +1,17 @@
+import { computed } from 'vue'
 import { type Address, type PublicClient } from 'viem'
 import { getPublicClient } from '@wagmi/core'
-import type { Config } from '@wagmi/vue'
+import { useConfig, type Config } from '@wagmi/vue'
+import { useMainChainId } from '@1001-digital/components'
 import {
   type ObservationsMode,
   type RecentObservationData,
   recentObservationsCache,
-  getIndexerUrls,
 } from '../utils/observations'
 import { createOnchainProvider } from '../utils/observation-provider-onchain'
 import { createIndexerProvider } from '../utils/observation-provider-indexer'
-
+import { useObservationsConfig } from '../utils/config'
+import { useAsyncFetch } from './useAsyncFetch'
 
 async function resolve(
   strategies: ObservationsMode[],
@@ -39,14 +41,13 @@ async function resolve(
 }
 
 export const useRecentObservations = () => {
-  const { $wagmi } = useNuxtApp()
-  const appConfig = useAppConfig()
-  const config = useRuntimeConfig()
+  const wagmi = useConfig()
+  const config = useObservationsConfig()
   const chainId = useMainChainId()
-  const contractAddress = config.public.observationsContract as Address
+  const contractAddress = config.observationsContract
 
-  const mode = computed<ObservationsMode>(() => (appConfig as any).observations?.mode || 'onchain')
-  const indexerUrls = computed(() => getIndexerUrls(config.public.observations))
+  const mode = computed<ObservationsMode>(() => config.mode)
+  const indexerUrls = computed(() => config.indexerEndpoints)
 
   const cacheKey = 'recent-observations'
 
@@ -55,7 +56,7 @@ export const useRecentObservations = () => {
     pending,
     error,
     refresh,
-  } = useAsyncData(
+  } = useAsyncFetch(
     cacheKey,
     () => {
       const strategies: ObservationsMode[] = mode.value === 'indexer'
@@ -63,7 +64,7 @@ export const useRecentObservations = () => {
         : ['onchain', 'indexer']
 
       return recentObservationsCache.fetch(cacheKey, () =>
-        resolve(strategies, indexerUrls.value, $wagmi as Config, chainId, contractAddress),
+        resolve(strategies, indexerUrls.value, wagmi, chainId, contractAddress),
       )
     },
     {

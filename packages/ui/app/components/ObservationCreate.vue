@@ -94,10 +94,12 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, watch, defineModel } from 'vue'
 import { writeContract } from '@wagmi/core'
 import { type Address, zeroAddress } from 'viem'
-import type { Config } from '@wagmi/vue'
+import { useConfig, useConnection, type Config } from '@wagmi/vue'
 import { ObservationsAbi, type ObservationData } from '../utils/observations'
+import { useObservationsConfig } from '../utils/config'
 
 const props = defineProps<{
   contract: Address
@@ -116,9 +118,9 @@ const emit = defineEmits<{
   'cancel-edit': []
 }>()
 
-const { $wagmi } = useNuxtApp()
-const config = useRuntimeConfig()
-const contractAddress = config.public.observationsContract as Address
+const wagmi = useConfig()
+const obsConfig = useObservationsConfig()
+const contractAddress = obsConfig.observationsContract
 
 const { isConnected } = useConnection()
 
@@ -165,7 +167,7 @@ const effectiveRecipient = computed(() =>
 )
 
 const submitObservation = () => {
-  return writeContract($wagmi as Config, {
+  return writeContract(wagmi, {
     address: contractAddress,
     abi: ObservationsAbi,
     functionName: 'observe',

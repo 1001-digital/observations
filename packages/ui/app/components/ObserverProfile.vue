@@ -20,27 +20,27 @@
           {{ profile.data.description }}
         </p>
         <div v-if="hasLinks" class="observer-profile-links">
-          <NuxtLink
+          <a
             v-if="profile.data?.links.url"
-            :to="profile.data.links.url"
+            :href="profile.data.links.url"
             target="_blank"
           >
             {{ profile.data.links.url.replace(/^https?:\/\//, '') }}
-          </NuxtLink>
-          <NuxtLink
+          </a>
+          <a
             v-if="profile.data?.links.twitter"
-            :to="`https://x.com/${profile.data.links.twitter}`"
+            :href="`https://x.com/${profile.data.links.twitter}`"
             target="_blank"
           >
             @{{ profile.data.links.twitter }}
-          </NuxtLink>
-          <NuxtLink
+          </a>
+          <a
             v-if="profile.data?.links.github"
-            :to="`https://github.com/${profile.data.links.github}`"
+            :href="`https://github.com/${profile.data.links.github}`"
             target="_blank"
           >
             {{ profile.data.links.github }}
-          </NuxtLink>
+          </a>
         </div>
       </div>
     </div>
@@ -58,7 +58,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { formatEther, type Address } from 'viem'
+import { shortAddress, type EnsProfile } from '@1001-digital/components'
 
 const props = defineProps<{
   profile: EnsProfile

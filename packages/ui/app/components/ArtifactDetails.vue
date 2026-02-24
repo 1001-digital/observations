@@ -9,28 +9,28 @@
       <template v-if="details.showCollection && collection.name">
         <dt>Collection</dt>
         <dd>
-          <NuxtLink :to="`/${contract}`">
+          <component :is="LinkComponent" :to="`/${contract}`">
             {{ collection.name
             }}<small v-if="details.showSymbol && collection.symbol">
               ({{ collection.symbol }})</small
             >
-          </NuxtLink>
+          </component :is="LinkComponent">
         </dd>
       </template>
       <template v-if="details.showArtist && collection.owner">
         <dt>Artist</dt>
         <dd>
-          <NuxtLink :to="`/observer/${collection.owner}`">
+          <component :is="LinkComponent" :to="`/observer/${collection.owner}`">
             <EvmAccount :address="collection.owner" />
-          </NuxtLink>
+          </component :is="LinkComponent">
         </dd>
       </template>
       <template v-if="details.showOwner && owner">
         <dt>Owner</dt>
         <dd>
-          <NuxtLink :to="`/observer/${owner}`">
+          <component :is="LinkComponent" :to="`/observer/${owner}`">
             <EvmAccount :address="owner" />
-          </NuxtLink>
+          </component :is="LinkComponent">
         </dd>
       </template>
     </dl>
@@ -38,8 +38,11 @@
 </template>
 
 <script setup lang="ts">
+import { inject } from 'vue'
 import type { Address } from 'viem'
+import { LinkComponentKey, EvmAccount } from '@1001-digital/components'
 import type { CollectionData } from '../composables/useCollection'
+import { useObservationsConfig } from '../utils/config'
 
 defineProps<{
   metadata: { name?: string; description?: string }
@@ -48,9 +51,8 @@ defineProps<{
   owner?: Address | null
 }>()
 
-const {
-  artifact: { details },
-} = useAppConfig()
+const LinkComponent = inject(LinkComponentKey, 'a')
+const { artifact: { details } } = useObservationsConfig()
 </script>
 
 <style scoped>

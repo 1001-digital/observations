@@ -148,10 +148,15 @@ export async function graphqlFetch<T>(
 
   for (const endpoint of endpoints) {
     try {
-      const response = await $fetch<{ data: T; errors?: { message: string }[] }>(endpoint, {
+      const res = await fetch(endpoint, {
         method: 'POST',
-        body: { query, variables },
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query, variables }),
       })
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+
+      const response: { data: T; errors?: { message: string }[] } = await res.json()
 
       if (response.errors?.length) {
         throw new Error(response.errors![0]!.message)

@@ -1,4 +1,5 @@
 import { parseAbi, type Address } from 'viem'
+import { createCache } from '@1001-digital/components'
 
 export const ObservationsAbi = parseAbi([
   'event Observation(address indexed collection, uint256 indexed tokenId, address indexed observer, uint64 id, uint64 parent, bool update, string note, int32 x, int32 y, uint8 viewType, uint32 time, uint256 tip, address tipRecipient)',

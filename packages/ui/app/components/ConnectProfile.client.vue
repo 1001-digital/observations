@@ -9,6 +9,9 @@
 </template>
 
 <script setup lang="ts">
+import { useConnection } from '@wagmi/vue'
+import { EvmProfile, EvmAvatar, EvmConnect } from '@1001-digital/components'
+
 const emit = defineEmits<{
   connected: []
   disconnected: []

@@ -47,8 +47,11 @@
 </template>
 
 <script setup lang="ts">
+import { computed, toRef } from 'vue'
 import type { Address } from 'viem'
+import { Loading } from '@1001-digital/components'
 import type { ObservationData } from '../utils/observations'
+import { useObservations } from '../composables/useObservations'
 
 interface ObservationThread {
   observation: ObservationData

@@ -9,6 +9,11 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useBlockNumber } from '@wagmi/vue'
+import { useMainChainId, formatNumber } from '@1001-digital/components'
+import { formatBlockAge } from '../utils/time'
+
 const props = defineProps<{
   blockNumber: bigint
 }>()

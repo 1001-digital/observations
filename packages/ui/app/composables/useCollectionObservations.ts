@@ -1,16 +1,19 @@
+import { computed, type Ref } from 'vue'
 import { type Address, type PublicClient } from 'viem'
 import { getPublicClient } from '@wagmi/core'
-import type { Config } from '@wagmi/vue'
+import { useConfig, type Config } from '@wagmi/vue'
+import { useMainChainId } from '@1001-digital/components'
 import {
   type ObservationsMode,
   type CollectionArtifactData,
   type RecentObservationData,
   collectionArtifactsCache,
   collectionObservationsCache,
-  getIndexerUrls,
 } from '../utils/observations'
 import { createOnchainProvider } from '../utils/observation-provider-onchain'
 import { createIndexerProvider } from '../utils/observation-provider-indexer'
+import { useObservationsConfig } from '../utils/config'
+import { useAsyncFetch } from './useAsyncFetch'
 
 function getProvider(
   strategy: ObservationsMode,
@@ -70,14 +73,13 @@ async function resolveObservations(
 }
 
 export const useCollectionObservations = (collection: Ref<Address>) => {
-  const { $wagmi } = useNuxtApp()
-  const appConfig = useAppConfig()
-  const config = useRuntimeConfig()
+  const wagmi = useConfig()
+  const config = useObservationsConfig()
   const chainId = useMainChainId()
-  const contractAddress = config.public.observationsContract as Address
+  const contractAddress = config.observationsContract
 
-  const mode = computed<ObservationsMode>(() => (appConfig as any).observations?.mode || 'onchain')
-  const indexerUrls = computed(() => getIndexerUrls(config.public.observations))
+  const mode = computed<ObservationsMode>(() => config.mode)
+  const indexerUrls = computed(() => config.indexerEndpoints)
 
   const strategies = computed<ObservationsMode[]>(() => mode.value === 'indexer'
     ? ['indexer', 'onchain']
@@ -91,10 +93,10 @@ export const useCollectionObservations = (collection: Ref<Address>) => {
     data: artifacts,
     pending: artifactsPending,
     error: artifactsError,
-  } = useAsyncData(
+  } = useAsyncFetch(
     artifactsCacheKey.value,
     () => collectionArtifactsCache.fetch(artifactsCacheKey.value, () =>
-      resolveArtifacts(strategies.value, collection.value, indexerUrls.value, $wagmi as Config, chainId, contractAddress),
+      resolveArtifacts(strategies.value, collection.value, indexerUrls.value, wagmi, chainId, contractAddress),
     ),
     {
       watch: [collection],
@@ -106,10 +108,10 @@ export const useCollectionObservations = (collection: Ref<Address>) => {
     data: observations,
     pending: observationsPending,
     error: observationsError,
-  } = useAsyncData(
+  } = useAsyncFetch(
     observationsCacheKey.value,
     () => collectionObservationsCache.fetch(observationsCacheKey.value, () =>
-      resolveObservations(strategies.value, collection.value, indexerUrls.value, $wagmi as Config, chainId, contractAddress),
+      resolveObservations(strategies.value, collection.value, indexerUrls.value, wagmi, chainId, contractAddress),
     ),
     {
       watch: [collection],

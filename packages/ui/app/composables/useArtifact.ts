@@ -1,8 +1,12 @@
+import { computed, type Ref } from 'vue'
 import { getContract, type Address, type PublicClient } from 'viem'
 import { getPublicClient } from '@wagmi/core'
+import { useConfig } from '@wagmi/vue'
 import { parseAbi } from 'viem'
-import { resolveUri } from '@1001-digital/components'
-import { type ObservationsMode, getIndexerUrls } from '../utils/observations'
+import { resolveUri, useChainConfig } from '@1001-digital/components'
+import { type ObservationsMode } from '../utils/observations'
+import { useObservationsConfig } from '../utils/config'
+import { useAsyncFetch } from './useAsyncFetch'
 
 const ERC721_ABI = parseAbi([
   'function tokenURI(uint256 tokenId) view returns (string)',
@@ -27,10 +31,10 @@ export interface TokenMetadata {
 }
 
 export const resolveURI = (uri?: string): string => {
-  const { evm } = useAppConfig()
+  const config = useObservationsConfig()
   return resolveUri(uri, {
-    ipfsGateway: evm?.ipfsGateway,
-    arweaveGateway: evm?.arweaveGateway,
+    ipfsGateway: config.ipfsGateway,
+    arweaveGateway: config.arweaveGateway,
   })
 }
 
@@ -53,13 +57,15 @@ async function fetchTokenFromIndexer(
 ): Promise<TokenMetadata | null> {
   for (const baseUrl of baseUrls) {
     try {
-      const data = await $fetch<{
+      const res = await fetch(`${baseUrl}/artifacts/${collection.toLowerCase()}/${tokenId}`)
+      if (!res.ok) continue
+      const data: {
         name: string | null
         description: string | null
         image: string | null
         animationUrl: string | null
         data: Record<string, unknown> | null
-      }>(`${baseUrl}/artifacts/${collection.toLowerCase()}/${tokenId}`)
+      } = await res.json()
       if (data) {
         return {
           name: data.name ?? undefined,
@@ -123,10 +129,11 @@ const fetchMetadata = async (uri: string): Promise<TokenMetadata> => {
     return JSON.parse(jsonStr)
   }
 
-  return await $fetch(resolved)
+  const res = await fetch(resolved)
+  return await res.json()
 }
 
-async function resolve(
+async function resolveArtifact(
   strategies: ObservationsMode[],
   baseUrls: string[],
   client: PublicClient,
@@ -150,15 +157,13 @@ async function resolve(
 }
 
 export const useArtifact = (contract: Ref<Address>, tokenId: Ref<bigint>) => {
-  const { $wagmi } = useNuxtApp()
-  const appConfig = useAppConfig()
+  const wagmi = useConfig()
+  const config = useObservationsConfig()
   const chainId = useChainConfig('mainnet').id
-  const client = getPublicClient($wagmi, { chainId }) as PublicClient
-  const config = useRuntimeConfig()
-  const indexerUrls = getIndexerUrls(config.public.observations)
-  const baseUrls = getArtifactBaseUrls(indexerUrls)
+  const client = getPublicClient(wagmi, { chainId }) as PublicClient
+  const baseUrls = getArtifactBaseUrls(config.indexerEndpoints)
 
-  const mode = computed<ObservationsMode>(() => (appConfig as any).observations?.mode || 'onchain')
+  const mode = computed<ObservationsMode>(() => config.mode)
   const strategies = computed<ObservationsMode[]>(() => mode.value === 'indexer'
     ? ['indexer', 'onchain']
     : ['onchain', 'indexer'],
@@ -168,11 +173,11 @@ export const useArtifact = (contract: Ref<Address>, tokenId: Ref<bigint>) => {
     data: metadata,
     pending,
     error,
-  } = useAsyncData(`artifact-${contract.value}-${tokenId.value}`, () =>
-    resolve(strategies.value, baseUrls, client, contract.value, tokenId.value),
+  } = useAsyncFetch(`artifact-${contract.value}-${tokenId.value}`, () =>
+    resolveArtifact(strategies.value, baseUrls, client, contract.value, tokenId.value),
   )
 
-  const { data: owner } = useAsyncData(
+  const { data: owner } = useAsyncFetch(
     `artifact-owner-${contract.value}-${tokenId.value}`,
     () => {
       const c = getContract({ address: contract.value, abi: ERC721_ABI, client })

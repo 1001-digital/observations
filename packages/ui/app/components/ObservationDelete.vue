@@ -31,10 +31,12 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { writeContract } from '@wagmi/core'
 import { type Address, zeroAddress } from 'viem'
-import type { Config } from '@wagmi/vue'
+import { useConfig } from '@wagmi/vue'
 import { ObservationsAbi, type ObservationData } from '../utils/observations'
+import { useObservationsConfig } from '../utils/config'
 
 const props = defineProps<{
   observation: ObservationData
@@ -47,15 +49,15 @@ const emit = defineEmits<{
   cancel: []
 }>()
 
-const { $wagmi } = useNuxtApp()
-const config = useRuntimeConfig()
-const contractAddress = config.public.observationsContract as Address
+const wagmi = useConfig()
+const obsConfig = useObservationsConfig()
+const contractAddress = obsConfig.observationsContract
 
 const flowRef = ref<{ initializeRequest: () => Promise<unknown> }>()
 
 const submitDelete = () => {
   const obs = props.observation
-  return writeContract($wagmi as Config, {
+  return writeContract(wagmi, {
     address: contractAddress,
     abi: ObservationsAbi,
     functionName: 'observe',
