@@ -2,7 +2,7 @@ import { getContract, type Address, type PublicClient } from 'viem'
 import { getPublicClient } from '@wagmi/core'
 import { parseAbi } from 'viem'
 import { resolveURI } from './useArtifact'
-import { getIndexerUrls } from '../utils/observations'
+import { type ObservationsMode, getIndexerUrls } from '../utils/observations'
 
 const COLLECTION_ABI = parseAbi([
   'function name() view returns (string)',
@@ -109,28 +109,50 @@ const fetchCollectionOnChain = async (
   }
 }
 
+async function resolve(
+  strategies: ObservationsMode[],
+  baseUrls: string[],
+  client: PublicClient,
+  address: Address,
+): Promise<CollectionData> {
+  for (const strategy of strategies) {
+    try {
+      if (strategy === 'indexer') {
+        if (!baseUrls.length) continue
+        const data = await fetchCollectionFromIndexer(baseUrls, address)
+        if (data) return data
+      }
+      if (strategy === 'onchain') {
+        if (!client) continue
+        return await fetchCollectionOnChain(client, address)
+      }
+    } catch { continue }
+  }
+  return {}
+}
+
 export const useCollection = (contract: Ref<Address>) => {
   const { $wagmi } = useNuxtApp()
+  const appConfig = useAppConfig()
   const chainId = useChainConfig('mainnet').id
   const client = getPublicClient($wagmi, { chainId }) as PublicClient
   const config = useRuntimeConfig()
   const indexerUrls = getIndexerUrls(config.public.observations)
   const baseUrls = getArtifactBaseUrls(indexerUrls)
 
+  const mode = computed<ObservationsMode>(() => (appConfig as any).observations?.mode || 'onchain')
+  const strategies = computed<ObservationsMode[]>(() => mode.value === 'indexer'
+    ? ['indexer', 'onchain']
+    : ['onchain', 'indexer'],
+  )
+
   const {
     data: collection,
     pending,
     error,
-  } = useAsyncData(`collection-${contract.value}`, async () => {
-    // Try indexer first
-    if (baseUrls.length) {
-      const cached = await fetchCollectionFromIndexer(baseUrls, contract.value)
-      if (cached) return cached
-    }
-
-    // Fall back to direct RPC
-    return fetchCollectionOnChain(client, contract.value)
-  })
+  } = useAsyncData(`collection-${contract.value}`, () =>
+    resolve(strategies.value, baseUrls, client, contract.value),
+  )
 
   const image = computed(() => resolveURI(collection.value?.image))
 

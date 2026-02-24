@@ -2,7 +2,7 @@ import { getContract, type Address, type PublicClient } from 'viem'
 import { getPublicClient } from '@wagmi/core'
 import { parseAbi } from 'viem'
 import { resolveUri } from '@1001-digital/components'
-import { getIndexerUrls } from '../utils/observations'
+import { type ObservationsMode, getIndexerUrls } from '../utils/observations'
 
 const ERC721_ABI = parseAbi([
   'function tokenURI(uint256 tokenId) view returns (string)',
@@ -126,28 +126,51 @@ const fetchMetadata = async (uri: string): Promise<TokenMetadata> => {
   return await $fetch(resolved)
 }
 
+async function resolve(
+  strategies: ObservationsMode[],
+  baseUrls: string[],
+  client: PublicClient,
+  collection: Address,
+  tokenId: bigint,
+): Promise<TokenMetadata> {
+  for (const strategy of strategies) {
+    try {
+      if (strategy === 'indexer') {
+        if (!baseUrls.length) continue
+        const data = await fetchTokenFromIndexer(baseUrls, collection, tokenId)
+        if (data) return data
+      }
+      if (strategy === 'onchain') {
+        if (!client) continue
+        return await fetchTokenURI(client, collection, tokenId).then(fetchMetadata)
+      }
+    } catch { continue }
+  }
+  return {}
+}
+
 export const useArtifact = (contract: Ref<Address>, tokenId: Ref<bigint>) => {
   const { $wagmi } = useNuxtApp()
+  const appConfig = useAppConfig()
   const chainId = useChainConfig('mainnet').id
   const client = getPublicClient($wagmi, { chainId }) as PublicClient
   const config = useRuntimeConfig()
   const indexerUrls = getIndexerUrls(config.public.observations)
   const baseUrls = getArtifactBaseUrls(indexerUrls)
 
+  const mode = computed<ObservationsMode>(() => (appConfig as any).observations?.mode || 'onchain')
+  const strategies = computed<ObservationsMode[]>(() => mode.value === 'indexer'
+    ? ['indexer', 'onchain']
+    : ['onchain', 'indexer'],
+  )
+
   const {
     data: metadata,
     pending,
     error,
-  } = useAsyncData(`artifact-${contract.value}-${tokenId.value}`, async () => {
-    // Try indexer first
-    if (baseUrls.length) {
-      const cached = await fetchTokenFromIndexer(baseUrls, contract.value, tokenId.value)
-      if (cached) return cached
-    }
-
-    // Fall back to direct RPC
-    return fetchTokenURI(client, contract.value, tokenId.value).then(fetchMetadata)
-  })
+  } = useAsyncData(`artifact-${contract.value}-${tokenId.value}`, () =>
+    resolve(strategies.value, baseUrls, client, contract.value, tokenId.value),
+  )
 
   const { data: owner } = useAsyncData(
     `artifact-owner-${contract.value}-${tokenId.value}`,
