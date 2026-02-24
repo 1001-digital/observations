@@ -5,7 +5,7 @@ import { useConfig } from '@wagmi/vue'
 import { parseAbi } from 'viem'
 import { resolveUri, useChainConfig } from '@1001-digital/components'
 import { type ObservationsMode } from '../utils/observations'
-import { useObservationsConfig } from '../utils/config'
+import { useObservationsConfig, type ObservationsConfig } from '../utils/config'
 import { useAsyncFetch } from './useAsyncFetch'
 
 const ERC721_ABI = parseAbi([
@@ -30,11 +30,11 @@ export interface TokenMetadata {
   [key: string]: unknown
 }
 
-export const resolveURI = (uri?: string): string => {
-  const config = useObservationsConfig()
+export const resolveURI = (uri?: string, config?: ObservationsConfig): string => {
+  const c = config ?? useObservationsConfig()
   return resolveUri(uri, {
-    ipfsGateway: config.ipfsGateway,
-    arweaveGateway: config.arweaveGateway,
+    ipfsGateway: c.ipfsGateway,
+    arweaveGateway: c.arweaveGateway,
   })
 }
 
@@ -116,8 +116,8 @@ const fetchTokenURI = async (
   return await contract.read.tokenURI([tokenId])
 }
 
-const fetchMetadata = async (uri: string): Promise<TokenMetadata> => {
-  const resolved = resolveURI(uri)
+const fetchMetadata = async (uri: string, config: ObservationsConfig): Promise<TokenMetadata> => {
+  const resolved = resolveURI(uri, config)
 
   if (resolved.startsWith('data:application/json;base64,')) {
     const base64Data = resolved.split(',')[1]
@@ -139,6 +139,7 @@ async function resolveArtifact(
   client: PublicClient,
   collection: Address,
   tokenId: bigint,
+  config: ObservationsConfig,
 ): Promise<TokenMetadata> {
   for (const strategy of strategies) {
     try {
@@ -149,7 +150,7 @@ async function resolveArtifact(
       }
       if (strategy === 'onchain') {
         if (!client) continue
-        return await fetchTokenURI(client, collection, tokenId).then(fetchMetadata)
+        return await fetchTokenURI(client, collection, tokenId).then(uri => fetchMetadata(uri, config))
       }
     } catch { continue }
   }
@@ -174,7 +175,7 @@ export const useArtifact = (contract: Ref<Address>, tokenId: Ref<bigint>) => {
     pending,
     error,
   } = useAsyncFetch(`artifact-${contract.value}-${tokenId.value}`, () =>
-    resolveArtifact(strategies.value, baseUrls, client, contract.value, tokenId.value),
+    resolveArtifact(strategies.value, baseUrls, client, contract.value, tokenId.value, config),
   )
 
   const { data: owner } = useAsyncFetch(
@@ -185,8 +186,8 @@ export const useArtifact = (contract: Ref<Address>, tokenId: Ref<bigint>) => {
     },
   )
 
-  const image = computed(() => resolveURI(metadata.value?.image))
-  const animationUrl = computed(() => resolveURI(metadata.value?.animation_url))
+  const image = computed(() => resolveURI(metadata.value?.image, config))
+  const animationUrl = computed(() => resolveURI(metadata.value?.animation_url, config))
 
   return {
     metadata,

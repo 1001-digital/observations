@@ -6,7 +6,7 @@ import { parseAbi } from 'viem'
 import { useChainConfig } from '@1001-digital/components'
 import { resolveURI } from './useArtifact'
 import { type ObservationsMode } from '../utils/observations'
-import { useObservationsConfig } from '../utils/config'
+import { useObservationsConfig, type ObservationsConfig } from '../utils/config'
 import { useAsyncFetch } from './useAsyncFetch'
 
 const COLLECTION_ABI = parseAbi([
@@ -70,8 +70,8 @@ async function fetchCollectionFromIndexer(
   return null
 }
 
-const fetchContractURI = async (uri: string): Promise<CollectionData> => {
-  const resolved = resolveURI(uri)
+const fetchContractURI = async (uri: string, config: ObservationsConfig): Promise<CollectionData> => {
+  const resolved = resolveURI(uri, config)
 
   if (resolved.startsWith('data:application/json;base64,')) {
     const base64Data = resolved.split(',')[1]
@@ -90,6 +90,7 @@ const fetchContractURI = async (uri: string): Promise<CollectionData> => {
 const fetchCollectionOnChain = async (
   client: PublicClient,
   address: Address,
+  config: ObservationsConfig,
 ): Promise<CollectionData> => {
   const contract = getContract({
     address,
@@ -105,7 +106,7 @@ const fetchCollectionOnChain = async (
   ])
 
   const uriData = contractURI
-    ? await fetchContractURI(contractURI).catch(() => ({}))
+    ? await fetchContractURI(contractURI, config).catch(() => ({}))
     : {}
 
   return {
@@ -122,6 +123,7 @@ async function resolveCollection(
   baseUrls: string[],
   client: PublicClient,
   address: Address,
+  config: ObservationsConfig,
 ): Promise<CollectionData> {
   for (const strategy of strategies) {
     try {
@@ -132,7 +134,7 @@ async function resolveCollection(
       }
       if (strategy === 'onchain') {
         if (!client) continue
-        return await fetchCollectionOnChain(client, address)
+        return await fetchCollectionOnChain(client, address, config)
       }
     } catch { continue }
   }
@@ -157,10 +159,10 @@ export const useCollection = (contract: Ref<Address>) => {
     pending,
     error,
   } = useAsyncFetch(`collection-${contract.value}`, () =>
-    resolveCollection(strategies.value, baseUrls, client, contract.value),
+    resolveCollection(strategies.value, baseUrls, client, contract.value, config),
   )
 
-  const image = computed(() => resolveURI(collection.value?.image))
+  const image = computed(() => resolveURI(collection.value?.image, config))
 
   return {
     collection,
