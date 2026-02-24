@@ -1,13 +1,14 @@
-import { http, createConfig, fallback, type CreateConnectorFn } from '@wagmi/core'
+import {
+  http,
+  createConfig,
+  fallback,
+  type CreateConnectorFn,
+} from '@wagmi/core'
 import { sepolia, mainnet } from 'viem/chains'
 import type { Transport } from 'viem'
-import {
-  injected,
-  metaMask,
-  safe,
-  walletConnect,
-} from '@wagmi/connectors'
+import { injected, metaMask, safe, walletConnect } from '@wagmi/connectors'
 import { inAppWallet } from '@1001-digital/components'
+import { defaultChain } from './evmConfig'
 
 const env = import.meta.env
 
@@ -15,7 +16,7 @@ const title = env.VITE_TITLE || 'OBSERVATIONS'
 
 // Build transports with fallbacks
 function buildTransport(...envKeys: (string | undefined)[]): Transport {
-  const transports = envKeys.filter(Boolean).map(url => http(url))
+  const transports = envKeys.filter(Boolean).map((url) => http(url))
   transports.push(http())
   return fallback(transports)
 }
@@ -56,7 +57,7 @@ if (env.VITE_WALLET_CONNECT_PROJECT_ID)
   )
 
 export const wagmiConfig = createConfig({
-  chains: [sepolia, mainnet],
+  chains: defaultChain === 'mainnet' ? [mainnet, sepolia] : [sepolia, mainnet],
   batch: {
     multicall: true,
   },

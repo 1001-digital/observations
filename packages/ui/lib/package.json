@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@1001-digital/components": "^1.1.0",
+    "@1001-digital/components": "^1.1.1",
     "@1001-digital/observations-components": "workspace:*",
     "@1001-digital/styles": "^1.0.0",
     "@wagmi/core": "^3.0.0",

@@ -14,6 +14,7 @@ import {
   ObservationsConfigKey,
   type ObservationsConfig,
 } from '@1001-digital/observations-components'
+import { defaultChain, evmChains } from './evmConfig'
 import { wagmiConfig } from './wagmi'
 import { router } from './router'
 import App from './App.vue'
@@ -71,11 +72,8 @@ app.provide(LinkComponentKey, RouterLink)
 app.provide(IconAliasesKey, defaultIconAliases)
 app.provide(EvmConfigKey, {
   title,
-  defaultChain: 'sepolia',
-  chains: {
-    mainnet: { id: 1, blockExplorer: 'https://etherscan.io' },
-    sepolia: { id: 11155111, blockExplorer: 'https://sepolia.etherscan.io' },
-  },
+  defaultChain,
+  chains: evmChains,
   ens: {
     mode: 'indexer',
     indexerUrls: ensIndexerUrls,
