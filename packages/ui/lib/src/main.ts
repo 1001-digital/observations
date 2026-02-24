@@ -3,13 +3,13 @@ import { VueQueryPlugin } from '@tanstack/vue-query'
 import { WagmiPlugin } from '@wagmi/vue'
 import { RouterLink } from 'vue-router'
 import type { Address } from 'viem'
+import '@1001-digital/styles'
 import {
   EvmConfigKey,
   LinkComponentKey,
   IconAliasesKey,
   defaultIconAliases,
 } from '@1001-digital/components'
-import '@1001-digital/styles'
 import {
   ObservationsConfigKey,
   type ObservationsConfig,
