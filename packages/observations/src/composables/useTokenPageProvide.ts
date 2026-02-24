@@ -1,4 +1,4 @@
-import type { InjectionKey, Ref } from 'vue'
+import { inject, type InjectionKey, type Ref } from 'vue'
 import type { Address } from 'viem'
 import type { ObservationData } from '../utils/observations'
 

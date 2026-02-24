@@ -31,6 +31,7 @@
 import { computed } from 'vue'
 import { Loading } from '@1001-digital/components'
 import { useRecentObservations } from '../composables/useRecentObservations'
+import ObservationListItem from './ObservationListItem.vue'
 
 const { observations, pending } = useRecentObservations()
 

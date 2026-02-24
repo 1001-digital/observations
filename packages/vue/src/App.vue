@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { Globals } from '@1001-digital/components'
-import ConnectProfile from '@ui/components/ConnectProfile.client.vue'
+import { ConnectProfile } from '@1001-digital/observations'
 
 const onConnected = () => {}
 const onDisconnected = () => {}

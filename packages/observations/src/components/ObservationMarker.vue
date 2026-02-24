@@ -32,6 +32,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { Popover } from '@1001-digital/components'
+
 const props = defineProps<{
   x: number
   y: number

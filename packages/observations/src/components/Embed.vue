@@ -30,6 +30,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, watchEffect, watch, nextTick } from 'vue'
 import { useWindowSize } from '@vueuse/core'
 
 async function fetchMediaType(url: string): Promise<string | undefined> {

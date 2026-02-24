@@ -45,10 +45,12 @@ import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { isAddress } from 'viem'
 import { Button, Loading } from '@1001-digital/components'
-import ObserverProfile from '@ui/components/ObserverProfile.vue'
-import ObservationListItem from '@ui/components/ObservationListItem.vue'
-import { useObserverObservations } from '@ui/composables/useObserverObservations'
-import { useObservationsConfig } from '@ui/utils/config'
+import {
+  ObserverProfile,
+  ObservationListItem,
+  useObserverObservations,
+  useObservationsConfig,
+} from '@1001-digital/observations'
 import { useEnsProfile } from '../composables/useEnsProfile'
 
 const route = useRoute()

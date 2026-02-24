@@ -14,8 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import Observations from '@ui/components/Observations.vue'
-import { useTokenPageData, useObservationNavigation } from '@ui/composables/useTokenPageProvide'
+import { Observations, useTokenPageData, useObservationNavigation } from '@1001-digital/observations'
 
 const { observations, count, pending, refreshAndPoll, contract, tokenId, tipRecipient, hasMultipleViewModes, viewType } = useTokenPageData()
 const { focusObservation } = useObservationNavigation()

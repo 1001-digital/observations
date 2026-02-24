@@ -68,19 +68,21 @@
 import { computed, provide, toRef } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Actions, Alert, Button, Icon, Loading, Tooltip } from '@1001-digital/components'
-import ArtifactVisual from '@ui/components/ArtifactVisual.vue'
-import ArtifactDetails from '@ui/components/ArtifactDetails.vue'
-import ObservationMarkers from '@ui/components/ObservationMarkers.vue'
-import { useArtifactContract, useArtifactTokenId, useArtifactScope } from '@ui/composables/artifactScope'
-import { useArtifact } from '@ui/composables/useArtifact'
-import { useArtifactView } from '@ui/composables/useArtifactView'
-import { useCollection } from '@ui/composables/useCollection'
-import { useObservations } from '@ui/composables/useObservations'
-import { useObservationMarkers } from '@ui/composables/useObservationMarkers'
 import {
+  ArtifactVisual,
+  ArtifactDetails,
+  ObservationMarkers,
+  useArtifactContract,
+  useArtifactTokenId,
+  useArtifactScope,
+  useArtifact,
+  useArtifactView,
+  useCollection,
+  useObservations,
+  useObservationMarkers,
   tokenPageDataKey,
   observationNavigationKey,
-} from '@ui/composables/useTokenPageProvide'
+} from '@1001-digital/observations'
 
 const route = useRoute()
 const router = useRouter()

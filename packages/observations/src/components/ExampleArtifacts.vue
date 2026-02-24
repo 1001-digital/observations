@@ -29,7 +29,10 @@
 
 <script setup lang="ts">
 import type { Address } from 'viem'
+import { Card, CardLink } from '@1001-digital/components'
 import { useObservationsConfig } from '../utils/config'
+import Artifact from './Artifact.vue'
+import ArtifactVisual from './ArtifactVisual.vue'
 
 const { exampleArtifacts: artifacts } = useObservationsConfig()
 </script>

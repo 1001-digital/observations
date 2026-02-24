@@ -1,0 +1,22 @@
+{
+  "name": "@1001-digital/observations",
+  "version": "0.1.0",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*"
+  },
+  "files": ["src"],
+  "peerDependencies": {
+    "@1001-digital/components": "^1.0.0",
+    "@wagmi/core": ">=3.0.0",
+    "@wagmi/vue": ">=0.5.0",
+    "viem": ">=2.0.0",
+    "vue": "^3.5.0",
+    "vue-router": "^4.5.0"
+  },
+  "dependencies": {
+    "@vueuse/core": "^14.2.0"
+  }
+}

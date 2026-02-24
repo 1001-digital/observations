@@ -52,6 +52,8 @@ import type { Address } from 'viem'
 import { Loading } from '@1001-digital/components'
 import type { ObservationData } from '../utils/observations'
 import { useObservations } from '../composables/useObservations'
+import ObservationCreate from './ObservationCreate.vue'
+import Observation from './Observation.vue'
 
 interface ObservationThread {
   observation: ObservationData

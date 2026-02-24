@@ -13,6 +13,8 @@
 </template>
 
 <script setup lang="ts">
+import Embed from './Embed.vue'
+
 defineProps<{
   image: string
   animationUrl?: string

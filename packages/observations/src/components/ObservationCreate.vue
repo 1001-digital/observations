@@ -98,8 +98,10 @@ import { ref, computed, watch, defineModel } from 'vue'
 import { writeContract } from '@wagmi/core'
 import { type Address, zeroAddress } from 'viem'
 import { useConfig, useConnection, type Config } from '@wagmi/vue'
+import { Button, Actions, FormTextarea, EvmConnect, EvmTransactionFlow } from '@1001-digital/components'
 import { ObservationsAbi, type ObservationData } from '../utils/observations'
 import { useObservationsConfig } from '../utils/config'
+import TipSelect from './TipSelect.vue'
 
 const props = defineProps<{
   contract: Address

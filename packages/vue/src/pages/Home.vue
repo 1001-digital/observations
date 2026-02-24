@@ -13,9 +13,7 @@
 
 <script setup lang="ts">
 import { Card } from '@1001-digital/components'
-import FindArtifact from '@ui/components/FindArtifact.vue'
-import RecentObservations from '@ui/components/RecentObservations.vue'
-import ExampleArtifacts from '@ui/components/ExampleArtifacts.vue'
+import { FindArtifact, RecentObservations, ExampleArtifacts } from '@1001-digital/observations'
 </script>
 
 <style scoped>

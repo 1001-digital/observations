@@ -35,6 +35,7 @@ import { ref, onMounted } from 'vue'
 import { writeContract } from '@wagmi/core'
 import { type Address, zeroAddress } from 'viem'
 import { useConfig } from '@wagmi/vue'
+import { Button, Actions, EvmTransactionFlow } from '@1001-digital/components'
 import { ObservationsAbi, type ObservationData } from '../utils/observations'
 import { useObservationsConfig } from '../utils/config'
 

@@ -36,6 +36,8 @@ import { Loading, Alert } from '@1001-digital/components'
 import { useArtifact } from '../composables/useArtifact'
 import { useCollection } from '../composables/useCollection'
 import { useArtifactView } from '../composables/useArtifactView'
+import ArtifactVisual from './ArtifactVisual.vue'
+import ArtifactDetails from './ArtifactDetails.vue'
 
 const props = defineProps<{
   contract: Address

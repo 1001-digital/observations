@@ -71,8 +71,9 @@
 <script setup lang="ts">
 import { ref, computed, inject } from 'vue'
 import { formatEther, zeroAddress, type Address } from 'viem'
-import { LinkComponentKey, useBlockExplorer, EvmAccount } from '@1001-digital/components'
+import { LinkComponentKey, useBlockExplorer, EvmAccount, Dropdown, DropdownItem, Button, Icon } from '@1001-digital/components'
 import type { ObservationData } from '../utils/observations'
+import ObservationTime from './ObservationTime.vue'
 
 const props = defineProps<{
   observation: ObservationData

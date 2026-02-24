@@ -81,6 +81,9 @@ import type { Address } from 'viem'
 import { useConnection } from '@wagmi/vue'
 import { LinkComponentKey, EvmAccount } from '@1001-digital/components'
 import type { ObservationData } from '../utils/observations'
+import ObservationMarker from './ObservationMarker.vue'
+import ObservationCreate from './ObservationCreate.vue'
+import ObservationTime from './ObservationTime.vue'
 
 const props = defineProps<{
   contract: Address

@@ -94,11 +94,13 @@ import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import type { Address } from 'viem'
 import { Card, CardLink, Loading, EvmAccount, shortAddress } from '@1001-digital/components'
-import ArtifactVisual from '@ui/components/ArtifactVisual.vue'
-import Artifact from '@ui/components/Artifact.vue'
-import ObservationListItem from '@ui/components/ObservationListItem.vue'
-import { useCollection } from '@ui/composables/useCollection'
-import { useCollectionObservations } from '@ui/composables/useCollectionObservations'
+import {
+  ArtifactVisual,
+  Artifact,
+  ObservationListItem,
+  useCollection,
+  useCollectionObservations,
+} from '@1001-digital/observations'
 
 const route = useRoute()
 const contract = route.params.contract as Address

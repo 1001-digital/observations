@@ -60,7 +60,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { formatEther, type Address } from 'viem'
-import { shortAddress, type EnsProfile } from '@1001-digital/components'
+import { Card, shortAddress, type EnsProfile } from '@1001-digital/components'
 
 const props = defineProps<{
   profile: EnsProfile

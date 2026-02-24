@@ -25,6 +25,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { Button, Form, FormLabel, FormItem } from '@1001-digital/components'
 
 const router = useRouter()
 const contract = ref('')

@@ -12,7 +12,7 @@ import '@1001-digital/styles'
 import {
   ObservationsConfigKey,
   type ObservationsConfig,
-} from '@ui/utils/config'
+} from '@1001-digital/observations'
 import { wagmiConfig } from './wagmi'
 import { router } from './router'
 import App from './App.vue'

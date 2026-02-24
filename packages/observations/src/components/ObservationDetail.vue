@@ -85,6 +85,9 @@ import type { Address } from 'viem'
 import { useConnection } from '@wagmi/vue'
 import { EvmAccount } from '@1001-digital/components'
 import type { ObservationData } from '../utils/observations'
+import Observation from './Observation.vue'
+import ObservationCreate from './ObservationCreate.vue'
+import ObservationDelete from './ObservationDelete.vue'
 
 const props = defineProps<{
   contract: Address

@@ -8,6 +8,7 @@
   "dependencies": {
     "@1001-digital/layers.base": "^1.0.1",
     "@1001-digital/layers.evm": "^1.1.2",
+    "@1001-digital/observations": "workspace:*",
     "nuxt": "^4.3.0"
   }
 }
