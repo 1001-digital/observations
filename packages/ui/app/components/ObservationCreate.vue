@@ -11,6 +11,7 @@
               : 'Leave an observation...'
         "
         :rows="3"
+        :disabled="pending"
       />
       <TipSelect
         v-if="!editObservation && tipRecipient"
@@ -71,7 +72,7 @@
             >
             <Button
               @click.stop.prevent="() => triggerTransactionFlow(start)"
-              :disabled="!note.trim()"
+              :disabled="pending || !note.trim()"
               >{{
                 editObservation ? 'Update' : isReply ? 'Reply' : 'Observe'
               }}</Button
