@@ -20,7 +20,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { Alert } from '@1001-digital/components'
-import { ObservationDetail, useTokenPageData, useObservationNavigation } from '@1001-digital/observations'
+import { ObservationDetail, useTokenPageData, useObservationNavigation } from '@1001-digital/observations-ui'
 
 const route = useRoute()
 const { observations, pending, refreshAndPoll, contract, tokenId, tipRecipient, hasMultipleViewModes } = useTokenPageData()

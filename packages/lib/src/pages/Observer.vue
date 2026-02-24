@@ -50,7 +50,7 @@ import {
   ObservationListItem,
   useObserverObservations,
   useObservationsConfig,
-} from '@1001-digital/observations'
+} from '@1001-digital/observations-ui'
 import { useEnsProfile } from '../composables/useEnsProfile'
 
 const route = useRoute()

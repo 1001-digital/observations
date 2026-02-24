@@ -100,7 +100,7 @@ import {
   ObservationListItem,
   useCollection,
   useCollectionObservations,
-} from '@1001-digital/observations'
+} from '@1001-digital/observations-ui'
 
 const route = useRoute()
 const contract = route.params.contract as Address

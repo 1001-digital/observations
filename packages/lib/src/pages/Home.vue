@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { Card } from '@1001-digital/components'
-import { FindArtifact, RecentObservations, ExampleArtifacts } from '@1001-digital/observations'
+import { FindArtifact, RecentObservations, ExampleArtifacts } from '@1001-digital/observations-ui'
 </script>
 
 <style scoped>

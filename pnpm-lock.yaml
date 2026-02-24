@@ -67,53 +67,14 @@ importers:
         specifier: ^5.2.2
         version: 5.8.3
 
-  packages/observations:
-    dependencies:
-      '@1001-digital/components':
-        specifier: ^1.1.0
-        version: 1.1.0(@1001-digital/styles@1.0.0)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
-      '@vueuse/core':
-        specifier: ^14.2.0
-        version: 14.2.1(vue@3.5.28(typescript@5.8.3))
-      '@wagmi/core':
-        specifier: '>=3.0.0'
-        version: 3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
-      '@wagmi/vue':
-        specifier: '>=0.5.0'
-        version: 0.5.0(25a2348d4f9bf438307f03b605c9a50f)
-      viem:
-        specifier: '>=2.0.0'
-        version: 2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
-      vue:
-        specifier: ^3.5.0
-        version: 3.5.28(typescript@5.8.3)
-      vue-router:
-        specifier: ^4.5.0
-        version: 4.6.4(vue@3.5.28(typescript@5.8.3))
-
-  packages/ui:
-    dependencies:
-      '@1001-digital/layers.base':
-        specifier: ^1.0.2
-        version: 1.0.2(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(magicast@0.5.2)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))
-      '@1001-digital/layers.evm':
-        specifier: ^1.1.3
-        version: 1.1.3(27435fc59045936c0f188bc13594aaee)
-      '@1001-digital/observations':
-        specifier: workspace:*
-        version: link:../observations
-      nuxt:
-        specifier: ^4.3.0
-        version: 4.3.1(@electric-sql/pglite@0.2.13)(@parcel/watcher@2.5.6)(@types/node@22.19.11)(@vue/compiler-sfc@3.5.28)(bufferutil@4.1.0)(cac@6.7.14)(db0@0.3.4(@electric-sql/pglite@0.2.13)(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(gel@2.2.0)(kysely@0.26.3)(pg@8.18.0)))(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(gel@2.2.0)(kysely@0.26.3)(pg@8.18.0))(idb-keyval@6.2.2)(ioredis@5.9.2)(magicast@0.5.2)(optionator@0.9.4)(rollup@4.57.1)(terser@5.46.0)(tsx@4.21.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue-tsc@2.2.12(typescript@5.8.3))(yaml@2.8.2)
-
-  packages/vue:
+  packages/lib:
     dependencies:
       '@1001-digital/components':
         specifier: ^1.1.0
         version: 1.1.0(@1001-digital/styles@1.0.0)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(88bfd56e9faf81f0164c21599857073d))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
-      '@1001-digital/observations':
+      '@1001-digital/observations-ui':
         specifier: workspace:*
-        version: link:../observations
+        version: link:../ui
       '@1001-digital/styles':
         specifier: ^1.0.0
         version: 1.0.0
@@ -146,8 +107,38 @@ importers:
         specifier: ^2.2.0
         version: 2.2.12(typescript@5.8.3)
 
+  packages/ui:
+    dependencies:
+      '@1001-digital/components':
+        specifier: ^1.1.0
+        version: 1.1.0(@1001-digital/styles@1.0.0)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
+      '@vueuse/core':
+        specifier: ^14.2.0
+        version: 14.2.1(vue@3.5.28(typescript@5.8.3))
+      '@wagmi/core':
+        specifier: '>=3.0.0'
+        version: 3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+      '@wagmi/vue':
+        specifier: '>=0.5.0'
+        version: 0.5.0(25a2348d4f9bf438307f03b605c9a50f)
+      viem:
+        specifier: '>=2.0.0'
+        version: 2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
+      vue:
+        specifier: ^3.5.0
+        version: 3.5.28(typescript@5.8.3)
+      vue-router:
+        specifier: ^4.5.0
+        version: 4.6.4(vue@3.5.28(typescript@5.8.3))
+
   packages/web:
     dependencies:
+      '@1001-digital/layers.base':
+        specifier: ^1.0.2
+        version: 1.0.2(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(magicast@0.5.2)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))
+      '@1001-digital/layers.evm':
+        specifier: ^1.1.3
+        version: 1.1.3(27435fc59045936c0f188bc13594aaee)
       '@1001-digital/observations-ui':
         specifier: workspace:*
         version: link:../ui

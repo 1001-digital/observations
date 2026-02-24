@@ -10,13 +10,37 @@ export default defineAppConfig({
     '0x036721e5a769cc48b3189efbb9cce4471e8a48b1/15455',
     '0x036721e5a769cc48b3189efbb9cce4471e8a48b1/1001',
   ],
-  evm: {
-    ipfsGateway: 'https://ipfs.vv.xyz/ipfs/',
-    inAppWallet: {
-      enabled: true,
+  artifact: {
+    defaultView: 'animation' as 'animation' | 'image',
+    details: {
+      showCollection: true,
+      showSymbol: true,
+      showArtist: true,
+      showOwner: true,
     },
   },
   observations: {
     mode: 'indexer' as 'indexer' | 'onchain',
+  },
+  evm: {
+    defaultChain: 'sepolia',
+    ipfsGateway: 'https://ipfs.vv.xyz/ipfs/',
+    arweaveGateway: 'https://arweave.net/',
+    chains: {
+      mainnet: {
+        id: 1,
+        blockExplorer: 'https://etherscan.io',
+      },
+      sepolia: {
+        id: 11155111,
+        blockExplorer: 'https://sepolia.etherscan.io',
+      },
+    },
+    ens: {
+      mode: 'indexer',
+    },
+    inAppWallet: {
+      enabled: true,
+    },
   },
 })

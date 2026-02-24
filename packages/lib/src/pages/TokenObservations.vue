@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { Observations, useTokenPageData, useObservationNavigation } from '@1001-digital/observations'
+import { Observations, useTokenPageData, useObservationNavigation } from '@1001-digital/observations-ui'
 
 const { observations, count, pending, refreshAndPoll, contract, tokenId, tipRecipient, hasMultipleViewModes, viewType } = useTokenPageData()
 const { focusObservation } = useObservationNavigation()
