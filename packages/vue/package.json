@@ -8,9 +8,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@1001-digital/components": "workspace:*",
+    "@1001-digital/components": "^1.1.0",
     "@1001-digital/observations": "workspace:*",
-    "@1001-digital/styles": "workspace:*",
+    "@1001-digital/styles": "^1.0.0",
     "@wagmi/core": "^3.0.0",
     "@wagmi/vue": "^0.5.0",
     "viem": "^2.0.0",
