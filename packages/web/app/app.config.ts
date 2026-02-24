@@ -12,6 +12,9 @@ export default defineAppConfig({
   ],
   evm: {
     ipfsGateway: 'https://ipfs.vv.xyz/ipfs/',
+    inAppWallet: {
+      enabled: true,
+    },
   },
   observations: {
     mode: 'indexer' as 'indexer' | 'onchain',
