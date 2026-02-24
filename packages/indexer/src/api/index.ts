@@ -26,7 +26,7 @@ app.route(
 app.route(
   "/artifacts",
   createArtifactRoutes({
-    client: publicClients["sepolia"],
+    client: publicClients["ethereum"],
     db: artifactDb,
   }),
 );
