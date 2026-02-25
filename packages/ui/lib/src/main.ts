@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { VueQueryPlugin } from '@tanstack/vue-query'
-import { WagmiPlugin } from '@wagmi/vue'
+import { WagmiPlugin, type WagmiPluginOptions } from '@wagmi/vue'
 import { RouterLink } from 'vue-router'
 import type { Address } from 'viem'
 import '@1001-digital/styles'
@@ -65,7 +65,9 @@ const app = createApp(App)
 
 app.use(router)
 app.use(VueQueryPlugin)
-app.use(WagmiPlugin, { config: wagmiConfig })
+app.use(WagmiPlugin, {
+  config: wagmiConfig as WagmiPluginOptions['config'],
+})
 
 app.provide(ObservationsConfigKey, observationsConfig)
 app.provide(LinkComponentKey, RouterLink)
