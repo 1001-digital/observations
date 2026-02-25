@@ -10,8 +10,8 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@1001-digital/layers.base": "^1.0.3",
-    "@1001-digital/layers.evm": "^1.1.6",
+    "@1001-digital/layers.base": "^1.0.4",
+    "@1001-digital/layers.evm": "^1.1.7",
     "@1001-digital/observations-components": "workspace:^",
     "nuxt": "^4.3.0"
   }
