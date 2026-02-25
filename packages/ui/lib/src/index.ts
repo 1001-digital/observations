@@ -1,5 +1,5 @@
 import { createApp, defineComponent, h } from 'vue'
-import { createRouter, createMemoryHistory, RouterLink } from 'vue-router'
+import { createRouter, createMemoryHistory } from 'vue-router'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import { WagmiPlugin } from '@wagmi/vue'
 import type { Address } from 'viem'
@@ -15,6 +15,7 @@ import {
   ObservationsConfigKey,
   type ObservationsConfig,
 } from '@1001-digital/observations-components'
+import AppLink from './AppLink.vue'
 import ArtifactViewer from './ArtifactViewer.vue'
 import { createEvmConfig } from './evmConfig'
 import { createWagmiConfig } from './wagmi'
@@ -119,7 +120,7 @@ export function mountArtifact(
   app.use(WagmiPlugin, { config: wagmiConfig })
 
   app.provide(ObservationsConfigKey, observationsConfig)
-  app.provide(LinkComponentKey, RouterLink)
+  app.provide(LinkComponentKey, AppLink)
   app.provide(IconAliasesKey, defaultIconAliases)
   app.provide(EvmConfigKey, {
     title: 'OBSERVATIONS',
