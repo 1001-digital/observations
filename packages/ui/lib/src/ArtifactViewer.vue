@@ -224,7 +224,6 @@ const onMarkerComplete = () => {
   height: 100%;
   display: grid;
   grid-template-rows: auto 1fr;
-  color-scheme: light;
   --font-family: serif;
 }
 
@@ -262,7 +261,7 @@ const onMarkerComplete = () => {
   container-type: size;
   border-bottom: var(--border);
   height: 100cqw;
-  background: var(--gray-z-9);
+  background: var(--gray-z-0);
 
   .artifact-visual {
     width: min(80cqw, 80cqh);
