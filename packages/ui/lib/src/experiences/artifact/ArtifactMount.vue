@@ -67,14 +67,14 @@
 <script setup lang="ts">
 import { computed, provide, toRef } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import type { Address } from 'viem'
 import { Actions, Alert, Button, Icon, Loading, Tooltip } from '@1001-digital/components'
 import {
   ArtifactVisual,
   ArtifactDetails,
   ObservationMarkers,
-  useArtifactContract,
-  useArtifactTokenId,
-  useArtifactScope,
+  ObservationsConfigKey,
+  useObservationsConfig,
   useArtifact,
   useArtifactView,
   useCollection,
@@ -84,11 +84,25 @@ import {
   observationNavigationKey,
 } from '@1001-digital/observations-components'
 
+const props = defineProps<{
+  contract: Address
+  token: string
+}>()
+
 const route = useRoute()
 const router = useRouter()
 
-const contract = useArtifactContract()
-const tokenId = useArtifactTokenId()
+// Provide a scoped ObservationsConfig so useArtifactContract/useArtifactTokenId
+// pick up our contract+token without needing route params.
+const parentConfig = useObservationsConfig()
+provide(ObservationsConfigKey, {
+  ...parentConfig,
+  contract: props.contract,
+  token: props.token,
+})
+
+const contract = computed(() => props.contract)
+const tokenId = computed(() => BigInt(props.token))
 
 const { metadata, owner, image, animationUrl, pending, error } = useArtifact(
   toRef(contract),
@@ -109,13 +123,6 @@ const { pendingMarker, placeMarker, discardMarker } = useObservationMarkers()
 
 const focusedId = computed(() => (route.params.id as string) ?? null)
 
-const { contract: scopeContract, token: scopeToken } = useArtifactScope()
-const basePath = computed(() =>
-  scopeContract && scopeToken
-    ? ''
-    : `/${contract.value}/${tokenId.value}`,
-)
-
 const hasMultipleViewModes = computed(() => !!image.value && !!animationUrl.value)
 
 const effectiveShowAnimation = computed({
@@ -135,16 +142,16 @@ const viewType = computed(() => effectiveShowAnimation.value ? 1 : 0)
 
 const focusObservation = (id: string) => {
   pendingMarker.value = null
-  router.push({ path: `${basePath.value}/${id}`, query: route.query })
+  router.push({ path: `/artifact/${id}`, query: route.query })
 }
 
 const clearFocus = () => {
-  router.push({ path: basePath.value || '/', query: route.query })
+  router.push({ path: '/artifact', query: route.query })
 }
 
 const onPlaceMarker = async (x: number, y: number) => {
   if (route.params.id) {
-    await router.push({ path: basePath.value || '/', query: route.query })
+    await router.push({ path: '/artifact', query: route.query })
   }
   placeMarker(x, y)
 }
@@ -178,7 +185,7 @@ provide(observationNavigationKey, {
   grid-auto-rows: min-content;
 
   @media (min-width: 45rem) {
-    height: calc(100dvh - var(--navbar-height, 0px));
+    height: calc(100dvh - var(--navbar-height, 0px) - var(--config-bar-height, 2.5rem));
     grid-template-columns: 1fr 20rem;
     grid-auto-rows: auto;
   }

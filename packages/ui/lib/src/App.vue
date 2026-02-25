@@ -1,12 +1,20 @@
 <template>
-  <Globals>
-    <div class="app">
-      <header class="app-header">
-        <ConnectProfile @connected="onConnected" @disconnected="onDisconnected" />
-      </header>
-      <router-view />
-    </div>
-  </Globals>
+  <div class="app">
+    <Globals />
+    <header class="app-header">
+      <nav class="app-nav">
+        <router-link to="/">Index</router-link>
+        <router-link to="/artifact">Artifact</router-link>
+        <router-link to="/collection">Collection</router-link>
+        <router-link to="/artist">Artist</router-link>
+      </nav>
+      <ConnectProfile
+        @connected="onConnected"
+        @disconnected="onDisconnected"
+      />
+    </header>
+    <router-view />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -38,9 +46,25 @@ html {
 .app-header {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   height: var(--navbar-height);
   padding: 0 var(--spacer);
   border-bottom: var(--border);
+}
+
+.app-nav {
+  display: flex;
+  gap: var(--spacer);
+  font-size: var(--font-sm);
+
+  a {
+    text-decoration: none;
+    color: var(--muted);
+
+    &.router-link-active {
+      color: inherit;
+      font-weight: 600;
+    }
+  }
 }
 </style>

@@ -33,8 +33,6 @@ const ensIndexerUrls = [env.VITE_ENS_INDEXER_1].filter(Boolean) as string[]
 
 const observationsConfig: ObservationsConfig = {
   observationsContract: (env.VITE_OBSERVATIONS_CONTRACT || '0x') as Address,
-  contract: (env.VITE_CONTRACT as Address) || undefined,
-  token: env.VITE_TOKEN || undefined,
   indexerEndpoints,
   mode: indexerEndpoints.length ? 'indexer' : 'onchain',
   exampleArtifacts: [
