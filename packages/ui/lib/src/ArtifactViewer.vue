@@ -1,9 +1,5 @@
 <template>
   <div class="artifact-viewer">
-    <header class="viewer-header">
-      <ConnectProfile />
-    </header>
-
     <article class="token-detail">
       <div class="artifact-column">
         <ObservationMarkers
@@ -128,7 +124,6 @@ import {
   ObservationMarkers,
   Observations,
   ObservationDetail,
-  ConnectProfile,
   ObservationsConfigKey,
   useObservationsConfig,
   useArtifactPage,
@@ -152,22 +147,39 @@ const tokenId = computed(() => BigInt(props.token))
 const focusedId = ref<string | null>(null)
 
 const {
-  metadata, owner, image, animationUrl, pending, error,
-  collection, tipRecipient,
-  observations, observationCount, observationsPending, refreshAndPoll,
-  pendingMarker, discardMarker,
-  focusedObservation, hasMultipleViewModes, effectiveShowAnimation, viewType,
-  focusObservation, clearFocus, onPlaceMarker, onMarkerComplete,
-} = useArtifactPage(
-  contract,
-  tokenId,
-  focusedId,
-  {
-    onFocusObservation: (id) => { focusedId.value = id },
-    onClearFocus: () => { focusedId.value = null },
-    onBeforePlaceMarker: () => { focusedId.value = null },
+  metadata,
+  owner,
+  image,
+  animationUrl,
+  pending,
+  error,
+  collection,
+  tipRecipient,
+  observations,
+  observationCount,
+  observationsPending,
+  refreshAndPoll,
+  pendingMarker,
+  discardMarker,
+  focusedObservation,
+  hasMultipleViewModes,
+  effectiveShowAnimation,
+  viewType,
+  focusObservation,
+  clearFocus,
+  onPlaceMarker,
+  onMarkerComplete,
+} = useArtifactPage(contract, tokenId, focusedId, {
+  onFocusObservation: (id) => {
+    focusedId.value = id
   },
-)
+  onClearFocus: () => {
+    focusedId.value = null
+  },
+  onBeforePlaceMarker: () => {
+    focusedId.value = null
+  },
+})
 </script>
 
 <style scoped>
