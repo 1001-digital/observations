@@ -13,11 +13,24 @@
       }
       body {
         margin: 0;
+
+        > main {
+          max-width: 60rem;
+          margin: 0 auto;
+        }
+      }
+      #artifact {
+        border: 1px solid black;
+        aspect-ratio: 1;
       }
     </style>
   </head>
   <body>
-    <div id="artifact"></div>
+    <main>
+      <h1>Test Artifact Site</h1>
+      <p>Lorem ipsum dolor sit...</p>
+      <div id="artifact"></div>
+    </main>
 
     <script type="module">
       import { mountArtifact } from '../src/index.ts'
