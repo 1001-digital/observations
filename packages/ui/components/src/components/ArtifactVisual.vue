@@ -27,7 +27,7 @@ const showAnimation = defineModel<boolean>('showAnimation', { default: false })
 <style>
 :root {
   --artifact-shadow-inset: 10%;
-  --artifact-shadow-color: var(--color);
+  --artifact-shadow-color: var(--gray-z-2);
   --artifact-shadow-blur: 5rem;
   --artifact-shadow-opacity: 0.25;
 }
@@ -69,6 +69,5 @@ const showAnimation = defineModel<boolean>('showAnimation', { default: false })
     top: 40%;
     border-radius: 20%;
   }
-
 }
 </style>

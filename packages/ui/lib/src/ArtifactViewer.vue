@@ -14,7 +14,9 @@
           :observations="observations"
           :pending-marker="pendingMarker"
           :focused-id="focusedId"
-          :view-type="hasMultipleViewModes ? (effectiveShowAnimation ? 1 : 0) : undefined"
+          :view-type="
+            hasMultipleViewModes ? (effectiveShowAnimation ? 1 : 0) : undefined
+          "
           @place-marker="onPlaceMarker"
           @discard-marker="discardMarker"
           @focus-observation="focusObservation"
@@ -28,19 +30,34 @@
             :animation-url="animationUrl"
             :name="metadata.name"
           />
-          <Actions v-if="(animationUrl && image) || hasEmbed" class="visual-actions">
+          <Actions
+            v-if="(animationUrl && image) || hasEmbed"
+            class="visual-actions"
+          >
             <Tooltip v-if="animationUrl && image">
               <template #trigger>
-                <Button class="small" @click="effectiveShowAnimation = !effectiveShowAnimation">
-                  <Icon :type="effectiveShowAnimation ? 'lucide:image' : 'lucide:play'" />
+                <Button
+                  class="small"
+                  @click="effectiveShowAnimation = !effectiveShowAnimation"
+                >
+                  <Icon
+                    :type="
+                      effectiveShowAnimation ? 'lucide:image' : 'lucide:play'
+                    "
+                  />
                 </Button>
               </template>
               {{ effectiveShowAnimation ? 'Show image' : 'Show animation' }}
             </Tooltip>
             <Tooltip v-if="hasEmbed">
               <template #trigger>
-                <Button class="small" @click="toggleObserving">
-                  <Icon :type="observing ? 'lucide:hand' : 'lucide:crosshair'" />
+                <Button
+                  class="small"
+                  @click="toggleObserving"
+                >
+                  <Icon
+                    :type="observing ? 'lucide:hand' : 'lucide:crosshair'"
+                  />
                 </Button>
               </template>
               {{ observing ? 'Interact' : 'Observe' }}
@@ -97,7 +114,14 @@
 <script setup lang="ts">
 import { computed, provide, ref, toRef } from 'vue'
 import type { Address } from 'viem'
-import { Actions, Alert, Button, Icon, Loading, Tooltip } from '@1001-digital/components'
+import {
+  Actions,
+  Alert,
+  Button,
+  Icon,
+  Loading,
+  Tooltip,
+} from '@1001-digital/components'
 import {
   ArtifactVisual,
   ArtifactDetails,
@@ -151,10 +175,14 @@ const { pendingMarker, placeMarker, discardMarker } = useObservationMarkers()
 const focusedId = ref<string | null>(null)
 
 const focusedObservation = computed(() =>
-  focusedId.value ? observations.value.find((o) => o.id === focusedId.value) : null,
+  focusedId.value
+    ? observations.value.find((o) => o.id === focusedId.value)
+    : null,
 )
 
-const hasMultipleViewModes = computed(() => !!image.value && !!animationUrl.value)
+const hasMultipleViewModes = computed(
+  () => !!image.value && !!animationUrl.value,
+)
 
 const effectiveShowAnimation = computed({
   get() {
@@ -169,7 +197,7 @@ const effectiveShowAnimation = computed({
   },
 })
 
-const viewType = computed(() => effectiveShowAnimation.value ? 1 : 0)
+const viewType = computed(() => (effectiveShowAnimation.value ? 1 : 0))
 
 const focusObservation = (id: string) => {
   pendingMarker.value = null
@@ -234,7 +262,7 @@ const onMarkerComplete = () => {
   container-type: size;
   border-bottom: var(--border);
   height: 100cqw;
-  background: var(--gray-z-0);
+  background: var(--gray-z-9);
 
   .artifact-visual {
     width: min(80cqw, 80cqh);
