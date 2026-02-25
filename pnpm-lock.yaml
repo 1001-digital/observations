@@ -73,8 +73,8 @@ importers:
         specifier: ^1.0.3
         version: 1.0.3(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(magicast@0.5.2)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))
       '@1001-digital/layers.evm':
-        specifier: ^1.1.4
-        version: 1.1.4(1f03e5da8942b1ef130e05c2c1fc4ebc)
+        specifier: ^1.1.6
+        version: 1.1.6(1f03e5da8942b1ef130e05c2c1fc4ebc)
       '@1001-digital/observations-components':
         specifier: workspace:*
         version: link:../components
@@ -164,11 +164,27 @@ packages:
       viem:
         optional: true
 
+  '@1001-digital/components@1.1.4':
+    resolution: {integrity: sha512-dhnFMqiAxdK1hYWkfVUR2Bo6Y7l/UeHJPQvp5iS6bF6/7AKFlY46UOyRa/9yVMpju4zxrKZ/txTgwXTFfkwpGQ==}
+    peerDependencies:
+      '@1001-digital/styles': ^1.0.0
+      '@wagmi/core': '>=3.0.0'
+      '@wagmi/vue': '>=0.5.0'
+      viem: '>=2.0.0'
+      vue: ^3.5.0
+    peerDependenciesMeta:
+      '@wagmi/core':
+        optional: true
+      '@wagmi/vue':
+        optional: true
+      viem:
+        optional: true
+
   '@1001-digital/layers.base@1.0.3':
     resolution: {integrity: sha512-7N3YCmvzEAUXDqN/JQRDA/6ol/mm16sIvUWPsj0pc+zfShnilys+9ttL8XvWjUWoO5R5Vp8U73hW4xj1L2i9OA==}
 
-  '@1001-digital/layers.evm@1.1.4':
-    resolution: {integrity: sha512-jhERwrX4P/pViK14NI4lx5c4pbB43vtS34O6gmy9U/JxWc2QHI/Zddz28FA9QS7ZVjm9pXnPhWX9M2GzLyotmQ==}
+  '@1001-digital/layers.evm@1.1.6':
+    resolution: {integrity: sha512-czUpOiLQ+sL0sV6IeSXx74xzrMvcpB9XMTx66GI8SHRQUrexA7eN9TEQm+4p8t5qkwabfVJYFcszzCU30BiQZw==}
     peerDependencies:
       '@1001-digital/layers.base': ^1.0.3
 
@@ -2727,6 +2743,9 @@ packages:
   '@tanstack/virtual-core@3.13.18':
     resolution: {integrity: sha512-Mx86Hqu1k39icq2Zusq+Ey2J6dDWTjDvEv43PJtRCoEYTLyfaPnxIQ6iy7YAOK0NV/qOEmZQ/uCufrppZxTgcg==}
 
+  '@tanstack/virtual-core@3.13.19':
+    resolution: {integrity: sha512-/BMP7kNhzKOd7wnDeB8NrIRNLwkf5AhCYCvtfZV2GXWbBieFm/el0n6LOAXlTi6ZwHICSNnQcIxRCWHrLzDY+g==}
+
   '@tanstack/vue-query@5.92.9':
     resolution: {integrity: sha512-jjAZcqKveyX0C4w/6zUqbnqk/XzuxNWaFsWjGTJWULVFizUNeLGME2gf9vVSDclIyiBhR13oZJPPs6fJgfpIJQ==}
     peerDependencies:
@@ -2738,6 +2757,11 @@ packages:
 
   '@tanstack/vue-virtual@3.13.18':
     resolution: {integrity: sha512-6pT8HdHtTU5Z+t906cGdCroUNA5wHjFXsNss9gwk7QAr1VNZtz9IQCs2Nhx0gABK48c+OocHl2As+TMg8+Hy4A==}
+    peerDependencies:
+      vue: ^2.7.0 || ^3.0.0
+
+  '@tanstack/vue-virtual@3.13.19':
+    resolution: {integrity: sha512-07Fp1TYuIziB4zIDA/moeDKHODePy3K1fN4c4VIAGnkxo1+uOvBJP7m54CoxKiQX6Q9a1dZnznrwOg9C86yvvA==}
     peerDependencies:
       vue: ^2.7.0 || ^3.0.0
 
@@ -5770,6 +5794,11 @@ packages:
     peerDependencies:
       vue: '>= 3.2.0'
 
+  reka-ui@2.8.2:
+    resolution: {integrity: sha512-8lTKcJhmG+D3UyJxhBnNnW/720sLzm0pbA9AC1MWazmJ5YchJAyTSl+O00xP/kxBmEN0fw5JqWVHguiFmsGjzA==}
+    peerDependencies:
+      vue: '>= 3.2.0'
+
   remove-accents@0.5.0:
     resolution: {integrity: sha512-8g3/Otx1eJaVD12e31UbJj1YzdtVvzH85HV7t+9MJYk/u3XmkOUJ5Ys9wQrf9PCPK8+xn4ymzqYCiZl6QWKn+A==}
 
@@ -6927,6 +6956,24 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
 
+  '@1001-digital/components@1.1.4(@1001-digital/styles@1.0.0)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))':
+    dependencies:
+      '@1001-digital/styles': 1.0.0
+      '@iconify/vue': 5.0.0(vue@3.5.28(typescript@5.8.3))
+      '@internationalized/date': 3.11.0
+      '@visualizevalue/opepicons': 0.1.0
+      '@vueuse/core': 14.2.1(vue@3.5.28(typescript@5.8.3))
+      luxon: 3.7.2
+      qrcode: 1.5.4
+      reka-ui: 2.8.2(vue@3.5.28(typescript@5.8.3))
+      vue: 3.5.28(typescript@5.8.3)
+    optionalDependencies:
+      '@wagmi/core': 3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+      '@wagmi/vue': 0.5.0(25a2348d4f9bf438307f03b605c9a50f)
+      viem: 2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+
   '@1001-digital/layers.base@1.0.3(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(magicast@0.5.2)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))':
     dependencies:
       '@1001-digital/components': 1.1.1(@1001-digital/styles@1.0.0)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
@@ -6943,9 +6990,9 @@ snapshots:
       - vite
       - vue
 
-  '@1001-digital/layers.evm@1.1.4(1f03e5da8942b1ef130e05c2c1fc4ebc)':
+  '@1001-digital/layers.evm@1.1.6(1f03e5da8942b1ef130e05c2c1fc4ebc)':
     dependencies:
-      '@1001-digital/components': 1.1.1(@1001-digital/styles@1.0.0)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
+      '@1001-digital/components': 1.1.4(@1001-digital/styles@1.0.0)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
       '@1001-digital/layers.base': 1.0.3(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(magicast@0.5.2)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))
       '@base-org/account': 2.5.2(@types/react@19.2.14)(bufferutil@4.1.0)(immer@10.0.2)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       '@metamask/sdk': 0.33.1(bufferutil@4.1.0)(utf-8-validate@5.0.10)
@@ -10145,6 +10192,8 @@ snapshots:
 
   '@tanstack/virtual-core@3.13.18': {}
 
+  '@tanstack/virtual-core@3.13.19': {}
+
   '@tanstack/vue-query@5.92.9(vue@3.5.28(typescript@5.8.3))':
     dependencies:
       '@tanstack/match-sorter-utils': 8.19.4
@@ -10156,6 +10205,11 @@ snapshots:
   '@tanstack/vue-virtual@3.13.18(vue@3.5.28(typescript@5.8.3))':
     dependencies:
       '@tanstack/virtual-core': 3.13.18
+      vue: 3.5.28(typescript@5.8.3)
+
+  '@tanstack/vue-virtual@3.13.19(vue@3.5.28(typescript@5.8.3))':
+    dependencies:
+      '@tanstack/virtual-core': 3.13.19
       vue: 3.5.28(typescript@5.8.3)
 
   '@tybys/wasm-util@0.10.1':
@@ -14229,6 +14283,22 @@ snapshots:
       '@internationalized/date': 3.11.0
       '@internationalized/number': 3.6.5
       '@tanstack/vue-virtual': 3.13.18(vue@3.5.28(typescript@5.8.3))
+      '@vueuse/core': 14.2.1(vue@3.5.28(typescript@5.8.3))
+      '@vueuse/shared': 14.2.1(vue@3.5.28(typescript@5.8.3))
+      aria-hidden: 1.2.6
+      defu: 6.1.4
+      ohash: 2.0.11
+      vue: 3.5.28(typescript@5.8.3)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+
+  reka-ui@2.8.2(vue@3.5.28(typescript@5.8.3)):
+    dependencies:
+      '@floating-ui/dom': 1.7.5
+      '@floating-ui/vue': 1.1.10(vue@3.5.28(typescript@5.8.3))
+      '@internationalized/date': 3.11.0
+      '@internationalized/number': 3.6.5
+      '@tanstack/vue-virtual': 3.13.19(vue@3.5.28(typescript@5.8.3))
       '@vueuse/core': 14.2.1(vue@3.5.28(typescript@5.8.3))
       '@vueuse/shared': 14.2.1(vue@3.5.28(typescript@5.8.3))
       aria-hidden: 1.2.6
