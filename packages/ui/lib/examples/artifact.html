@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Artifact Viewer</title>
+    <style>
+      body { margin: 0; }
+      #artifact { height: 100dvh; }
+    </style>
+  </head>
+  <body>
+    <div id="artifact"></div>
+
+    <script type="module">
+      import { mountArtifact } from '../src/index.ts'
+
+      // Read config from env (provided by vite dev server via .env file).
+      // When using the built library, pass these values directly.
+      const env = import.meta.env
+
+      mountArtifact('#artifact', {
+        contract: env.VITE_DEFAULT_CONTRACT || '0x036721e5a769cc48b3189efbb9cce4471e8a48b1',
+        token:    env.VITE_DEFAULT_TOKEN    || '1',
+
+        // Infrastructure
+        observationsContract: env.VITE_OBSERVATIONS_CONTRACT,
+        chain: env.VITE_DEFAULT_CHAIN || 'sepolia',
+        rpc: {
+          mainnet: [env.VITE_RPC_MAINNET_1, env.VITE_RPC_MAINNET_2, env.VITE_RPC_MAINNET_3].filter(Boolean),
+          sepolia: [env.VITE_RPC_SEPOLIA_1, env.VITE_RPC_SEPOLIA_2, env.VITE_RPC_SEPOLIA_3].filter(Boolean),
+        },
+        indexerEndpoints: [env.VITE_INDEXER_ENDPOINT_1, env.VITE_INDEXER_ENDPOINT_2, env.VITE_INDEXER_ENDPOINT_3].filter(Boolean),
+        walletConnectProjectId: env.VITE_WALLET_CONNECT_PROJECT_ID || undefined,
+        ensIndexerUrls: [env.VITE_ENS_INDEXER_1].filter(Boolean),
+      })
+    </script>
+  </body>
+</html>

@@ -1,5 +1,3 @@
-const env = import.meta.env
-
 export const evmChains = {
   mainnet: {
     id: 1,
@@ -11,13 +9,10 @@ export const evmChains = {
   },
 } as const
 
-type EvmChainKey = keyof typeof evmChains
+export type EvmChainKey = keyof typeof evmChains
 
-const DEFAULT_CHAIN: EvmChainKey = 'sepolia'
+export function createEvmConfig(chain: EvmChainKey = 'sepolia') {
+  const defaultChain: EvmChainKey = chain in evmChains ? chain : 'sepolia'
 
-const isEvmChainKey = (key?: string): key is EvmChainKey =>
-  !!key && key in evmChains
-
-export const defaultChain: EvmChainKey = isEvmChainKey(env.VITE_DEFAULT_CHAIN)
-  ? env.VITE_DEFAULT_CHAIN
-  : DEFAULT_CHAIN
+  return { defaultChain, evmChains }
+}
