@@ -1,4 +1,5 @@
 import { createApp, defineComponent, h } from 'vue'
+import { createRouter, createMemoryHistory } from 'vue-router'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import { WagmiPlugin } from '@wagmi/vue'
 import type { Address } from 'viem'
@@ -111,8 +112,17 @@ export function mountArtifact(
     },
   })
 
+  const router = createRouter({
+    history: createMemoryHistory(),
+    routes: [
+      { path: '/:contract/:token', component: Root },
+    ],
+  })
+  router.replace(`/${options.contract}/${options.token}`)
+
   const app = createApp(Root)
 
+  app.use(router)
   app.use(VueQueryPlugin)
   app.use(WagmiPlugin, { config: wagmiConfig })
 
