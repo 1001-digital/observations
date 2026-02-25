@@ -108,10 +108,9 @@ export function mountArtifact(
   const router = createRouter({
     history: createMemoryHistory(),
     routes: [
-      { path: '/:contract/:token', component: Root },
+      { path: '/', component: Root },
     ],
   })
-  router.replace(`/${options.contract}/${options.token}`)
 
   const app = createApp(Root)
 
