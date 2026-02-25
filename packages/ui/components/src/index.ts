@@ -22,6 +22,7 @@ export { default as TipSelect } from './components/TipSelect.vue'
 // Composables
 export { useArtifactScope, useArtifactContract, useArtifactTokenId } from './composables/artifactScope'
 export { useArtifact, resolveURI, type TokenMetadata } from './composables/useArtifact'
+export { useArtifactPage, type ArtifactPageNavigation } from './composables/useArtifactPage'
 export { useArtifactView } from './composables/useArtifactView'
 export { useAsyncFetch } from './composables/useAsyncFetch'
 export { useCollection, type CollectionData } from './composables/useCollection'

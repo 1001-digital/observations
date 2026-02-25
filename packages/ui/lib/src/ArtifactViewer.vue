@@ -112,7 +112,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, provide, ref, toRef } from 'vue'
+import { computed, provide, ref } from 'vue'
 import type { Address } from 'viem'
 import {
   Actions,
@@ -131,11 +131,7 @@ import {
   ConnectProfile,
   ObservationsConfigKey,
   useObservationsConfig,
-  useArtifact,
-  useArtifactView,
-  useCollection,
-  useObservations,
-  useObservationMarkers,
+  useArtifactPage,
 } from '@1001-digital/observations-components'
 
 const props = defineProps<{
@@ -153,70 +149,25 @@ provide(ObservationsConfigKey, {
 
 const contract = computed(() => props.contract)
 const tokenId = computed(() => BigInt(props.token))
-
-const { metadata, owner, image, animationUrl, pending, error } = useArtifact(
-  toRef(contract),
-  toRef(tokenId),
-)
-const { collection } = useCollection(toRef(contract))
-const tipRecipient = computed(() => collection.value?.owner)
-const { showAnimation } = useArtifactView(animationUrl, pending)
-
-const {
-  observations,
-  count: observationCount,
-  pending: observationsPending,
-  refreshAndPoll,
-} = useObservations(toRef(contract), toRef(tokenId))
-
-const { pendingMarker, placeMarker, discardMarker } = useObservationMarkers()
-
-// Internal focus state (replaces vue-router navigation)
 const focusedId = ref<string | null>(null)
 
-const focusedObservation = computed(() =>
-  focusedId.value
-    ? observations.value.find((o) => o.id === focusedId.value)
-    : null,
-)
-
-const hasMultipleViewModes = computed(
-  () => !!image.value && !!animationUrl.value,
-)
-
-const effectiveShowAnimation = computed({
-  get() {
-    if (focusedId.value && hasMultipleViewModes.value) {
-      const obs = observations.value.find((o) => o.id === focusedId.value)
-      if (obs) return obs.viewType === 1
-    }
-    return showAnimation.value
+const {
+  metadata, owner, image, animationUrl, pending, error,
+  collection, tipRecipient,
+  observations, observationCount, observationsPending, refreshAndPoll,
+  pendingMarker, discardMarker,
+  focusedObservation, hasMultipleViewModes, effectiveShowAnimation, viewType,
+  focusObservation, clearFocus, onPlaceMarker, onMarkerComplete,
+} = useArtifactPage(
+  contract,
+  tokenId,
+  focusedId,
+  {
+    onFocusObservation: (id) => { focusedId.value = id },
+    onClearFocus: () => { focusedId.value = null },
+    onBeforePlaceMarker: () => { focusedId.value = null },
   },
-  set(value: boolean) {
-    showAnimation.value = value
-  },
-})
-
-const viewType = computed(() => (effectiveShowAnimation.value ? 1 : 0))
-
-const focusObservation = (id: string) => {
-  pendingMarker.value = null
-  focusedId.value = id
-}
-
-const clearFocus = () => {
-  focusedId.value = null
-}
-
-const onPlaceMarker = (x: number, y: number) => {
-  focusedId.value = null
-  placeMarker(x, y)
-}
-
-const onMarkerComplete = () => {
-  discardMarker()
-  refreshAndPoll()
-}
+)
 </script>
 
 <style scoped>

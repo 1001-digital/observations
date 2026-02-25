@@ -1,5 +1,5 @@
 import { createApp, defineComponent, h } from 'vue'
-import { createRouter, createMemoryHistory } from 'vue-router'
+import { createRouter, createMemoryHistory, RouterLink } from 'vue-router'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import { WagmiPlugin } from '@wagmi/vue'
 import type { Address } from 'viem'
@@ -92,14 +92,6 @@ export function mountArtifact(
     },
   }
 
-  // Inert link component for standalone use (no router)
-  const InertLink = defineComponent({
-    props: { to: [String, Object] },
-    setup(_, { slots }) {
-      return () => h('span', slots.default?.())
-    },
-  })
-
   const Root = defineComponent({
     setup() {
       return () => [
@@ -127,7 +119,7 @@ export function mountArtifact(
   app.use(WagmiPlugin, { config: wagmiConfig })
 
   app.provide(ObservationsConfigKey, observationsConfig)
-  app.provide(LinkComponentKey, InertLink)
+  app.provide(LinkComponentKey, RouterLink)
   app.provide(IconAliasesKey, defaultIconAliases)
   app.provide(EvmConfigKey, {
     title: 'OBSERVATIONS',

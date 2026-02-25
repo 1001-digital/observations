@@ -70,23 +70,6 @@ const route = useRoute()
 const contract = useArtifactContract()
 const tokenId = useArtifactTokenId()
 
-const { metadata, owner, image, animationUrl, pending, error } = useArtifact(
-  toRef(contract),
-  toRef(tokenId),
-)
-const { collection } = useCollection(toRef(contract))
-const tipRecipient = computed(() => collection.value?.owner)
-const { showAnimation } = useArtifactView(animationUrl, pending)
-
-const {
-  observations,
-  count: observationCount,
-  pending: observationsPending,
-  refreshAndPoll,
-} = useObservations(toRef(contract), toRef(tokenId))
-
-const { pendingMarker, placeMarker, discardMarker } = useObservationMarkers()
-
 // Derive focusedId from route
 const focusedId = computed(() => (route.params.id as string) ?? null)
 
@@ -98,45 +81,25 @@ const basePath = computed(() =>
     : `/${contract.value}/${tokenId.value}`,
 )
 
-const hasMultipleViewModes = computed(() => !!image.value && !!animationUrl.value)
-
-// When an observation is focused, derive view mode from its viewType
-const effectiveShowAnimation = computed({
-  get() {
-    if (focusedId.value && hasMultipleViewModes.value) {
-      const obs = observations.value.find((o) => o.id === focusedId.value)
-      if (obs) return obs.viewType === 1
-    }
-    return showAnimation.value
+const {
+  metadata, owner, image, animationUrl, pending, error,
+  collection, tipRecipient,
+  observations, observationCount, observationsPending, refreshAndPoll,
+  pendingMarker, discardMarker,
+  hasMultipleViewModes, effectiveShowAnimation, viewType,
+  focusObservation, clearFocus, onPlaceMarker, onMarkerComplete,
+} = useArtifactPage(
+  toRef(contract),
+  toRef(tokenId),
+  focusedId,
+  {
+    onFocusObservation: (id) => navigateTo({ path: `${basePath.value}/${id}`, query: route.query }),
+    onClearFocus: () => navigateTo({ path: basePath.value || '/', query: route.query }),
+    onBeforePlaceMarker: () => route.params.id
+      ? navigateTo({ path: basePath.value || '/', query: route.query })
+      : undefined,
   },
-  set(value: boolean) {
-    showAnimation.value = value
-  },
-})
-
-const viewType = computed(() => effectiveShowAnimation.value ? 1 : 0)
-
-// Navigation helpers
-const focusObservation = (id: string) => {
-  pendingMarker.value = null
-  navigateTo({ path: `${basePath.value}/${id}`, query: route.query })
-}
-
-const clearFocus = () => {
-  navigateTo({ path: basePath.value || '/', query: route.query })
-}
-
-const onPlaceMarker = async (x: number, y: number) => {
-  if (route.params.id) {
-    await navigateTo({ path: basePath.value || '/', query: route.query })
-  }
-  placeMarker(x, y)
-}
-
-const onMarkerComplete = () => {
-  discardMarker()
-  refreshAndPoll()
-}
+)
 
 // Provide data to child routes
 provide(tokenPageDataKey, {
