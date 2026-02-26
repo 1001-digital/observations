@@ -23,7 +23,21 @@ function buildTransport(urls?: string[]): Transport {
   return fallback(transports)
 }
 
+const configCache = new Map<string, ReturnType<typeof createConfig>>()
+
+function wagmiCacheKey(options: WagmiOptions): string {
+  return JSON.stringify([
+    options.defaultChain,
+    options.rpc?.mainnet ?? [],
+    options.rpc?.sepolia ?? [],
+    options.walletConnectProjectId ?? '',
+  ])
+}
+
 export function createWagmiConfig(options: WagmiOptions) {
+  const key = wagmiCacheKey(options)
+  const cached = configCache.get(key)
+  if (cached) return cached
   const title = options.title ?? 'OBSERVATIONS'
 
   const connectors: CreateConnectorFn[] = [
@@ -45,7 +59,7 @@ export function createWagmiConfig(options: WagmiOptions) {
     )
   }
 
-  return createConfig({
+  const config = createConfig({
     chains: options.defaultChain === 'mainnet' ? [mainnet, sepolia] : [sepolia, mainnet],
     batch: { multicall: true },
     connectors,
@@ -54,4 +68,7 @@ export function createWagmiConfig(options: WagmiOptions) {
       [mainnet.id]: buildTransport(options.rpc?.mainnet),
     },
   })
+
+  configCache.set(key, config)
+  return config
 }
