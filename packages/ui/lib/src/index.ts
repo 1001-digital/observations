@@ -3,7 +3,8 @@ import { createRouter, createMemoryHistory } from 'vue-router'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import { WagmiPlugin } from '@wagmi/vue'
 import type { Address } from 'viem'
-import '@1001-digital/styles'
+// Import styles as a string — ?inline prevents Vite from injecting into <head>
+import globalStyles from '@1001-digital/styles?inline'
 import {
   Globals,
   EvmConfigKey,
@@ -19,6 +20,7 @@ import AppLink from './AppLink.vue'
 import ArtifactViewer from './ArtifactViewer.vue'
 import { createEvmConfig } from './evmConfig'
 import { createWagmiConfig } from './wagmi'
+import { createShadowRoot, injectStyles, captureDevStyles } from './shadow'
 
 export interface ArtifactOptions {
   /** NFT contract address */
@@ -61,6 +63,16 @@ export function mountArtifact(
 ) {
   const element = typeof el === 'string' ? document.querySelector(el) : el
   if (!element) throw new Error(`Element not found: ${el}`)
+
+  // Shadow DOM encapsulation — styles stay inside, host page unaffected
+  const { shadow, root, teleportTarget } = createShadowRoot(element)
+  injectStyles(shadow, globalStyles)
+
+  // In dev mode, capture Vite-injected Vue SFC styles into the shadow root
+  let stopCapture: (() => void) | undefined
+  if (import.meta.env.DEV) {
+    stopCapture = captureDevStyles(shadow)
+  }
 
   const ipfsGateway = options.ipfsGateway ?? 'https://ipfs.vv.xyz/ipfs/'
   const arweaveGateway = options.arweaveGateway ?? 'https://arweave.net/'
@@ -134,7 +146,17 @@ export function mountArtifact(
     walletConnectProjectId: options.walletConnectProjectId,
   })
 
-  app.mount(element)
+  // Provide the shadow teleport target so Dialog can render
+  // inside the shadow root instead of escaping to <body>
+  app.provide('teleport-target', teleportTarget)
 
-  return { unmount: () => app.unmount() }
+  // Mount into the shadow root's inner element (not the host)
+  app.mount(root)
+
+  return {
+    unmount: () => {
+      stopCapture?.()
+      app.unmount()
+    },
+  }
 }

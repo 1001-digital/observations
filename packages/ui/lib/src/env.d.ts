@@ -5,3 +5,8 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
+
+declare module '@1001-digital/styles?inline' {
+  const css: string
+  export default css
+}
