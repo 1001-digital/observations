@@ -70,11 +70,11 @@ importers:
   packages/ui/app:
     dependencies:
       '@1001-digital/layers.base':
-        specifier: ^1.0.5
-        version: 1.0.5(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(magicast@0.5.2)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))
+        specifier: ^1.0.8
+        version: 1.0.8(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(magicast@0.5.2)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))
       '@1001-digital/layers.evm':
-        specifier: ^1.1.8
-        version: 1.1.8(94293335078f2c25665d985104124d36)
+        specifier: ^1.1.11
+        version: 1.1.11(c59a666cd2de987bdd6c4932f8bda1e7)
       '@1001-digital/observations-components':
         specifier: workspace:^
         version: link:../components
@@ -85,8 +85,8 @@ importers:
   packages/ui/components:
     dependencies:
       '@1001-digital/components':
-        specifier: ^1.1.7
-        version: 1.1.7(@1001-digital/styles@1.0.1)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
+        specifier: ^1.1.10
+        version: 1.1.10(@1001-digital/styles@1.0.1)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
       '@vueuse/core':
         specifier: ^14.2.0
         version: 14.2.1(vue@3.5.28(typescript@5.8.3))
@@ -113,14 +113,14 @@ importers:
   packages/ui/lib:
     dependencies:
       '@1001-digital/components':
-        specifier: ^1.1.7
-        version: 1.1.7(@1001-digital/styles@1.0.0)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(88bfd56e9faf81f0164c21599857073d))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
+        specifier: ^1.1.10
+        version: 1.1.10(@1001-digital/styles@1.0.1)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(88bfd56e9faf81f0164c21599857073d))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
       '@1001-digital/observations-components':
         specifier: workspace:^
         version: link:../components
       '@1001-digital/styles':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^1.0.1
+        version: 1.0.1
       '@wagmi/core':
         specifier: ^3.0.0
         version: 3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
@@ -152,8 +152,8 @@ importers:
 
 packages:
 
-  '@1001-digital/components@1.1.7':
-    resolution: {integrity: sha512-BYIaRuoMbuC1n5EVRKY0jux8IzMTGUYq67dmzXuCK8tODKJwNTVdRkJFOa55AaFJ7tFkrZw/aH1vcm6QnC/SmQ==}
+  '@1001-digital/components@1.1.10':
+    resolution: {integrity: sha512-lhNN0zk2sfWPwHzfHmtCp88BzX4vfPtJitaPcZkSH4U3/c/hxURY7+9Iil0Z1WkmqbBoPQc3IwSLhfOYSClHIQ==}
     peerDependencies:
       '@1001-digital/styles': ^1.0.1
       '@wagmi/core': '>=3.0.0'
@@ -168,13 +168,13 @@ packages:
       viem:
         optional: true
 
-  '@1001-digital/layers.base@1.0.5':
-    resolution: {integrity: sha512-JXr2K1AJ2/ADp1T1K1fdWm1onCntmAo5r86QYLXxmjpqyR9ZyAeHq1h6LEVQvy0693jQoKS3Q+idHgVcAffEsg==}
+  '@1001-digital/layers.base@1.0.8':
+    resolution: {integrity: sha512-OgvSmU6S4eWhqvRCKMyji2q8vdNXzDYwlMhPVfs7W87WAFkAdLeai5yeco4l6LRtRp/6Zq0HQxfuIYP00LCLFQ==}
 
-  '@1001-digital/layers.evm@1.1.8':
-    resolution: {integrity: sha512-jB0p5bA7/qneWZ2ZMkvY2za2PqLsIhyrqHpEsjBudnF5164LmzZRG4fD78yYY/Lzfnot1Qg3YRxQ7KDOqZBtSQ==}
+  '@1001-digital/layers.evm@1.1.11':
+    resolution: {integrity: sha512-sunt6bWbcP6zw1S0wZXDHZMyXFU+ahOQIsqI0nSS4HqwXUacN15w9hITv7S2id3p6KrM07iS7ne2E8UCXbJ0ww==}
     peerDependencies:
-      '@1001-digital/layers.base': ^1.0.5
+      '@1001-digital/layers.base': ^1.0.8
 
   '@1001-digital/ponder-artifacts@0.1.1':
     resolution: {integrity: sha512-vu/eamj0oMJyLU0yaBPrfMYHWNizRxah+h1jRYQv8cAffbM+OnNb1PalO1I5UZGYwzcpiW/eZDsVnWQ3dfXgSw==}
@@ -203,9 +203,6 @@ packages:
         optional: true
       pg:
         optional: true
-
-  '@1001-digital/styles@1.0.0':
-    resolution: {integrity: sha512-wT/xml15ImFJiCNlZvn9sb9VWB9FRZAiLyH5OfZ3P9CyieZFqXbxvK7xaeZi9RK+NQhbAN70pMmifdOH/YUOvQ==}
 
   '@1001-digital/styles@1.0.1':
     resolution: {integrity: sha512-4Z6YeX9kFatSfloWwIOY4lgi6T1n0WLE6PoyVxKJcvIcCH2+86ksv45DlzkYSlglcARPbSe36ME6T3pzWOMwww==}
@@ -6910,28 +6907,7 @@ packages:
 
 snapshots:
 
-  '@1001-digital/components@1.1.7(@1001-digital/styles@1.0.0)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(88bfd56e9faf81f0164c21599857073d))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))':
-    dependencies:
-      '@1001-digital/styles': 1.0.0
-      '@1001-digital/wagmi-in-app-wallet': 0.1.0(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
-      '@iconify/vue': 5.0.0(vue@3.5.28(typescript@5.8.3))
-      '@internationalized/date': 3.11.0
-      '@types/luxon': 3.7.1
-      '@types/qrcode': 1.5.6
-      '@visualizevalue/opepicons': 0.1.0
-      '@vueuse/core': 14.2.1(vue@3.5.28(typescript@5.8.3))
-      luxon: 3.7.2
-      qrcode: 1.5.4
-      reka-ui: 2.8.2(vue@3.5.28(typescript@5.8.3))
-      vue: 3.5.28(typescript@5.8.3)
-    optionalDependencies:
-      '@wagmi/core': 3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
-      '@wagmi/vue': 0.5.0(88bfd56e9faf81f0164c21599857073d)
-      viem: 2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
-    transitivePeerDependencies:
-      - '@vue/composition-api'
-
-  '@1001-digital/components@1.1.7(@1001-digital/styles@1.0.1)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))':
+  '@1001-digital/components@1.1.10(@1001-digital/styles@1.0.1)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))':
     dependencies:
       '@1001-digital/styles': 1.0.1
       '@1001-digital/wagmi-in-app-wallet': 0.1.0(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
@@ -6952,9 +6928,30 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
 
-  '@1001-digital/layers.base@1.0.5(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(magicast@0.5.2)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))':
+  '@1001-digital/components@1.1.10(@1001-digital/styles@1.0.1)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(88bfd56e9faf81f0164c21599857073d))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))':
     dependencies:
-      '@1001-digital/components': 1.1.7(@1001-digital/styles@1.0.1)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
+      '@1001-digital/styles': 1.0.1
+      '@1001-digital/wagmi-in-app-wallet': 0.1.0(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+      '@iconify/vue': 5.0.0(vue@3.5.28(typescript@5.8.3))
+      '@internationalized/date': 3.11.0
+      '@types/luxon': 3.7.1
+      '@types/qrcode': 1.5.6
+      '@visualizevalue/opepicons': 0.1.0
+      '@vueuse/core': 14.2.1(vue@3.5.28(typescript@5.8.3))
+      luxon: 3.7.2
+      qrcode: 1.5.4
+      reka-ui: 2.8.2(vue@3.5.28(typescript@5.8.3))
+      vue: 3.5.28(typescript@5.8.3)
+    optionalDependencies:
+      '@wagmi/core': 3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+      '@wagmi/vue': 0.5.0(88bfd56e9faf81f0164c21599857073d)
+      viem: 2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+
+  '@1001-digital/layers.base@1.0.8(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(magicast@0.5.2)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))':
+    dependencies:
+      '@1001-digital/components': 1.1.10(@1001-digital/styles@1.0.1)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
       '@1001-digital/styles': 1.0.1
       '@iconify-json/lucide': 1.2.90
       '@iconify-json/simple-icons': 1.2.70
@@ -6968,10 +6965,10 @@ snapshots:
       - vite
       - vue
 
-  '@1001-digital/layers.evm@1.1.8(94293335078f2c25665d985104124d36)':
+  '@1001-digital/layers.evm@1.1.11(c59a666cd2de987bdd6c4932f8bda1e7)':
     dependencies:
-      '@1001-digital/components': 1.1.7(@1001-digital/styles@1.0.1)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
-      '@1001-digital/layers.base': 1.0.5(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(magicast@0.5.2)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))
+      '@1001-digital/components': 1.1.10(@1001-digital/styles@1.0.1)(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
+      '@1001-digital/layers.base': 1.0.8(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.12.1(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(25a2348d4f9bf438307f03b605c9a50f))(magicast@0.5.2)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))
       '@base-org/account': 2.5.2(@types/react@19.2.14)(bufferutil@4.1.0)(immer@10.0.2)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       '@metamask/sdk': 0.33.1(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@safe-global/safe-apps-provider': 0.18.6(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
@@ -7039,10 +7036,6 @@ snapshots:
     optionalDependencies:
       '@electric-sql/pglite': 0.2.13
       pg: 8.18.0
-
-  '@1001-digital/styles@1.0.0':
-    dependencies:
-      modern-normalize: 3.0.1
 
   '@1001-digital/styles@1.0.1':
     dependencies:
