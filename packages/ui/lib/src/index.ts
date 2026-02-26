@@ -67,6 +67,10 @@ export function mountArtifact(
   // Shadow DOM encapsulation — styles stay inside, host page unaffected
   const { shadow, root, teleportTarget } = createShadowRoot(element)
   injectStyles(shadow, globalStyles)
+  // Let color-scheme inherit from the host page so consumers can control
+  // light/dark mode. Without this, the adapted :host { color-scheme: light dark }
+  // from global styles overrides the inherited value, breaking light-dark() colors.
+  injectStyles(shadow, ':host { color-scheme: inherit; }')
 
   // In dev mode, capture Vite-injected Vue SFC styles into the shadow root
   let stopCapture: (() => void) | undefined
