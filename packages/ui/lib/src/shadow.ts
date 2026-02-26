@@ -24,6 +24,7 @@ export function createShadowRoot(host: Element) {
   const shadow = host.attachShadow({ mode: 'open' })
 
   const root = document.createElement('div')
+  root.style.height = '100%'
   shadow.appendChild(root)
 
   // Teleport target — dialogs/overlays render here instead of <body>

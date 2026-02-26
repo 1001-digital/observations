@@ -194,7 +194,7 @@ provide(observationNavigationKey, {
 
 <style scoped>
 .token-detail {
-  container-type: inline-size;
+  container-type: size;
   height: 100%;
 }
 
@@ -202,7 +202,6 @@ provide(observationNavigationKey, {
   display: grid;
   grid-auto-rows: min-content;
   height: 100%;
-  container-type: size;
 
   @container (min-width: 45rem) {
     grid-template-columns: 1fr 20rem;
