@@ -5,7 +5,20 @@
       :token-id="tokenId"
       :focused-id="focusedId"
       :navigation="navigation"
-    />
+    >
+      <template v-if="$slots['before-details']" #before-details>
+        <slot name="before-details" />
+      </template>
+      <template v-if="$slots['after-details']" #after-details>
+        <slot name="after-details" />
+      </template>
+      <template v-if="$slots.default" #default>
+        <slot />
+      </template>
+      <template v-if="$slots['after-content']" #after-content>
+        <slot name="after-content" />
+      </template>
+    </TokenDetail>
   </div>
 </template>
 

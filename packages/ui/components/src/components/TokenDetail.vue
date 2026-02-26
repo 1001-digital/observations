@@ -66,12 +66,16 @@
       />
       <Alert v-else-if="error">{{ error.message }}</Alert>
       <template v-else-if="metadata">
+        <slot name="before-details" />
+
         <ArtifactDetails
           :metadata="metadata"
           :collection="collection"
           :contract="contract"
           :owner="owner"
         />
+
+        <slot name="after-details" />
 
         <slot>
           <ObservationDetail
@@ -100,6 +104,8 @@
             @focus-observation="focusObservation"
           />
         </slot>
+
+        <slot name="after-content" />
       </template>
     </div>
   </article>

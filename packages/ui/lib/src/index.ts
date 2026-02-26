@@ -1,4 +1,4 @@
-import { createApp, defineComponent, h } from 'vue'
+import { createApp, defineComponent, h, type Component, type VNode } from 'vue'
 import { createRouter, createMemoryHistory } from 'vue-router'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import { WagmiPlugin } from '@wagmi/vue'
@@ -43,6 +43,12 @@ export interface ArtifactOptions {
   arweaveGateway?: string
   /** ENS indexer URLs */
   ensIndexerUrls?: string[]
+  /** Component rendered above artifact details */
+  beforeDetails?: Component
+  /** Component rendered between details and observations */
+  afterDetails?: Component
+  /** Component rendered below observations */
+  afterContent?: Component
 }
 
 /**
@@ -110,12 +116,17 @@ export function mountArtifact(
 
   const Root = defineComponent({
     setup() {
+      const slots: Record<string, () => VNode> = {}
+      if (options.beforeDetails) slots['before-details'] = () => h(options.beforeDetails!)
+      if (options.afterDetails) slots['after-details'] = () => h(options.afterDetails!)
+      if (options.afterContent) slots['after-content'] = () => h(options.afterContent!)
+
       return () => [
         h(Globals),
         h(Artifact, {
           contract: options.contract,
           token: options.token,
-        }),
+        }, Object.keys(slots).length ? slots : undefined),
       ]
     },
   })
