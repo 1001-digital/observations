@@ -1,6 +1,7 @@
 // Components
 export { default as Artifact } from './components/Artifact.vue'
 export { default as ArtifactDetails } from './components/ArtifactDetails.vue'
+export { default as TokenDetail } from './components/TokenDetail.vue'
 export { default as ArtifactVisual } from './components/ArtifactVisual.vue'
 export { default as ConnectProfile } from './components/ConnectProfile.vue'
 export { default as Embed } from './components/Embed.vue'
