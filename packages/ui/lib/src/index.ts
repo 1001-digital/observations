@@ -17,7 +17,7 @@ import {
   type ObservationsConfig,
 } from '@1001-digital/observations-components'
 import AppLink from './AppLink.vue'
-import ArtifactViewer from './ArtifactViewer.vue'
+import Artifact from './Artifact.vue'
 import { createEvmConfig } from './evmConfig'
 import { createWagmiConfig } from './wagmi'
 import { createShadowRoot, injectStyles, captureDevStyles } from './shadow'
@@ -112,7 +112,7 @@ export function mountArtifact(
     setup() {
       return () => [
         h(Globals),
-        h(ArtifactViewer, {
+        h(Artifact, {
           contract: options.contract,
           token: options.token,
         }),
