@@ -50,50 +50,80 @@ export function injectStyles(shadow: ShadowRoot, css: string) {
 
 /**
  * In dev mode, Vite injects Vue SFC <style> blocks into document.head
- * as <style data-vite-dev-id="..."> elements. This observer intercepts
- * them and moves them into the shadow root so they:
+ * as <style data-vite-dev-id="..."> elements. We intercept them and
+ * clone them into every registered shadow root so they:
  *   1. Don't leak into the host page
- *   2. Actually apply inside the shadow tree
+ *   2. Actually apply inside each shadow tree
  *
- * On HMR updates, Vite can't find the moved style (shadow DOM is
- * encapsulated from document.querySelector), so it creates a fresh
- * <style> — we deduplicate by removing the old one first.
+ * A shared registry + observer ensures multiple mountArtifact() calls
+ * all receive the same styles. On HMR updates Vite creates a fresh
+ * <style> (it can't find the moved one inside shadow DOM) — we
+ * deduplicate by removing the previous clone first.
  *
- * Returns a cleanup function to disconnect the observer.
+ * Returns a cleanup function that unregisters the shadow root and
+ * tears down the observer when the last instance unmounts.
  */
-export function captureDevStyles(shadow: ShadowRoot): () => void {
-  function capture(style: HTMLStyleElement) {
-    const id = style.getAttribute('data-vite-dev-id')
+const devStyleTargets = new Set<ShadowRoot>()
+let devObserver: MutationObserver | null = null
+
+function distributeStyle(style: HTMLStyleElement) {
+  const id = style.getAttribute('data-vite-dev-id')
+
+  for (const shadow of devStyleTargets) {
     if (id) {
       shadow.querySelector(`style[data-vite-dev-id="${id}"]`)?.remove()
     }
 
-    if (style.textContent) {
-      style.textContent = adaptStyles(style.textContent)
+    const clone = style.cloneNode(true) as HTMLStyleElement
+    if (clone.textContent) {
+      clone.textContent = adaptStyles(clone.textContent)
     }
-
-    shadow.appendChild(style)
+    shadow.appendChild(clone)
   }
 
-  // Move existing Vite-injected styles
+  // Remove original so it doesn't leak into the host page
+  style.remove()
+}
+
+export function captureDevStyles(shadow: ShadowRoot): () => void {
+  // Clone already-captured styles from a sibling shadow (they were
+  // moved out of <head> by an earlier mount).
+  if (devStyleTargets.size > 0) {
+    const [existing] = devStyleTargets
+    for (const el of existing.querySelectorAll<HTMLStyleElement>('style[data-vite-dev-id]')) {
+      shadow.appendChild(el.cloneNode(true))
+    }
+  }
+
+  devStyleTargets.add(shadow)
+
+  // Move any remaining Vite-injected styles from <head>
   for (const el of [...document.head.querySelectorAll('style[data-vite-dev-id]')]) {
-    capture(el as HTMLStyleElement)
+    distributeStyle(el as HTMLStyleElement)
   }
 
-  // Watch for new injections (HMR updates, lazy-loaded component styles)
-  const observer = new MutationObserver((mutations) => {
-    for (const { addedNodes } of mutations) {
-      for (const node of addedNodes) {
-        if (
-          node instanceof HTMLStyleElement &&
-          node.hasAttribute('data-vite-dev-id')
-        ) {
-          capture(node)
+  // Shared observer — one for all mounted instances
+  if (!devObserver) {
+    devObserver = new MutationObserver((mutations) => {
+      for (const { addedNodes } of mutations) {
+        for (const node of addedNodes) {
+          if (
+            node instanceof HTMLStyleElement &&
+            node.hasAttribute('data-vite-dev-id')
+          ) {
+            distributeStyle(node)
+          }
         }
       }
-    }
-  })
-  observer.observe(document.head, { childList: true })
+    })
+    devObserver.observe(document.head, { childList: true })
+  }
 
-  return () => observer.disconnect()
+  return () => {
+    devStyleTargets.delete(shadow)
+    if (devStyleTargets.size === 0 && devObserver) {
+      devObserver.disconnect()
+      devObserver = null
+    }
+  }
 }

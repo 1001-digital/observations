@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Multiple Artifacts</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        margin: 0;
+
+        > main {
+          max-width: 60rem;
+          margin: 0 auto;
+          padding: 2rem;
+        }
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+      .artifact {
+        border: 1px solid black;
+        aspect-ratio: 1;
+      }
+      h2 {
+        margin: 0 0 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Multiple Artifacts</h1>
+      <div class="grid">
+        <div>
+          <h2>#1001</h2>
+          <div id="artifact-1001" class="artifact"></div>
+        </div>
+        <div>
+          <h2>#16000</h2>
+          <div id="artifact-16000" class="artifact"></div>
+        </div>
+      </div>
+    </main>
+
+    <script type="module">
+      import { mountArtifact } from '../src/index.ts'
+
+      const env = import.meta.env
+
+      const shared = {
+        contract:
+          env.VITE_DEFAULT_CONTRACT ||
+          '0x036721e5a769cc48b3189efbb9cce4471e8a48b1',
+        observationsContract: env.VITE_OBSERVATIONS_CONTRACT,
+        chain: env.VITE_DEFAULT_CHAIN || 'sepolia',
+        rpc: {
+          mainnet: [
+            env.VITE_RPC_MAINNET_1,
+            env.VITE_RPC_MAINNET_2,
+            env.VITE_RPC_MAINNET_3,
+          ].filter(Boolean),
+          sepolia: [
+            env.VITE_RPC_SEPOLIA_1,
+            env.VITE_RPC_SEPOLIA_2,
+            env.VITE_RPC_SEPOLIA_3,
+          ].filter(Boolean),
+        },
+        indexerEndpoints: [
+          env.VITE_INDEXER_ENDPOINT_1,
+          env.VITE_INDEXER_ENDPOINT_2,
+          env.VITE_INDEXER_ENDPOINT_3,
+        ].filter(Boolean),
+        walletConnectProjectId: env.VITE_WALLET_CONNECT_PROJECT_ID || undefined,
+        ensIndexerUrls: [env.VITE_ENS_INDEXER_1].filter(Boolean),
+      }
+
+      mountArtifact('#artifact-1001', { ...shared, token: '1001' })
+      mountArtifact('#artifact-16000', { ...shared, token: '16000' })
+    </script>
+  </body>
+</html>
