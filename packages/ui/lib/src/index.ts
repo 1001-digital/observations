@@ -14,6 +14,7 @@ import {
 } from '@1001-digital/components'
 import {
   ObservationsConfigKey,
+  ConnectProfile,
   type ObservationsConfig,
 } from '@1001-digital/observations-components'
 import AppLink from './AppLink.vue'
@@ -117,7 +118,9 @@ export function mountArtifact(
   const Root = defineComponent({
     setup() {
       const slots: Record<string, () => VNode> = {}
-      if (options.beforeDetails) slots['before-details'] = () => h(options.beforeDetails!)
+      slots['before-details'] = options.beforeDetails
+        ? () => h(options.beforeDetails!)
+        : () => h('div', [h(ConnectProfile, { className: 'block' })])
       if (options.afterDetails) slots['after-details'] = () => h(options.afterDetails!)
       if (options.afterContent) slots['after-content'] = () => h(options.afterContent!)
 
