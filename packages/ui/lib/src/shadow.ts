@@ -35,14 +35,16 @@ export function createShadowRoot(host: Element) {
 }
 
 /**
- * Inject a CSS string into the shadow root via adoptedStyleSheets.
+ * Inject a CSS string into the shadow root via a <style> element.
+ * Uses <style> rather than adoptedStyleSheets so that @layer ordering
+ * is shared with component <style> blocks captured by captureDevStyles.
  * Remaps :root/html/body selectors to :host so custom properties
  * and base styles apply within the shadow tree.
  */
 export function injectStyles(shadow: ShadowRoot, css: string) {
-  const sheet = new CSSStyleSheet()
-  sheet.replaceSync(adaptStyles(css))
-  shadow.adoptedStyleSheets = [...shadow.adoptedStyleSheets, sheet]
+  const style = document.createElement('style')
+  style.textContent = adaptStyles(css)
+  shadow.appendChild(style)
 }
 
 /**
