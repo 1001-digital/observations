@@ -10,7 +10,7 @@
 
 <style>
 :root {
-  /* color-scheme: light; */
+  color-scheme: light;
   --navbar-height: 3.5rem;
 }
 
