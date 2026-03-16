@@ -1,13 +1,28 @@
 <template>
   <div class="tip-select">
-    <Button v-if="!active" class="tertiary small" @click="activate">
+    <Button
+      v-if="!active"
+      class="tertiary small"
+      :disabled="disabled"
+      @click="activate"
+    >
       Add tip
     </Button>
     <FormInputGroup v-else>
-      <Button class="small" @click="double" title="Double tip">
+      <Button
+        class="small"
+        :disabled="disabled"
+        @click="double"
+        title="Double tip"
+      >
         ${{ usdAmount }}
       </Button>
-      <Button class="muted small" @click="clear">&times;</Button>
+      <Button
+        class="muted small"
+        :disabled="disabled"
+        @click="clear"
+        >&times;</Button
+      >
     </FormInputGroup>
   </div>
 </template>
@@ -17,6 +32,10 @@ import { ref, computed, watch, defineModel } from 'vue'
 import { parseEther } from 'viem'
 import { Button, FormInputGroup } from '@1001-digital/components'
 import { usePriceFeed } from '@1001-digital/components.evm'
+
+defineProps<{
+  disabled?: boolean
+}>()
 
 const model = defineModel<bigint>({ default: 0n })
 
@@ -34,9 +53,15 @@ const usdToWei = (usd: number) => {
   return parseEther((usd / ethPrice).toPrecision(3))
 }
 
-const activate = () => { level.value = 0 }
-const double = () => { level.value++ }
-const clear = () => { level.value = -1 }
+const activate = () => {
+  level.value = 0
+}
+const double = () => {
+  level.value++
+}
+const clear = () => {
+  level.value = -1
+}
 
 watch([level, ethUSDRaw], () => {
   model.value = active.value ? usdToWei(usdAmount.value) : 0n

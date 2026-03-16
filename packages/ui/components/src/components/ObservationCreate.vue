@@ -18,6 +18,7 @@
     <TipSelect
       v-if="!editObservation && tipRecipient"
       v-model="tip"
+      :disabled="pending"
     />
     <EvmTransactionFlow
       :request="submitObservation"
