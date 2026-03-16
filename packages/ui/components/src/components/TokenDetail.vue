@@ -62,7 +62,7 @@
         </ObservationMarkers>
       </div>
 
-      <div ref="sidebarRef" class="sidebar" :class="{ scrollable: sidebarOverflows }">
+      <div class="sidebar">
         <Loading
           v-if="pending"
           spinner
@@ -192,33 +192,6 @@ provide(observationNavigationKey, {
   focusObservation,
   clearFocus,
 })
-
-const sidebarRef = ref<HTMLElement>()
-const sidebarOverflows = ref(false)
-
-const checkOverflow = () => {
-  const el = sidebarRef.value
-  if (!el) return
-  sidebarOverflows.value = el.scrollHeight > el.clientHeight
-}
-
-onMounted(() => {
-  const el = sidebarRef.value
-  if (!el) return
-
-  const ro = new ResizeObserver(checkOverflow)
-  ro.observe(el)
-
-  const mo = new MutationObserver(checkOverflow)
-  mo.observe(el, { childList: true, subtree: true })
-
-  checkOverflow()
-
-  onUnmounted(() => {
-    ro.disconnect()
-    mo.disconnect()
-  })
-})
 </script>
 
 <style scoped>
@@ -271,14 +244,11 @@ onMounted(() => {
 .sidebar {
   width: 100%;
   container-type: inline-size;
+  scrollbar-gutter: stable;
 
   @container (min-width: 45rem) {
     min-height: 0;
     overflow-y: clip;
-
-    &.scrollable {
-      overflow-y: auto;
-    }
   }
 
   > *,
