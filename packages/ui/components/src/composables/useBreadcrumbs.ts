@@ -17,16 +17,23 @@ export function useBreadcrumb(
   key: BreadcrumbKey,
   crumb: MaybeRefOrGetter<BreadcrumbItem | null>,
 ) {
+  let lastSet: BreadcrumbItem | null = null
+
   watchEffect(() => {
     const value = toValue(crumb)
     if (value?.label) {
+      lastSet = value
       state.set(key, value)
     } else {
+      lastSet = null
       state.delete(key)
     }
   })
 
   onScopeDispose(() => {
-    state.delete(key)
+    // Only clean up if no new owner has taken over this key
+    if (state.get(key) === lastSet) {
+      state.delete(key)
+    }
   })
 }
