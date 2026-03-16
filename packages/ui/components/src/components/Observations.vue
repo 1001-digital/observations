@@ -133,6 +133,7 @@ function onComplete() {
 .observations {
   display: grid;
   gap: var(--spacer);
+  align-content: start;
   min-height: 10rem;
 
   h2 {
