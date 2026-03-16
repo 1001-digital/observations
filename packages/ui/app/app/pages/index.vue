@@ -7,7 +7,7 @@
       <FindArtifact />
     </Card>
     <RecentObservations />
-    <ExampleArtifacts />
+    <!-- <ExampleArtifacts /> -->
   </main>
 </template>
 
