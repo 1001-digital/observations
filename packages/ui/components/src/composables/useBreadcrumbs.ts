@@ -7,33 +7,33 @@ export interface BreadcrumbItem {
 
 export type BreadcrumbKey = 'collection' | 'token' | 'observation'
 
-const state = reactive(new Map<BreadcrumbKey, BreadcrumbItem>())
+const crumbs = reactive(new Map<BreadcrumbKey, BreadcrumbItem>())
+const owned = new Map<BreadcrumbKey, symbol>()
 
-export function useBreadcrumbs() {
-  return state
-}
+export const useBreadcrumbs = () => crumbs
 
 export function useBreadcrumb(
   key: BreadcrumbKey,
   crumb: MaybeRefOrGetter<BreadcrumbItem | null>,
 ) {
-  let lastSet: BreadcrumbItem | null = null
+  const id = Symbol()
+
+  const release = () => {
+    if (owned.get(key) === id) {
+      owned.delete(key)
+      crumbs.delete(key)
+    }
+  }
 
   watchEffect(() => {
     const value = toValue(crumb)
     if (value?.label) {
-      lastSet = value
-      state.set(key, value)
+      owned.set(key, id)
+      crumbs.set(key, value)
     } else {
-      lastSet = null
-      state.delete(key)
+      release()
     }
   })
 
-  onScopeDispose(() => {
-    // Only clean up if no new owner has taken over this key
-    if (state.get(key) === lastSet) {
-      state.delete(key)
-    }
-  })
+  onScopeDispose(release)
 }
