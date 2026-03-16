@@ -1,6 +1,5 @@
 <template>
   <div class="app">
-    <Globals />
     <header class="app-header">
       <ConnectProfile />
     </header>
