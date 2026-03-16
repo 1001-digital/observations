@@ -4,30 +4,8 @@ import { observation, artifact, tips } from "ponder:schema";
 ponder.on("Observations:Observation", async ({ event, context }) => {
   const { collection, tokenId, observer, id, parent, update, note, x, y, viewType, time, tip, tipRecipient } = event.args;
 
-  // Insert the event as its own row (preserves full event history)
-  await context.db
-    .insert(observation)
-    .values({
-      collection,
-      tokenId,
-      id: BigInt(id),
-      observer,
-      parent: BigInt(parent),
-      update,
-      note,
-      x,
-      y,
-      view: viewType,
-      time,
-      tip,
-      recipient: tipRecipient,
-      block: event.block.number,
-      timestamp: event.block.timestamp,
-      txHash: event.transaction.hash,
-    });
-
-  // Process update events: modify the parent observation
   if (update && parent > 0) {
+    // Updates reuse the parent's ID — apply edit/delete to existing row
     const parentKey = { collection, tokenId, id: BigInt(parent) };
     const parentRow = await context.db.find(observation, parentKey);
 
@@ -46,19 +24,41 @@ ponder.on("Observations:Observation", async ({ event, context }) => {
         });
       }
     }
-  }
+  } else {
+    // New observation or reply — insert row and increment artifact count
+    await context.db
+      .insert(observation)
+      .values({
+        collection,
+        tokenId,
+        id: BigInt(id),
+        observer,
+        parent: BigInt(parent),
+        update,
+        note,
+        x,
+        y,
+        view: viewType,
+        time,
+        tip,
+        recipient: tipRecipient,
+        block: event.block.number,
+        timestamp: event.block.timestamp,
+        txHash: event.transaction.hash,
+      });
 
-  await context.db
-    .insert(artifact)
-    .values({
-      collection,
-      tokenId,
-      count: 1n,
-      firstBlock: event.block.number,
-    })
-    .onConflictDoUpdate((row) => ({
-      count: row.count + 1n,
-    }));
+    await context.db
+      .insert(artifact)
+      .values({
+        collection,
+        tokenId,
+        count: 1n,
+        firstBlock: event.block.number,
+      })
+      .onConflictDoUpdate((row) => ({
+        count: row.count + 1n,
+      }));
+  }
 
   if (tip > 0n) {
     await context.db

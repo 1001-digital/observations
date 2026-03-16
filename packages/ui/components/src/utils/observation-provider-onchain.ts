@@ -11,25 +11,23 @@ const MAX_BLOCK_RANGE = 5000n
 
 function resolveUpdates<T extends ObservationData>(events: T[]): T[] {
   const map = new Map<string, T>()
-  const updateIds = new Set<string>()
 
   for (const event of events) {
-    map.set(event.id, event)
+    if (!event.update) map.set(event.id, event)
   }
 
   for (const event of events) {
     if (!event.update) continue
-    updateIds.add(event.id)
 
-    const parentId = String(event.parent)
-    const parent = map.get(parentId)
+    // Updates reuse the parent's ID (id == parent)
+    const parent = map.get(event.id)
     if (!parent) continue
 
     // Only allow the original observer to edit/delete their observation
     if (parent.observer.toLowerCase() !== event.observer.toLowerCase()) continue
 
     if (event.note === '') {
-      map.delete(parentId)
+      map.delete(event.id)
     } else {
       parent.note = event.note
       parent.x = event.x
@@ -40,7 +38,7 @@ function resolveUpdates<T extends ObservationData>(events: T[]): T[] {
     }
   }
 
-  return events.filter(e => !updateIds.has(e.id) && map.has(e.id))
+  return [...map.values()]
 }
 
 function mapEvent(event: any): ObservationData {
@@ -148,6 +146,7 @@ export function createOnchainProvider(client: PublicClient, contractAddress: Add
 
       const artifactMap = new Map<string, CollectionArtifactData>()
       for (const event of results.flat()) {
+        if (event.args.update) continue
         const tokenId = event.args.tokenId!
         const key = tokenId.toString()
         const existing = artifactMap.get(key)

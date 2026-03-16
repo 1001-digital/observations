@@ -510,7 +510,7 @@ describe("Observations", async function () {
       observations.write.observe([collection, tokenId, 1n, true, "Edited.", 0, 0, 0, 0, zeroAddress]),
       observations,
       "Observation",
-      [collection, tokenId, getAddress(walletClient.account.address), 2n, 1n, true, "Edited.", 0, 0, 0, 0, 0n, zeroAddress],
+      [collection, tokenId, getAddress(walletClient.account.address), 1n, 1n, true, "Edited.", 0, 0, 0, 0, 0n, zeroAddress],
     );
   });
 
@@ -523,7 +523,7 @@ describe("Observations", async function () {
       observations.write.observe([collection, tokenId, 1n, true, "", 0, 0, 0, 0, zeroAddress]),
       observations,
       "Observation",
-      [collection, tokenId, getAddress(walletClient.account.address), 2n, 1n, true, "", 0, 0, 0, 0, 0n, zeroAddress],
+      [collection, tokenId, getAddress(walletClient.account.address), 1n, 1n, true, "", 0, 0, 0, 0, 0n, zeroAddress],
     );
   });
 
@@ -598,7 +598,7 @@ describe("Observations", async function () {
     );
   });
 
-  it("Should still increment count for replies and updates", async function () {
+  it("Should not increment count for updates", async function () {
     const observations = await viem.deployContract("Observations");
 
     await observations.write.observe([collection, tokenId, 0n, false, "Original.", 0, 0, 0, 0, zeroAddress]);
@@ -606,6 +606,6 @@ describe("Observations", async function () {
     await observations.write.observe([collection, tokenId, 1n, true, "Edit.", 0, 0, 0, 0, zeroAddress]);
 
     const [count] = await observations.read.artifacts([collection, tokenId]);
-    assert.equal(count, 3n);
+    assert.equal(count, 2n);
   });
 });

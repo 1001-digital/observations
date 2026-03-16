@@ -117,11 +117,15 @@ contract Observations {
             a.firstBlock = uint128(block.number);
         }
 
-        unchecked { ++a.count; }
-        id = a.count;
-
-        if (parent >= id) revert InvalidParent();
-        if (update && parent == 0) revert UpdateRequiresParent();
+        if (update) {
+            if (parent == 0) revert UpdateRequiresParent();
+            if (parent > a.count) revert InvalidParent();
+            id = parent;
+        } else {
+            unchecked { ++a.count; }
+            id = a.count;
+            if (parent >= id) revert InvalidParent();
+        }
     }
 }
 
