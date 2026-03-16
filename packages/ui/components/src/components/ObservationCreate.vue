@@ -1,95 +1,95 @@
 <template>
-  <div class="observation-form">
-    <template v-if="isConnected">
-      <FormTextarea
-        v-model="note"
-        :placeholder="
-          editObservation
-            ? 'Update your observation...'
+  <div
+    v-if="isConnected"
+    class="observation-form"
+  >
+    <FormTextarea
+      v-model="note"
+      :placeholder="
+        editObservation
+          ? 'Update your observation...'
+          : isReply
+            ? 'Write a reply...'
+            : 'Leave an observation...'
+      "
+      :rows="3"
+      :disabled="pending"
+    />
+    <TipSelect
+      v-if="!editObservation && tipRecipient"
+      v-model="tip"
+    />
+    <EvmTransactionFlow
+      chain="sepolia"
+      :request="submitObservation"
+      :text="{
+        title: {
+          confirm: editObservation
+            ? 'Update Observation'
             : isReply
-              ? 'Write a reply...'
-              : 'Leave an observation...'
-        "
-        :rows="3"
-        :disabled="pending"
-      />
-      <TipSelect
-        v-if="!editObservation && tipRecipient"
-        v-model="tip"
-      />
-      <EvmTransactionFlow
-        chain="sepolia"
-        :request="submitObservation"
-        :text="{
-          title: {
-            confirm: editObservation
-              ? 'Update Observation'
-              : isReply
-                ? 'Submit Reply'
-                : 'Submit Observation',
-            requesting: editObservation
-              ? 'Updating Observation'
-              : isReply
-                ? 'Submitting Reply'
-                : 'Submitting Observation',
-            waiting: editObservation
-              ? 'Updating Observation'
-              : isReply
-                ? 'Submitting Reply'
-                : 'Submitting Observation',
-            complete: editObservation
-              ? 'Observation Updated'
-              : isReply
-                ? 'Reply Submitted'
-                : 'Observation Submitted',
-            error: editObservation
-              ? 'Update Failed'
-              : isReply
-                ? 'Reply Failed'
-                : 'Submission Failed',
-          },
-          lead: {
-            complete: editObservation
-              ? 'Your observation has been updated onchain.'
-              : isReply
-                ? 'Your reply has been recorded onchain.'
-                : 'Your observation has been recorded onchain.',
-          },
-          action: {
-            confirm: editObservation ? 'Update' : 'Submit',
-          },
-        }"
-        skip-confirmation
-        @complete="onComplete"
-        @cancel="pending = false"
-      >
-        <template #start="{ start }">
-          <Actions>
-            <Button
-              v-if="editObservation"
-              @click.stop.prevent="emit('cancel-edit')"
-              >Cancel</Button
-            >
-            <Button
-              @click.stop.prevent="() => triggerTransactionFlow(start)"
-              :disabled="pending || !note.trim()"
-              >{{
-                editObservation ? 'Update' : isReply ? 'Reply' : 'Observe'
-              }}</Button
-            >
-          </Actions>
-        </template>
-        <template #confirm>
-          <p class="observation-note">{{ note }}</p>
-        </template>
-        <template #complete="{ cancel }">
-          <Actions>
-            <Button @click="cancel">Close</Button>
-          </Actions>
-        </template>
-      </EvmTransactionFlow>
-    </template>
-    <EvmConnectDialog v-else />
+              ? 'Submit Reply'
+              : 'Submit Observation',
+          requesting: editObservation
+            ? 'Updating Observation'
+            : isReply
+              ? 'Submitting Reply'
+              : 'Submitting Observation',
+          waiting: editObservation
+            ? 'Updating Observation'
+            : isReply
+              ? 'Submitting Reply'
+              : 'Submitting Observation',
+          complete: editObservation
+            ? 'Observation Updated'
+            : isReply
+              ? 'Reply Submitted'
+              : 'Observation Submitted',
+          error: editObservation
+            ? 'Update Failed'
+            : isReply
+              ? 'Reply Failed'
+              : 'Submission Failed',
+        },
+        lead: {
+          complete: editObservation
+            ? 'Your observation has been updated onchain.'
+            : isReply
+              ? 'Your reply has been recorded onchain.'
+              : 'Your observation has been recorded onchain.',
+        },
+        action: {
+          confirm: editObservation ? 'Update' : 'Submit',
+        },
+      }"
+      skip-confirmation
+      @complete="onComplete"
+      @cancel="pending = false"
+    >
+      <template #start="{ start }">
+        <Actions>
+          <Button
+            v-if="editObservation"
+            @click.stop.prevent="emit('cancel-edit')"
+            >Cancel</Button
+          >
+          <Button
+            @click.stop.prevent="() => triggerTransactionFlow(start)"
+            :disabled="pending || !note.trim()"
+            >{{
+              editObservation ? 'Update' : isReply ? 'Reply' : 'Observe'
+            }}</Button
+          >
+        </Actions>
+      </template>
+      <template #confirm>
+        <p class="observation-note">{{ note }}</p>
+      </template>
+      <template #complete="{ cancel }">
+        <Actions>
+          <Button @click="cancel">Close</Button>
+        </Actions>
+      </template>
+    </EvmTransactionFlow>
   </div>
 </template>
 
