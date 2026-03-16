@@ -29,6 +29,9 @@ export default defineNuxtConfig({
     },
   },
   vite: {
+    resolve: {
+      dedupe: ['vue', '@wagmi/core', '@wagmi/vue', '@1001-digital/components', '@1001-digital/components.evm'],
+    },
     optimizeDeps: {
       exclude: ['@1001-digital/components', '@1001-digital/components.evm'],
     },

@@ -20,7 +20,6 @@
       v-model="tip"
     />
     <EvmTransactionFlow
-      chain="sepolia"
       :request="submitObservation"
       :text="{
         title: {
@@ -102,6 +101,7 @@ import { Button, Actions, FormTextarea } from '@1001-digital/components'
 import {
   EvmConnectDialog,
   EvmTransactionFlow,
+  useMainChainId,
 } from '@1001-digital/components.evm'
 import { ObservationsAbi, type ObservationData } from '../utils/observations'
 import { useObservationsConfig } from '../utils/config'
@@ -127,6 +127,7 @@ const emit = defineEmits<{
 const wagmi = useConfig()
 const obsConfig = useObservationsConfig()
 const contractAddress = obsConfig.observationsContract
+const chainId = useMainChainId()
 
 const { isConnected } = useConnection()
 
@@ -174,6 +175,7 @@ const effectiveRecipient = computed(() =>
 
 const submitObservation = () => {
   return writeContract(wagmi, {
+    chainId,
     address: contractAddress,
     abi: ObservationsAbi,
     functionName: 'observe',

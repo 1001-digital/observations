@@ -1,6 +1,5 @@
 <template>
   <EvmTransactionFlow
-    chain="sepolia"
     ref="flowRef"
     :request="submitDelete"
     :text="{
@@ -36,7 +35,7 @@ import { writeContract } from '@wagmi/core'
 import { type Address, zeroAddress } from 'viem'
 import { useConfig } from '@wagmi/vue'
 import { Button, Actions } from '@1001-digital/components'
-import { EvmTransactionFlow } from '@1001-digital/components.evm'
+import { EvmTransactionFlow, useMainChainId } from '@1001-digital/components.evm'
 import { ObservationsAbi, type ObservationData } from '../utils/observations'
 import { useObservationsConfig } from '../utils/config'
 
@@ -54,12 +53,14 @@ const emit = defineEmits<{
 const wagmi = useConfig()
 const obsConfig = useObservationsConfig()
 const contractAddress = obsConfig.observationsContract
+const chainId = useMainChainId()
 
 const flowRef = ref<{ initializeRequest: () => Promise<unknown> }>()
 
 const submitDelete = () => {
   const obs = props.observation
   return writeContract(wagmi, {
+    chainId,
     address: contractAddress,
     abi: ObservationsAbi,
     functionName: 'observe',
