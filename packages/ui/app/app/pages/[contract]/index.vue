@@ -1,7 +1,10 @@
 <template>
   <main class="collection-overview">
     <section class="collection-header">
-      <Loading v-if="collectionPending" spinner />
+      <Loading
+        v-if="collectionPending"
+        spinner
+      />
       <template v-else-if="collectionData">
         <img
           v-if="collectionImage"
@@ -11,8 +14,13 @@
         />
         <div class="collection-info">
           <h1>{{ collectionData.name || shortAddress(contract) }}</h1>
-          <p v-if="collectionData.description">{{ collectionData.description }}</p>
-          <dl v-if="collectionData.owner" class="collection-meta">
+          <p v-if="collectionData.description">
+            {{ collectionData.description }}
+          </p>
+          <dl
+            v-if="collectionData.owner"
+            class="collection-meta"
+          >
             <dt>Artist</dt>
             <dd>
               <NuxtLink :to="`/observer/${collectionData.owner}`">
@@ -26,11 +34,14 @@
 
     <section class="collection-tokens">
       <h2>
-        Tokens
+        Tokens with observations
         <small v-if="artifacts.length">({{ artifacts.length }})</small>
       </h2>
 
-      <Loading v-if="pending" spinner />
+      <Loading
+        v-if="pending"
+        spinner
+      />
       <div
         v-else-if="artifacts.length"
         class="token-grid"
@@ -49,7 +60,11 @@
               />
               <header>
                 <h3>{{ metadata.name || `#${a.tokenId}` }}</h3>
-                <small>{{ a.count }} observation{{ a.count !== 1n ? 's' : '' }}</small>
+                <small
+                  >{{ a.count }} observation{{
+                    a.count !== 1n ? 's' : ''
+                  }}</small
+                >
               </header>
               <CardLink :to="`/${contract}/${a.tokenId}`">
                 {{ metadata.name || `#${a.tokenId}` }}
@@ -58,13 +73,21 @@
           </template>
         </Artifact>
       </div>
-      <p v-else class="empty">No tokens with observations yet.</p>
+      <p
+        v-else
+        class="empty"
+      >
+        No tokens with observations yet.
+      </p>
     </section>
 
     <section class="collection-timeline">
       <h2>Timeline</h2>
 
-      <Loading v-if="pending" spinner />
+      <Loading
+        v-if="pending"
+        spinner
+      />
       <div
         v-else-if="observations.length"
         class="timeline-list"
@@ -84,7 +107,12 @@
           </template>
         </ObservationListItem>
       </div>
-      <p v-else class="empty">No observations yet.</p>
+      <p
+        v-else
+        class="empty"
+      >
+        No observations yet.
+      </p>
     </section>
   </main>
 </template>
@@ -95,8 +123,14 @@ import type { Address } from 'viem'
 const route = useRoute()
 const contract = route.params.contract as Address
 
-const { collection: collectionData, image: collectionImage, pending: collectionPending } = useCollection(ref(contract))
-const { artifacts, observations, pending } = useCollectionObservations(ref(contract))
+const {
+  collection: collectionData,
+  image: collectionImage,
+  pending: collectionPending,
+} = useCollection(ref(contract))
+const { artifacts, observations, pending } = useCollectionObservations(
+  ref(contract),
+)
 </script>
 
 <style scoped>
