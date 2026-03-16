@@ -89,7 +89,7 @@
         </template>
       </EvmTransactionFlow>
     </template>
-    <EvmConnect v-else />
+    <EvmConnectDialog v-else />
   </div>
 </template>
 
@@ -97,9 +97,12 @@
 import { ref, computed, watch, defineModel } from 'vue'
 import { writeContract } from '@wagmi/core'
 import { type Address, zeroAddress } from 'viem'
-import { useConfig, useConnection, type Config } from '@wagmi/vue'
+import { useConfig, useConnection } from '@wagmi/vue'
 import { Button, Actions, FormTextarea } from '@1001-digital/components'
-import { EvmConnect, EvmTransactionFlow } from '@1001-digital/components.evm'
+import {
+  EvmConnectDialog,
+  EvmTransactionFlow,
+} from '@1001-digital/components.evm'
 import { ObservationsAbi, type ObservationData } from '../utils/observations'
 import { useObservationsConfig } from '../utils/config'
 import TipSelect from './TipSelect.vue'
