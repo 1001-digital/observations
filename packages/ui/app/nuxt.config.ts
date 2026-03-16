@@ -14,10 +14,8 @@ export default defineNuxtConfig({
   ssr: false,
   css: [join(currentDir, './app/assets/styles/index.css')],
   components: [
-    {
-      path: `${observationsSrc}/components`,
-      pathPrefix: false,
-    },
+    { path: join(currentDir, './app/components'), pathPrefix: false },
+    { path: `${observationsSrc}/components`, pathPrefix: false },
   ],
   imports: {
     dirs: [

@@ -1,8 +1,6 @@
 <template>
   <div class="app">
-    <header class="app-header">
-      <ConnectProfile />
-    </header>
+    <AppHeader />
     <NuxtPage />
   </div>
 </template>
@@ -22,14 +20,5 @@ html {
 .app {
   min-height: 100dvh;
   width: 100vw;
-}
-
-.app-header {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  height: var(--navbar-height);
-  padding: 0 var(--spacer);
-  border-bottom: var(--border);
 }
 </style>
