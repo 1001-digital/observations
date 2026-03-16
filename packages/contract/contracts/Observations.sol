@@ -122,7 +122,7 @@ contract Observations {
             if (parent > a.count) revert InvalidParent();
             id = parent;
         } else {
-            unchecked { ++a.count; }
+            ++a.count;
             id = a.count;
             if (parent >= id) revert InvalidParent();
         }
