@@ -11,7 +11,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useBlockNumber } from '@wagmi/vue'
-import { Tooltip, useMainChainId, formatNumber } from '@1001-digital/components'
+import { Tooltip, formatNumber } from '@1001-digital/components'
+import { useMainChainId } from '@1001-digital/components.evm'
 import { formatBlockAge } from '../utils/time'
 
 const props = defineProps<{

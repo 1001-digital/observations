@@ -37,7 +37,7 @@
                   @click="effectiveShowAnimation = !effectiveShowAnimation"
                 >
                   <Icon
-                    :type="
+                    :name="
                       effectiveShowAnimation ? 'lucide:image' : 'lucide:play'
                     "
                   />
@@ -51,7 +51,7 @@
                   class="small"
                   @click="toggleObserving"
                 >
-                  <Icon :type="observing ? 'lucide:hand' : 'lucide:crosshair'" />
+                  <Icon :name="observing ? 'lucide:hand' : 'lucide:crosshair'" />
                 </Button>
               </template>
               {{ observing ? 'Interact' : 'Observe' }}

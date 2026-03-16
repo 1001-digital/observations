@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useBlockExplorer } from '@1001-digital/components'
+import { useBlockExplorer } from '@1001-digital/components.evm'
 
 const props = defineProps<{
   to?: string | Record<string, any>

@@ -3,7 +3,7 @@ import { getContract, type Address, type PublicClient } from 'viem'
 import { getPublicClient } from '@wagmi/core'
 import { useConfig } from '@wagmi/vue'
 import { parseAbi } from 'viem'
-import { resolveUri, useChainConfig } from '@1001-digital/components'
+import { useChainConfig } from '@1001-digital/components.evm'
 import { type ObservationsMode } from '../utils/observations'
 import { useObservationsConfig, type ObservationsConfig } from '../utils/config'
 import { useAsyncFetch } from './useAsyncFetch'
@@ -30,12 +30,16 @@ export interface TokenMetadata {
   [key: string]: unknown
 }
 
+const RAW_IPFS_HASH = /^(Qm[1-9A-HJ-NP-Za-km-z]{44}|baf[a-z2-7]{56})/
+
 export const resolveURI = (uri?: string, config?: ObservationsConfig): string => {
+  if (!uri) return ''
+  if (uri.startsWith('data:')) return uri
   const c = config ?? useObservationsConfig()
-  return resolveUri(uri, {
-    ipfsGateway: c.ipfsGateway,
-    arweaveGateway: c.arweaveGateway,
-  })
+  if (uri.startsWith('ipfs://')) return `${c.ipfsGateway}${uri.slice(7)}`
+  if (uri.startsWith('ar://')) return `${c.arweaveGateway}${uri.slice(5)}`
+  if (RAW_IPFS_HASH.test(uri)) return `${c.ipfsGateway}${uri}`
+  return uri
 }
 
 function getArtifactBaseUrls(indexerUrls: string[]): string[] {

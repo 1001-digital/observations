@@ -6,9 +6,9 @@ import {
   ensCache,
   fetchEnsFromIndexer,
   fetchEnsFromChain,
+  useEvmConfig,
   type EnsProfile,
-} from '@1001-digital/components'
-import { useEvmConfig } from '@1001-digital/components'
+} from '@1001-digital/components.evm'
 
 const ENS_KEYS_PROFILE = ['avatar', 'header', 'description', 'url', 'com.twitter', 'com.github']
 

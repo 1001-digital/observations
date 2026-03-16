@@ -83,7 +83,7 @@
 import { ref, computed } from 'vue'
 import type { Address } from 'viem'
 import { useConnection } from '@wagmi/vue'
-import { EvmAccount } from '@1001-digital/components'
+import { EvmAccount } from '@1001-digital/components.evm'
 import type { ObservationData } from '../utils/observations'
 import Observation from './Observation.vue'
 import ObservationCreate from './ObservationCreate.vue'

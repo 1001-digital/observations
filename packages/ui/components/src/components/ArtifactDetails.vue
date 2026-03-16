@@ -40,7 +40,8 @@
 <script setup lang="ts">
 import { inject } from 'vue'
 import type { Address } from 'viem'
-import { LinkComponentKey, EvmAccount } from '@1001-digital/components'
+import { LinkComponentKey } from '@1001-digital/components'
+import { EvmAccount } from '@1001-digital/components.evm'
 import type { CollectionData } from '../composables/useCollection'
 import { useObservationsConfig } from '../utils/config'
 

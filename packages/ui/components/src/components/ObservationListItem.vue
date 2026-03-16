@@ -46,7 +46,8 @@
 
 <script setup lang="ts">
 import { inject } from 'vue'
-import { LinkComponentKey, useBlockExplorer, shortAddress, EvmAccount } from '@1001-digital/components'
+import { LinkComponentKey } from '@1001-digital/components'
+import { useBlockExplorer, shortAddress, EvmAccount } from '@1001-digital/components.evm'
 import type { RecentObservationData } from '../utils/observations'
 import Artifact from './Artifact.vue'
 import ObservationTime from './ObservationTime.vue'

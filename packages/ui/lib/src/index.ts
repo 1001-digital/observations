@@ -7,11 +7,11 @@ import type { Address } from 'viem'
 import globalStyles from '@1001-digital/styles?inline'
 import {
   Globals,
-  EvmConfigKey,
   LinkComponentKey,
   IconAliasesKey,
   defaultIconAliases,
 } from '@1001-digital/components'
+import { EvmConfigKey } from '@1001-digital/components.evm'
 import {
   ObservationsConfigKey,
   ConnectProfile,

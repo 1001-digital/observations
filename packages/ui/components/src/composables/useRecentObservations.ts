@@ -2,7 +2,7 @@ import { computed } from 'vue'
 import { type Address, type PublicClient } from 'viem'
 import { getPublicClient } from '@wagmi/core'
 import { useConfig, type Config } from '@wagmi/vue'
-import { useMainChainId } from '@1001-digital/components'
+import { useMainChainId } from '@1001-digital/components.evm'
 import {
   type ObservationsMode,
   type RecentObservationData,

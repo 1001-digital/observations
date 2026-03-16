@@ -2,7 +2,7 @@ import { computed, ref, watch, onScopeDispose, type Ref } from 'vue'
 import { type Address, type PublicClient } from 'viem'
 import { getPublicClient, watchContractEvent } from '@wagmi/core'
 import { useConfig, type Config } from '@wagmi/vue'
-import { useMainChainId } from '@1001-digital/components'
+import { useMainChainId } from '@1001-digital/components.evm'
 import {
   type ObservationsMode,
   type ObservationData,

@@ -7,7 +7,7 @@ import {
 import { sepolia, mainnet } from 'viem/chains'
 import type { Transport } from 'viem'
 import { injected, metaMask, safe, walletConnect } from '@wagmi/connectors'
-import { inAppWallet } from '@1001-digital/components'
+import { inAppWallet } from '@1001-digital/components.evm'
 import type { EvmChainKey } from './evmConfig'
 
 export interface WagmiOptions {

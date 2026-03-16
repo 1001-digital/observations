@@ -25,12 +25,12 @@ export default defineNuxtConfig({
       `${observationsSrc}/utils`,
     ],
     transform: {
-      include: [/@1001-digital\/components/, /@1001-digital\/observations-components/],
+      include: [/@1001-digital\/components/, /@1001-digital\/components\.evm/, /@1001-digital\/observations-components/],
     },
   },
   vite: {
     optimizeDeps: {
-      exclude: ['@1001-digital/components'],
+      exclude: ['@1001-digital/components', '@1001-digital/components.evm'],
     },
   },
   runtimeConfig: {
