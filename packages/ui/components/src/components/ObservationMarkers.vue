@@ -82,6 +82,7 @@ import { useConnection } from '@wagmi/vue'
 import { LinkComponentKey } from '@1001-digital/components'
 import { EvmAccount } from '@1001-digital/components.evm'
 import type { ObservationData } from '../utils/observations'
+import { truncate } from '../utils/text'
 import ObservationMarker from './ObservationMarker.vue'
 import ObservationCreate from './ObservationCreate.vue'
 import ObservationTime from './ObservationTime.vue'
@@ -169,11 +170,6 @@ function displayObs(obs: ObservationData): ObservationData {
   return focusedReply.value && effectiveFocusedId.value === obs.id
     ? focusedReply.value
     : obs
-}
-
-function truncate(text: string, max = 20): string {
-  if (text.length <= max) return text
-  return text.slice(0, max).trimEnd() + '\u2026'
 }
 
 const container = ref<HTMLElement>()

@@ -131,6 +131,11 @@ const {
 const { artifacts, observations, pending } = useCollectionObservations(
   ref(contract),
 )
+
+const title = computed(() => collectionData.value?.name || shortAddress(contract))
+
+useBreadcrumb('collection', computed(() => ({ label: title.value, path: `/${contract}` })))
+useHead(computed(() => ({ title: title.value })))
 </script>
 
 <style scoped>

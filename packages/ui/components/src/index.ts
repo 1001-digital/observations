@@ -40,6 +40,12 @@ export {
   type TokenPageData,
   type ObservationNavigation,
 } from './composables/useTokenPageProvide'
+export {
+  useBreadcrumbs,
+  useBreadcrumb,
+  type BreadcrumbItem,
+  type BreadcrumbKey,
+} from './composables/useBreadcrumbs'
 
 // Utils
 export {
@@ -63,3 +69,4 @@ export {
 export { createIndexerProvider, graphqlFetch, fetchObserverObservations, type PaginatedObservations } from './utils/observation-provider-indexer'
 export { createOnchainProvider } from './utils/observation-provider-onchain'
 export { formatBlockAge } from './utils/time'
+export { truncate } from './utils/text'

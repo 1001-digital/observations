@@ -65,6 +65,9 @@ const {
   loadingMore,
   loadMore,
 } = useObserverObservations(observerAddress)
+
+const title = computed(() => profile.value?.ens || profile.value?.address || id)
+useHead(computed(() => ({ title: title.value })))
 </script>
 
 <style scoped>

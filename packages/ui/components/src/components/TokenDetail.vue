@@ -131,6 +131,7 @@ import ArtifactDetails from './ArtifactDetails.vue'
 import ObservationMarkers from './ObservationMarkers.vue'
 import Observations from './Observations.vue'
 import ObservationDetail from './ObservationDetail.vue'
+import { shortAddress } from '@1001-digital/components.evm'
 import {
   useArtifactPage,
   type ArtifactPageNavigation,
@@ -139,6 +140,7 @@ import {
   tokenPageDataKey,
   observationNavigationKey,
 } from '../composables/useTokenPageProvide'
+import { useBreadcrumb } from '../composables/useBreadcrumbs'
 
 const props = defineProps<{
   contract: Address
@@ -192,6 +194,16 @@ provide(observationNavigationKey, {
   focusObservation,
   clearFocus,
 })
+
+useBreadcrumb('collection', computed(() => ({
+  label: collection.value?.name || shortAddress(contract.value),
+  path: `/${contract.value}`,
+})))
+
+useBreadcrumb('token', computed(() => metadata.value ? {
+  label: metadata.value.name || `#${tokenId.value}`,
+  path: `/${contract.value}/${tokenId.value}`,
+} : null))
 </script>
 
 <style scoped>

@@ -25,6 +25,16 @@ const basePath = computed(() =>
     : `/${contract.value}/${tokenId.value}`,
 )
 
+const crumbs = useBreadcrumbs()
+const title = computed(() => {
+  const token = crumbs.get('token')
+  const collection = crumbs.get('collection')
+  const parts = [token?.label || `#${tokenId.value}`]
+  if (collection) parts.push(collection.label)
+  return parts.join(' \u2014 ')
+})
+useHead(computed(() => ({ title: title.value })))
+
 const navigation = {
   onFocusObservation: (id: string) => navigateTo({ path: `${basePath.value}/${id}`, query: route.query }),
   onClearFocus: () => navigateTo({ path: basePath.value || '/', query: route.query }),

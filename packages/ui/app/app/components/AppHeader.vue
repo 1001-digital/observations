@@ -1,8 +1,15 @@
 <template>
   <header class="app-header">
     <nav class="app-nav">
-      <NuxtLink to="/" class="app-logo">Observations</NuxtLink>
-      <template v-for="crumb in breadcrumbs" :key="crumb.path">
+      <NuxtLink
+        to="/"
+        class="app-logo"
+        >Observations</NuxtLink
+      >
+      <template
+        v-for="crumb in breadcrumbs"
+        :key="crumb.path"
+      >
         <span class="breadcrumb-separator">/</span>
         <NuxtLink :to="crumb.path">{{ crumb.label }}</NuxtLink>
       </template>
@@ -12,40 +19,13 @@
 </template>
 
 <script setup lang="ts">
-import type { Address } from 'viem'
-import { shortAddress } from '@1001-digital/components.evm'
+const crumbs = useBreadcrumbs()
 
-const route = useRoute()
+const order = ['collection', 'token', 'observation'] as const
 
-const breadcrumbs = computed(() => {
-  const crumbs: { path: string; label: string }[] = []
-  const contract = route.params.contract as string | undefined
-  const token = route.params.token as string | undefined
-  const id = route.params.id as string | undefined
-
-  if (!contract) return crumbs
-
-  crumbs.push({
-    path: `/${contract}`,
-    label: shortAddress(contract as Address),
-  })
-
-  if (token) {
-    crumbs.push({
-      path: `/${contract}/${token}`,
-      label: `#${token}`,
-    })
-  }
-
-  if (id) {
-    crumbs.push({
-      path: `/${contract}/${token}/${id}`,
-      label: `#${id}`,
-    })
-  }
-
-  return crumbs
-})
+const breadcrumbs = computed(() =>
+  order.filter((key) => crumbs.has(key)).map((key) => crumbs.get(key)!),
+)
 </script>
 
 <style scoped>
@@ -72,13 +52,28 @@ const breadcrumbs = computed(() => {
 }
 
 .breadcrumb-separator {
-  color: var(--muted);
+  color: var(--gray-z-4);
   flex-shrink: 0;
+  padding-inline: var(--spacer-xs);
 }
 
 .app-nav a:not(.app-logo) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--gray-z-7);
+
+  &:hover,
+  &:focus {
+    color: var(--color);
+  }
+
+  &.router-link-exact-active {
+    color: var(--muted);
+  }
+}
+
+.app-nav a {
+  text-transform: uppercase;
 }
 </style>

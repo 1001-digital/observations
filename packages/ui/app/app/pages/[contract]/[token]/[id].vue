@@ -23,4 +23,16 @@ const { focusObservation, clearFocus } = useObservationNavigation()
 
 const focusedId = computed(() => route.params.id as string)
 const observation = computed(() => observations.value.find((o) => o.id === focusedId.value))
+
+const title = computed(() =>
+  observation.value
+    ? truncate(observation.value.note) || `#${focusedId.value}`
+    : `#${focusedId.value}`,
+)
+
+useBreadcrumb('observation', computed(() => ({
+  label: title.value,
+  path: `/${contract.value}/${tokenId.value}/${focusedId.value}`,
+})))
+useHead(computed(() => ({ title: title.value })))
 </script>

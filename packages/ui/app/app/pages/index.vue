@@ -11,6 +11,10 @@
   </main>
 </template>
 
+<script setup lang="ts">
+useHead({ title: 'Observations' })
+</script>
+
 <style scoped>
 main {
   max-width: 64rem;

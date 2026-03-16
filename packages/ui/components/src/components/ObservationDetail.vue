@@ -85,6 +85,7 @@ import type { Address } from 'viem'
 import { useConnection } from '@wagmi/vue'
 import { EvmAccount } from '@1001-digital/components.evm'
 import type { ObservationData } from '../utils/observations'
+import { truncate } from '../utils/text'
 import Observation from './Observation.vue'
 import ObservationCreate from './ObservationCreate.vue'
 import ObservationDelete from './ObservationDelete.vue'
@@ -154,10 +155,6 @@ function onDeleteComplete() {
   emit('complete')
 }
 
-function truncate(text: string, max = 30): string {
-  if (text.length <= max) return text
-  return text.slice(0, max).trimEnd() + '\u2026'
-}
 </script>
 
 <style scoped>
