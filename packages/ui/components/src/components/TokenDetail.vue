@@ -51,7 +51,9 @@
                   class="small"
                   @click="toggleObserving"
                 >
-                  <Icon :name="observing ? 'lucide:hand' : 'lucide:crosshair'" />
+                  <Icon
+                    :name="observing ? 'lucide:hand' : 'lucide:crosshair'"
+                  />
                 </Button>
               </template>
               {{ observing ? 'Interact' : 'Observe' }}
@@ -60,7 +62,7 @@
         </ObservationMarkers>
       </div>
 
-      <div class="sidebar">
+      <div ref="sidebarRef" class="sidebar" :class="{ scrollable: sidebarOverflows }">
         <Loading
           v-if="pending"
           spinner
@@ -114,7 +116,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, provide, toRef } from 'vue'
+import { computed, onMounted, onUnmounted, provide, ref, toRef } from 'vue'
 import type { Address } from 'viem'
 import {
   Actions,
@@ -190,6 +192,33 @@ provide(observationNavigationKey, {
   focusObservation,
   clearFocus,
 })
+
+const sidebarRef = ref<HTMLElement>()
+const sidebarOverflows = ref(false)
+
+const checkOverflow = () => {
+  const el = sidebarRef.value
+  if (!el) return
+  sidebarOverflows.value = el.scrollHeight > el.clientHeight
+}
+
+onMounted(() => {
+  const el = sidebarRef.value
+  if (!el) return
+
+  const ro = new ResizeObserver(checkOverflow)
+  ro.observe(el)
+
+  const mo = new MutationObserver(checkOverflow)
+  mo.observe(el, { childList: true, subtree: true })
+
+  checkOverflow()
+
+  onUnmounted(() => {
+    ro.disconnect()
+    mo.disconnect()
+  })
+})
 </script>
 
 <style scoped>
@@ -240,14 +269,22 @@ provide(observationNavigationKey, {
 }
 
 .sidebar {
+  width: 100%;
+  container-type: inline-size;
+
   @container (min-width: 45rem) {
     min-height: 0;
-    overflow-y: auto;
+    overflow-y: clip;
+
+    &.scrollable {
+      overflow-y: auto;
+    }
   }
 
   > *,
   & :deep(> *) {
     padding: var(--spacer);
+    width: 100cqw;
 
     &:not(:last-child) {
       border-bottom: var(--border);
@@ -256,10 +293,6 @@ provide(observationNavigationKey, {
     @container (min-width: 45rem) {
       padding: var(--spacer-lg);
     }
-  }
-
-  & :deep(.artifact-details) {
-    width: auto;
   }
 }
 
