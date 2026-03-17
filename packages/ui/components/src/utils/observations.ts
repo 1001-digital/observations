@@ -1,5 +1,4 @@
 import { parseAbi, type Address } from 'viem'
-import { createCache } from '@1001-digital/components.evm'
 
 export const ObservationsAbi = parseAbi([
   'event Observation(address indexed collection, uint256 indexed tokenId, address indexed observer, uint64 id, uint64 parent, bool update, string note, int32 x, int32 y, uint8 viewType, uint32 time, uint256 tip, address tipRecipient)',
@@ -45,11 +44,6 @@ export interface ObservationProvider {
   fetchCollectionArtifacts(collection: Address): Promise<CollectionArtifactData[]>
   fetchCollectionObservations(collection: Address): Promise<RecentObservationData[]>
 }
-
-export const observationsCache = createCache<{ count: bigint; items: ObservationData[] }>(5 * 60 * 1000, 200)
-export const recentObservationsCache = createCache<RecentObservationData[]>(5 * 60 * 1000, 1)
-export const collectionArtifactsCache = createCache<CollectionArtifactData[]>(5 * 60 * 1000, 50)
-export const collectionObservationsCache = createCache<RecentObservationData[]>(5 * 60 * 1000, 50)
 
 interface ObservationsRuntimeConfig {
   indexer?: { endpoint1?: string; endpoint2?: string; endpoint3?: string }

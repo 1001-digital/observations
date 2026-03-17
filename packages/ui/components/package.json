@@ -13,6 +13,8 @@
   "peerDependencies": {
     "@1001-digital/components": "^2.0.0",
     "@1001-digital/components.evm": "^2.0.0",
+    "@1001-digital/dapp-query-core": "*",
+    "@1001-digital/dapp-query-vue": "*",
     "@wagmi/core": ">=3.0.0",
     "@wagmi/vue": ">=0.5.0",
     "viem": ">=2.0.0",
@@ -23,6 +25,8 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "devDependencies": {
+    "@1001-digital/dapp-query-core": "workspace:*",
+    "@1001-digital/dapp-query-vue": "workspace:*",
     "vue-tsc": "^2.2.12"
   },
   "dependencies": {

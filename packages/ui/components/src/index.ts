@@ -25,7 +25,6 @@ export { useArtifactScope, useArtifactContract, useArtifactTokenId } from './com
 export { useArtifact, resolveURI, type TokenMetadata } from './composables/useArtifact'
 export { useArtifactPage, type ArtifactPageNavigation } from './composables/useArtifactPage'
 export { useArtifactView } from './composables/useArtifactView'
-export { useAsyncFetch } from './composables/useAsyncFetch'
 export { useCollection, type CollectionData } from './composables/useCollection'
 export { useCollectionObservations } from './composables/useCollectionObservations'
 export { useObservationMarkers } from './composables/useObservationMarkers'
@@ -55,10 +54,6 @@ export {
 } from './utils/config'
 export {
   ObservationsAbi,
-  observationsCache,
-  recentObservationsCache,
-  collectionArtifactsCache,
-  collectionObservationsCache,
   getIndexerUrls,
   type ObservationData,
   type RecentObservationData,
@@ -66,6 +61,12 @@ export {
   type ObservationsMode,
   type ObservationProvider,
 } from './utils/observations'
+export {
+  createObservationsQuery,
+  createRecentObservationsQuery,
+  createCollectionArtifactsQuery,
+  createCollectionObservationsQuery,
+} from './queries/observations'
 export { createIndexerProvider, graphqlFetch, fetchObserverObservations, type PaginatedObservations } from './utils/observation-provider-indexer'
 export { createOnchainProvider } from './utils/observation-provider-onchain'
 export { formatBlockAge } from './utils/time'
