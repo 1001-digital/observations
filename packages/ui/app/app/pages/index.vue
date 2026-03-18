@@ -1,5 +1,6 @@
 <template>
   <main>
+    <LandingHero />
     <Card>
       <header>
         <h1>Find Artifact</h1>
