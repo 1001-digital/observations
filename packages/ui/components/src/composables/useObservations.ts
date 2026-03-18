@@ -5,6 +5,7 @@ import { useMainChainId } from '@1001-digital/components.evm'
 import { useQuery, useQueryClient } from '@1001-digital/dapp-query-vue'
 import { createObservationsQuery } from '../queries/observations'
 import { useObservationsConfig } from '../utils/config'
+import type { ObservationData } from '../utils/observations'
 
 export const useObservations = (collection: Ref<Address>, tokenId: Ref<bigint>) => {
   const wagmi = useConfig()
@@ -13,7 +14,8 @@ export const useObservations = (collection: Ref<Address>, tokenId: Ref<bigint>) 
 
   const query = createObservationsQuery(config, wagmi, chainId)
   const queryClient = useQueryClient()
-  const { data, pending, error, refresh } = useQuery(query, () => [collection.value, tokenId.value])
+  type Data = { count: bigint; items: ObservationData[] }
+  const { data, pending, error, refresh } = useQuery<Data, [Address, bigint]>(query, () => [collection.value, tokenId.value])
 
   const count = computed(() => data.value?.count ?? 0n)
   const items = computed(() => data.value?.items ?? [])
@@ -23,7 +25,7 @@ export const useObservations = (collection: Ref<Address>, tokenId: Ref<bigint>) 
     await queryClient.waitForChange(
       query,
       [collection.value, tokenId.value],
-      (d) => d.count > prev,
+      (d: Data) => d.count > prev,
     )
   }
 

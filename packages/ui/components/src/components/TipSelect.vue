@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, defineModel } from 'vue'
 import { parseEther } from 'viem'
-import { Button, FormInputGroup } from '@1001-digital/components'
+import { Button, FormInputGroup, formatNumber } from '@1001-digital/components'
 import { usePriceFeed } from '@1001-digital/components.evm'
 
 defineProps<{
