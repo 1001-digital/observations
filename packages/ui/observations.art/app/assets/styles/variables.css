@@ -20,9 +20,15 @@
   --gray-950: oklch(14.7% 0.004 49.25);
 
   /* Semantic overrides */
-  --background: var(--gray-100);
+  --background: var(--gray-200);
+  --card-background: var(--gray-100);
+  --input-background: var(--gray-50);
+  --button-background: var(--gray-100);
+  --button-tertiary-background: var(--gray-100);
   --border-color: var(--gray-300);
   --color: var(--gray-950);
+  --ui-color: var(--gray-800);
+  --button-color: var(--gray-700);
   --primary: var(--gray-400);
   --muted: var(--gray-500);
   --error: #a13d34;
