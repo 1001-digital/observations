@@ -25,8 +25,8 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "devDependencies": {
-    "@1001-digital/dapp-query-core": "workspace:*",
-    "@1001-digital/dapp-query-vue": "workspace:*",
+    "@1001-digital/dapp-query-core": "^0.2.0",
+    "@1001-digital/dapp-query-vue": "^1.0.0",
     "vue-tsc": "^2.2.12"
   },
   "dependencies": {
