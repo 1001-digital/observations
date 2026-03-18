@@ -195,15 +195,25 @@ provide(observationNavigationKey, {
   clearFocus,
 })
 
-useBreadcrumb('collection', computed(() => ({
-  label: collection.value?.name || shortAddress(contract.value),
-  path: `/${contract.value}`,
-})))
+useBreadcrumb(
+  'collection',
+  computed(() => ({
+    label: collection.value?.name || shortAddress(contract.value),
+    path: `/${contract.value}`,
+  })),
+)
 
-useBreadcrumb('token', computed(() => metadata.value ? {
-  label: metadata.value.name || `#${tokenId.value}`,
-  path: `/${contract.value}/${tokenId.value}`,
-} : null))
+useBreadcrumb(
+  'token',
+  computed(() =>
+    metadata.value
+      ? {
+          label: metadata.value.name || `#${tokenId.value}`,
+          path: `/${contract.value}/${tokenId.value}`,
+        }
+      : null,
+  ),
+)
 </script>
 
 <style scoped>
@@ -238,7 +248,7 @@ useBreadcrumb('token', computed(() => metadata.value ? {
   container-type: size;
   border-bottom: var(--border);
   height: 100cqw;
-  background: var(--gray-z-0);
+  background: var(--gray-z-3);
 
   .artifact-visual {
     width: min(80cqw, 80cqh);
