@@ -15,7 +15,10 @@
         @click="double"
         title="Double tip"
       >
-        ${{ usdAmount }}
+        <span>
+          <span class="muted">$</span>
+          <span>{{ formatNumber(usdAmount) }}</span>
+        </span>
       </Button>
       <Button
         class="muted small"
@@ -71,3 +74,11 @@ watch(model, (v) => {
   if (v === 0n && ethUSDRaw.value) level.value = -1
 })
 </script>
+
+<style scoped>
+:deep(.input-group) {
+  button:first-child {
+    min-width: 3rem;
+  }
+}
+</style>
