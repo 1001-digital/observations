@@ -33,6 +33,7 @@ const breadcrumbs = computed(() =>
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--spacer);
   height: var(--navbar-height);
   padding: 0 var(--spacer);
   border-bottom: var(--border);
