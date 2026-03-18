@@ -19,10 +19,10 @@ useHead({ title: 'Observations' })
 <style scoped>
 main {
   max-width: 64rem;
-  margin: var(--spacer) auto;
-  padding: var(--spacer);
+  margin: 0 auto;
+  padding: clamp(4rem, 9vw, 12rem) 0;
   display: grid;
-  gap: var(--spacer-lg);
+  gap: clamp(4rem, 9vw, 12rem);
 }
 
 .card {

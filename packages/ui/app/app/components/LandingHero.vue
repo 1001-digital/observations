@@ -11,7 +11,7 @@
 <style scoped>
 .landing-hero {
   text-align: center;
-  padding: clamp(4rem, 9vw, 12rem) var(--spacer);
+  padding: var(--spacer);
 }
 
 .landing-hero h1 {
