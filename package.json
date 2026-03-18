@@ -8,11 +8,5 @@
   },
   "devDependencies": {
     "prettier": "^3.8.1"
-  },
-  "pnpm": {
-    "overrides": {
-      "@1001-digital/components": "2.0.2",
-      "@1001-digital/components.evm": "2.0.1"
-    }
   }
 }

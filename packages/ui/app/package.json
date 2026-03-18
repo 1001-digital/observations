@@ -10,6 +10,8 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@1001-digital/dapp-query-core": "^1.1.0",
+    "@1001-digital/dapp-query-vue": "^1.1.0",
     "@1001-digital/layers.base": "^2.0.0",
     "@1001-digital/layers.evm": "^2.0.0",
     "@1001-digital/observations-components": "workspace:^",
