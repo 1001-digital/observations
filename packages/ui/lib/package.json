@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@1001-digital/components": "2.0.6",
-    "@1001-digital/components.evm": "2.1.4",
+    "@1001-digital/components": "2.0.7",
+    "@1001-digital/components.evm": "2.2.0",
     "@1001-digital/observations-components": "workspace:^",
     "@1001-digital/styles": "^2.1.2",
     "@wagmi/core": "^3.0.0",

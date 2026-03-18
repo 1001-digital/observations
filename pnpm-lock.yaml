@@ -76,11 +76,11 @@ importers:
         specifier: ^1.1.0
         version: 1.1.0(@1001-digital/dapp-query-core@1.1.0(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(vue@3.5.28(typescript@5.8.3))
       '@1001-digital/layers.base':
-        specifier: ^2.0.4
-        version: 2.0.4(magicast@0.5.2)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))
+        specifier: ^2.0.5
+        version: 2.0.5(magicast@0.5.2)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))
       '@1001-digital/layers.evm':
-        specifier: ^2.1.4
-        version: 2.1.4(df8490dc927809de6e7064e0103fc49e)
+        specifier: ^2.2.0
+        version: 2.2.0(efc8ea180c76de8e220fe798a96b4ffe)
       '@1001-digital/observations-components':
         specifier: workspace:^
         version: link:../components
@@ -91,11 +91,11 @@ importers:
   packages/ui/components:
     dependencies:
       '@1001-digital/components':
-        specifier: ^2.0.6
-        version: 2.0.6(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3))
+        specifier: ^2.0.7
+        version: 2.0.7(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3))
       '@1001-digital/components.evm':
-        specifier: ^2.1.4
-        version: 2.1.4(@1001-digital/components@2.0.6(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3)))(@vueuse/core@14.2.1(vue@3.5.28(typescript@5.8.3)))(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(65426059a309d73831a2d8aea90ee443))(bufferutil@4.1.0)(react-native@0.84.1(@babel/core@7.29.0)(@types/react@19.2.14)(bufferutil@4.1.0)(react@19.2.4)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
+        specifier: ^2.2.0
+        version: 2.2.0(@1001-digital/components@2.0.7(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3)))(@vueuse/core@14.2.1(vue@3.5.28(typescript@5.8.3)))(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(65426059a309d73831a2d8aea90ee443))(bufferutil@4.1.0)(react-native@0.84.1(@babel/core@7.29.0)(@types/react@19.2.14)(bufferutil@4.1.0)(react@19.2.4)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
       '@1001-digital/dapp-query-core':
         specifier: ^1.0.0
         version: 1.0.0(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
@@ -122,8 +122,8 @@ importers:
         version: 4.6.4(vue@3.5.28(typescript@5.8.3))
     devDependencies:
       '@types/luxon':
-        specifier: ^3.4.2
-        version: 3.4.2
+        specifier: ^3.7.0
+        version: 3.7.1
       vue-tsc:
         specifier: ^2.2.12
         version: 2.2.12(typescript@5.8.3)
@@ -131,11 +131,11 @@ importers:
   packages/ui/lib:
     dependencies:
       '@1001-digital/components':
-        specifier: 2.0.6
-        version: 2.0.6(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3))
+        specifier: 2.0.7
+        version: 2.0.7(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3))
       '@1001-digital/components.evm':
-        specifier: 2.1.4
-        version: 2.1.4(@1001-digital/components@2.0.6(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3)))(@vueuse/core@14.2.1(vue@3.5.28(typescript@5.8.3)))(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(94773ea2b8789a8c7c00b2ac3857f1e1))(bufferutil@4.1.0)(react-native@0.84.1(@babel/core@7.29.0)(@types/react@19.2.14)(bufferutil@4.1.0)(react@19.2.4)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
+        specifier: 2.2.0
+        version: 2.2.0(@1001-digital/components@2.0.7(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3)))(@vueuse/core@14.2.1(vue@3.5.28(typescript@5.8.3)))(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(94773ea2b8789a8c7c00b2ac3857f1e1))(bufferutil@4.1.0)(react-native@0.84.1(@babel/core@7.29.0)(@types/react@19.2.14)(bufferutil@4.1.0)(react@19.2.4)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
       '@1001-digital/observations-components':
         specifier: workspace:^
         version: link:../components
@@ -188,18 +188,18 @@ importers:
 
 packages:
 
-  '@1001-digital/components.evm@2.1.4':
-    resolution: {integrity: sha512-i3iJcClBSnZFE8PM0PD+5B/ySGIdJ6BoTyTEqJbtsIHjGqF1UMrPQc9LDfOFSHoAOBH8FJehA1uesy4YiUX/0w==}
+  '@1001-digital/components.evm@2.2.0':
+    resolution: {integrity: sha512-dUOQzElTUcxpvImB+TitA5Ja55H0A36ksy07MaKd6iDH8IcMuOSQYRWqzu0pSX185BAnSITKoH9hvjW0AfppTA==}
     peerDependencies:
-      '@1001-digital/components': ^2.0.6
+      '@1001-digital/components': ^2.0.7
       '@vueuse/core': '>=14.0.0'
       '@wagmi/core': '>=3.0.0'
       '@wagmi/vue': '>=0.5.0'
       viem: '>=2.0.0'
       vue: ^3.5.0
 
-  '@1001-digital/components@2.0.6':
-    resolution: {integrity: sha512-6S0swTbYYB8W607McSfyBro0RsIqpv2ohuqKY99YEyllUvzCgBjwU0Focr4W9584NSmOAFkbTo9YnCGMOu9/tQ==}
+  '@1001-digital/components@2.0.7':
+    resolution: {integrity: sha512-LihBZ6PhVe2aK+aEvtJ3nUujiDjdfdglRme8jDALt3W5DX1W3sq8vaibnbTOMoqmrRehX2Ps7Pl4RT4yD44Jzw==}
     peerDependencies:
       '@1001-digital/styles': ^2.1.2
       vue: ^3.5.0
@@ -229,13 +229,13 @@ packages:
   '@1001-digital/dweb-fetch@0.1.6':
     resolution: {integrity: sha512-FI9l7FP7SQbFxn2cSMVwL/5nPWQH/2xeXiqo87aUp5/NjswQVHMn6655iQLascoKlMYLYJHvAzqP39g5tDf2Yw==}
 
-  '@1001-digital/layers.base@2.0.4':
-    resolution: {integrity: sha512-qab4RKkc1BQIoR+yVPh6+4BVnNG+sHkxTwbpUiCE2T1VUa7+DPX01wZ1rYyoQgQBUSEiYsOb1oLFxGBmHMEYxw==}
+  '@1001-digital/layers.base@2.0.5':
+    resolution: {integrity: sha512-suH3RHr3aTsCxOmWVYSuXHK/waVsjzefJABQ5ev514WicTVt//6vose4PhMB7soUZDtXGRlG8hIZWIolnedRng==}
 
-  '@1001-digital/layers.evm@2.1.4':
-    resolution: {integrity: sha512-54D8ihgkTvBxzboYzLUVFrbpQKhOQjBr6rMSKZM+L7CcLZ5QxanXVZuat/G8vPlyQNq4yVa3y5hraIYevK/1bw==}
+  '@1001-digital/layers.evm@2.2.0':
+    resolution: {integrity: sha512-ITL5o3QfpajY5EoPeECpxxIYhubChU2eofcYZKQJYwD9T7wv3DwZwyCEOYfsz55Y7cUMicZFXDmFp6qBASut/Q==}
     peerDependencies:
-      '@1001-digital/layers.base': ^2.0.4
+      '@1001-digital/layers.base': ^2.0.5
 
   '@1001-digital/ponder-artifacts@0.1.1':
     resolution: {integrity: sha512-vu/eamj0oMJyLU0yaBPrfMYHWNizRxah+h1jRYQv8cAffbM+OnNb1PalO1I5UZGYwzcpiW/eZDsVnWQ3dfXgSw==}
@@ -3526,8 +3526,8 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
-  '@types/luxon@3.4.2':
-    resolution: {integrity: sha512-TifLZlFudklWlMBfhubvgqTXRzLDI5pCbGa4P8a3wPyUQSW+1xQ5eDsreP9DWHX3tjq1ke96uYG/nwundroWcA==}
+  '@types/luxon@3.7.1':
+    resolution: {integrity: sha512-H3iskjFIAn5SlJU7OuxUmTEpebK6TKB8rxZShDslBMZJ5u9S//KM1sbdAisiSrqwLQncVjnpi2OK2J51h+4lsg==}
 
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
@@ -9065,9 +9065,9 @@ packages:
 
 snapshots:
 
-  '@1001-digital/components.evm@2.1.4(@1001-digital/components@2.0.6(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3)))(@vueuse/core@14.2.1(vue@3.5.28(typescript@5.8.3)))(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(94773ea2b8789a8c7c00b2ac3857f1e1))(bufferutil@4.1.0)(react-native@0.84.1(@babel/core@7.29.0)(@types/react@19.2.14)(bufferutil@4.1.0)(react@19.2.4)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))':
+  '@1001-digital/components.evm@2.2.0(@1001-digital/components@2.0.7(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3)))(@vueuse/core@14.2.1(vue@3.5.28(typescript@5.8.3)))(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(94773ea2b8789a8c7c00b2ac3857f1e1))(bufferutil@4.1.0)(react-native@0.84.1(@babel/core@7.29.0)(@types/react@19.2.14)(bufferutil@4.1.0)(react@19.2.4)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))':
     dependencies:
-      '@1001-digital/components': 2.0.6(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3))
+      '@1001-digital/components': 2.0.7(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3))
       '@1001-digital/dweb-fetch': 0.1.6(bufferutil@4.1.0)(react-native@0.84.1(@babel/core@7.29.0)(@types/react@19.2.14)(bufferutil@4.1.0)(react@19.2.4)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)
       '@1001-digital/wagmi-in-app-wallet': 0.1.0(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(viem@2.45.3(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
       '@types/qrcode': 1.5.6
@@ -9085,9 +9085,9 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@1001-digital/components.evm@2.1.4(@1001-digital/components@2.0.6(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3)))(@vueuse/core@14.2.1(vue@3.5.28(typescript@5.8.3)))(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(65426059a309d73831a2d8aea90ee443))(bufferutil@4.1.0)(react-native@0.84.1(@babel/core@7.29.0)(@types/react@19.2.14)(bufferutil@4.1.0)(react@19.2.4)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))':
+  '@1001-digital/components.evm@2.2.0(@1001-digital/components@2.0.7(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3)))(@vueuse/core@14.2.1(vue@3.5.28(typescript@5.8.3)))(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(65426059a309d73831a2d8aea90ee443))(bufferutil@4.1.0)(react-native@0.84.1(@babel/core@7.29.0)(@types/react@19.2.14)(bufferutil@4.1.0)(react@19.2.4)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))':
     dependencies:
-      '@1001-digital/components': 2.0.6(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3))
+      '@1001-digital/components': 2.0.7(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3))
       '@1001-digital/dweb-fetch': 0.1.6(bufferutil@4.1.0)(react-native@0.84.1(@babel/core@7.29.0)(@types/react@19.2.14)(bufferutil@4.1.0)(react@19.2.4)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)
       '@1001-digital/wagmi-in-app-wallet': 0.1.0(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
       '@types/qrcode': 1.5.6
@@ -9105,15 +9105,15 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@1001-digital/components.evm@2.1.4(@1001-digital/components@2.0.6(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3)))(@vueuse/core@14.2.1(vue@3.5.28(typescript@5.8.3)))(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(9f0794a133f4b480f66bbbbce0be6638))(bufferutil@4.1.0)(utf-8-validate@5.0.10)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))':
+  '@1001-digital/components.evm@2.2.0(@1001-digital/components@2.0.7(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3)))(@vueuse/core@14.2.1(vue@3.5.28(typescript@5.8.3)))(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(9f0794a133f4b480f66bbbbce0be6638))(bufferutil@4.1.0)(utf-8-validate@5.0.10)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))':
     dependencies:
-      '@1001-digital/components': 2.0.6(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3))
+      '@1001-digital/components': 2.0.7(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3))
       '@1001-digital/dweb-fetch': 0.1.6(bufferutil@4.1.0)(react-native@0.84.1(@babel/core@7.29.0)(@types/react@19.2.14)(bufferutil@4.1.0)(react@19.2.4)(utf-8-validate@5.0.10))(utf-8-validate@5.0.10)
       '@1001-digital/wagmi-in-app-wallet': 0.1.0(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
       '@types/qrcode': 1.5.6
       '@vueuse/core': 14.2.1(vue@3.5.28(typescript@5.8.3))
       '@wagmi/core': 3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
-      '@wagmi/vue': 0.5.0(9f0794a133f4b480f66bbbbce0be6638)
+      '@wagmi/vue': 0.5.0(65426059a309d73831a2d8aea90ee443)
       qrcode: 1.5.4
       viem: 2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       vue: 3.5.28(typescript@5.8.3)
@@ -9125,7 +9125,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@1001-digital/components@2.0.6(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3))':
+  '@1001-digital/components@2.0.7(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3))':
     dependencies:
       '@1001-digital/styles': 2.1.2
       '@iconify/vue': 5.0.0(vue@3.5.28(typescript@5.8.3))
@@ -9169,9 +9169,9 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@1001-digital/layers.base@2.0.4(magicast@0.5.2)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))':
+  '@1001-digital/layers.base@2.0.5(magicast@0.5.2)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))':
     dependencies:
-      '@1001-digital/components': 2.0.6(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3))
+      '@1001-digital/components': 2.0.7(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3))
       '@1001-digital/styles': 2.1.2
       '@iconify-json/lucide': 1.2.98
       '@iconify-json/simple-icons': 1.2.74
@@ -9182,17 +9182,17 @@ snapshots:
       - vite
       - vue
 
-  '@1001-digital/layers.evm@2.1.4(df8490dc927809de6e7064e0103fc49e)':
+  '@1001-digital/layers.evm@2.2.0(efc8ea180c76de8e220fe798a96b4ffe)':
     dependencies:
-      '@1001-digital/components': 2.0.6(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3))
-      '@1001-digital/components.evm': 2.1.4(@1001-digital/components@2.0.6(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3)))(@vueuse/core@14.2.1(vue@3.5.28(typescript@5.8.3)))(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(9f0794a133f4b480f66bbbbce0be6638))(bufferutil@4.1.0)(utf-8-validate@5.0.10)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
-      '@1001-digital/layers.base': 2.0.4(magicast@0.5.2)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))
+      '@1001-digital/components': 2.0.7(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3))
+      '@1001-digital/components.evm': 2.2.0(@1001-digital/components@2.0.7(@1001-digital/styles@2.1.2)(vue@3.5.28(typescript@5.8.3)))(@vueuse/core@14.2.1(vue@3.5.28(typescript@5.8.3)))(@wagmi/core@3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@wagmi/vue@0.5.0(9f0794a133f4b480f66bbbbce0be6638))(bufferutil@4.1.0)(utf-8-validate@5.0.10)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(vue@3.5.28(typescript@5.8.3))
+      '@1001-digital/layers.base': 2.0.5(magicast@0.5.2)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.28(typescript@5.8.3))
       '@base-org/account': 2.5.2(@types/react@19.2.14)(bufferutil@4.1.0)(immer@10.0.2)(react@19.2.4)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       '@metamask/sdk': 0.34.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@safe-global/safe-apps-provider': 0.18.6(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       '@safe-global/safe-apps-sdk': 9.1.0(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       '@tanstack/vue-query': 5.92.9(vue@3.5.28(typescript@5.8.3))
-      '@wagmi/vue': 0.5.0(9f0794a133f4b480f66bbbbce0be6638)
+      '@wagmi/vue': 0.5.0(65426059a309d73831a2d8aea90ee443)
       '@walletconnect/ethereum-provider': 2.23.8(@types/react@19.2.14)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.2.13)(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(gel@2.2.0)(kysely@0.26.3)(pg@8.18.0)))(immer@10.0.2)(ioredis@5.9.2)(react@19.2.4)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       viem: 2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
     transitivePeerDependencies:
@@ -14028,7 +14028,7 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
-  '@types/luxon@3.4.2': {}
+  '@types/luxon@3.7.1': {}
 
   '@types/ms@2.1.0': {}
 
@@ -14447,18 +14447,6 @@ snapshots:
       '@walletconnect/ethereum-provider': 2.23.8(@types/react@19.2.14)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.2.13)(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(gel@2.2.0)(kysely@0.26.3)(pg@8.18.0)))(immer@10.0.2)(ioredis@5.9.2)(react@19.2.4)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       typescript: 5.8.3
 
-  '@wagmi/connectors@7.2.1(573934e72dd0ed823cb79a7c4d8ec820)':
-    dependencies:
-      '@wagmi/core': 3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
-      viem: 2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
-    optionalDependencies:
-      '@base-org/account': 2.5.2(@types/react@19.2.14)(bufferutil@4.1.0)(immer@10.0.2)(react@19.2.4)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
-      '@metamask/sdk': 0.34.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      '@safe-global/safe-apps-provider': 0.18.6(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
-      '@safe-global/safe-apps-sdk': 9.1.0(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
-      '@walletconnect/ethereum-provider': 2.23.8(@types/react@19.2.14)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.2.13)(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(gel@2.2.0)(kysely@0.26.3)(pg@8.18.0)))(immer@10.0.2)(ioredis@5.9.2)(react@19.2.4)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
-      typescript: 5.8.3
-
   '@wagmi/connectors@7.2.1(e31bedd5b5c2a3232e608afb88b3ae88)':
     dependencies:
       '@wagmi/core': 3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
@@ -14537,31 +14525,6 @@ snapshots:
       vue: 3.5.28(typescript@5.8.3)
     optionalDependencies:
       nuxt: 4.3.1(@electric-sql/pglite@0.2.13)(@parcel/watcher@2.5.6)(@types/node@25.5.0)(@vue/compiler-sfc@3.5.28)(bufferutil@4.1.0)(cac@6.7.14)(db0@0.3.4(@electric-sql/pglite@0.2.13)(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(gel@2.2.0)(kysely@0.26.3)(pg@8.18.0)))(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(gel@2.2.0)(kysely@0.26.3)(pg@8.18.0))(idb-keyval@6.2.2)(ioredis@5.9.2)(magicast@0.5.2)(optionator@0.9.4)(rollup@4.57.1)(terser@5.46.1)(tsx@4.21.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(vite@6.4.1(@types/node@25.5.0)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.2))(vue-tsc@2.2.12(typescript@5.8.3))(xml2js@0.6.2)(yaml@2.8.2)
-      typescript: 5.8.3
-    transitivePeerDependencies:
-      - '@base-org/account'
-      - '@coinbase/wallet-sdk'
-      - '@metamask/sdk'
-      - '@safe-global/safe-apps-provider'
-      - '@safe-global/safe-apps-sdk'
-      - '@tanstack/query-core'
-      - '@types/react'
-      - '@walletconnect/ethereum-provider'
-      - immer
-      - ox
-      - porto
-      - react
-      - use-sync-external-store
-
-  '@wagmi/vue@0.5.0(9f0794a133f4b480f66bbbbce0be6638)':
-    dependencies:
-      '@tanstack/vue-query': 5.92.9(vue@3.5.28(typescript@5.8.3))
-      '@wagmi/connectors': 7.2.1(573934e72dd0ed823cb79a7c4d8ec820)
-      '@wagmi/core': 3.4.0(@tanstack/query-core@5.90.20)(@types/react@19.2.14)(immer@10.0.2)(ox@0.14.5(typescript@5.8.3)(zod@3.25.76))(react@19.2.4)(typescript@5.8.3)(viem@2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
-      viem: 2.47.4(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
-      vue: 3.5.28(typescript@5.8.3)
-    optionalDependencies:
-      nuxt: 4.3.1(@electric-sql/pglite@0.2.13)(@parcel/watcher@2.5.6)(@types/node@25.5.0)(@vue/compiler-sfc@3.5.28)(bufferutil@4.1.0)(cac@6.7.14)(db0@0.3.4(@electric-sql/pglite@0.2.13)(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(gel@2.2.0)(kysely@0.26.3)(pg@8.18.0)))(drizzle-orm@0.41.0(@electric-sql/pglite@0.2.13)(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(gel@2.2.0)(kysely@0.26.3)(pg@8.18.0))(idb-keyval@6.2.2)(ioredis@5.9.2)(magicast@0.5.2)(optionator@0.9.4)(rollup@4.57.1)(terser@5.46.1)(tsx@4.21.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(yaml@2.8.2))(vue-tsc@2.2.12(typescript@5.8.3))(xml2js@0.6.2)(yaml@2.8.2)
       typescript: 5.8.3
     transitivePeerDependencies:
       - '@base-org/account'

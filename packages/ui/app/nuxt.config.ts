@@ -40,18 +40,14 @@ export default defineNuxtConfig({
       token: '',
       observationsContract: '',
       observations: {
-        indexer: {
-          endpoint1: '',
-          endpoint2: '',
-          endpoint3: '',
-        },
+        indexers: '',
       },
       evm: {
         chains: {
-          sepolia: { rpc1: '', rpc2: '', rpc3: '' },
+          sepolia: { rpcs: '' },
         },
         ens: {
-          indexer1: 'http://localhost:42069/ens',
+          indexers: 'http://localhost:42069/ens',
         },
       },
     },

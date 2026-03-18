@@ -49,24 +49,12 @@
         observationsContract: env.VITE_OBSERVATIONS_CONTRACT,
         chain: env.VITE_DEFAULT_CHAIN || 'sepolia',
         rpc: {
-          mainnet: [
-            env.VITE_RPC_MAINNET_1,
-            env.VITE_RPC_MAINNET_2,
-            env.VITE_RPC_MAINNET_3,
-          ].filter(Boolean),
-          sepolia: [
-            env.VITE_RPC_SEPOLIA_1,
-            env.VITE_RPC_SEPOLIA_2,
-            env.VITE_RPC_SEPOLIA_3,
-          ].filter(Boolean),
+          mainnet: (env.VITE_RPC_MAINNET || '').split(/\s+/).filter(Boolean),
+          sepolia: (env.VITE_RPC_SEPOLIA || '').split(/\s+/).filter(Boolean),
         },
-        indexerEndpoints: [
-          env.VITE_INDEXER_ENDPOINT_1,
-          env.VITE_INDEXER_ENDPOINT_2,
-          env.VITE_INDEXER_ENDPOINT_3,
-        ].filter(Boolean),
+        indexerEndpoints: (env.VITE_INDEXERS || '').split(/\s+/).filter(Boolean),
         walletConnectProjectId: env.VITE_WALLET_CONNECT_PROJECT_ID || undefined,
-        ensIndexerUrls: [env.VITE_ENS_INDEXER_1].filter(Boolean),
+        ensIndexerUrls: (env.VITE_ENS_INDEXERS || '').split(/\s+/).filter(Boolean),
       })
     </script>
   </body>

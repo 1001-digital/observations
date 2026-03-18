@@ -6,10 +6,8 @@ export default defineNuxtPlugin((nuxtApp) => {
   const appConfig = useAppConfig()
 
   const pub = runtimeConfig.public
-  const indexer = (pub as any).observations?.indexer
-  const indexerEndpoints = indexer
-    ? [indexer.endpoint1, indexer.endpoint2, indexer.endpoint3].filter(Boolean) as string[]
-    : []
+  const indexerEndpoints = ((pub as any).observations?.indexers || '')
+    .split(/\s+/).filter(Boolean) as string[]
 
   const config: ObservationsConfig = {
     observationsContract: (pub as any).observationsContract as Address,

@@ -46,10 +46,9 @@ export interface ObservationProvider {
 }
 
 interface ObservationsRuntimeConfig {
-  indexer?: { endpoint1?: string; endpoint2?: string; endpoint3?: string }
+  indexers?: string
 }
 
 export function getIndexerUrls(config: ObservationsRuntimeConfig): string[] {
-  if (!config.indexer) return []
-  return [config.indexer.endpoint1, config.indexer.endpoint2, config.indexer.endpoint3].filter(Boolean) as string[]
+  return (config.indexers || '').split(/\s+/).filter(Boolean)
 }
