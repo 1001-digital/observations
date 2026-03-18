@@ -248,7 +248,7 @@ useBreadcrumb(
   container-type: size;
   border-bottom: var(--border);
   height: 100cqw;
-  background: var(--gray-z-4);
+  background: var(--gray-z-3);
 
   .artifact-visual {
     width: min(80cqw, 80cqh);
