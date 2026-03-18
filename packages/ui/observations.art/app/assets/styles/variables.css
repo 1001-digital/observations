@@ -5,6 +5,7 @@
     Roboto, sans-serif;
   --font-heading:
     'Alegreya', ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  --ui-font-family: var(--font-heading);
 
   /* Stone palette — warm replacement for neutral grays */
   --gray-50: oklch(98.5% 0.001 106.423);
