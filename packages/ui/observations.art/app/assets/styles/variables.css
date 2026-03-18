@@ -24,6 +24,12 @@
   --card-background: var(--gray-100);
   --input-background: var(--gray-50);
   --button-background: var(--gray-100);
+  --dialog-background: var(--gray-100);
+  --dialog-header-background: var(--gray-100);
+  --popover-header-background: var(--gray-100);
+  --popover-background: var(--gray-100);
+  --toast-info-header-background: var(--gray-100);
+  --toast-info-background: var(--gray-100);
   --button-tertiary-background: var(--gray-100);
   --border-color: var(--gray-300);
   --color: var(--gray-950);
