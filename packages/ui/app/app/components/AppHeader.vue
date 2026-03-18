@@ -74,6 +74,7 @@ const breadcrumbs = computed(() =>
 }
 
 .app-nav a {
-  text-transform: uppercase;
+  text-transform: capitalize;
+  font-family: var(--font-heading);
 }
 </style>
